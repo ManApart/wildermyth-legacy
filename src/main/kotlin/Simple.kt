@@ -1,13 +1,16 @@
 import kotlinx.browser.*
 import kotlinx.html.*
 import kotlinx.html.dom.*
+import kotlin.js.Json
 
 fun main() {
     displayExample()
 }
 
 fun displayExample() {
-    val example = JSON.parse<Character>("{\"name\": \"Cob\"}")
+    val json = JSON.parse<Json>(defaultData)
+    val example = parseFromJson(json)
+    println(JSON.stringify(example))
 
     document.body!!.append.div {
         h1 {
