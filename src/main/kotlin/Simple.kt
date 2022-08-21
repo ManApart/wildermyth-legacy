@@ -32,7 +32,7 @@ Export character in game
 Upload Face
 Upload Body
 Upload data
-Save character in local storage
+Save parsed character in local storage
 Export thin legacy data?
  */
 
