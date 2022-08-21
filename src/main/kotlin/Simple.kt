@@ -4,9 +4,6 @@ import kotlinx.html.dom.*
 import kotlinx.html.js.onChangeFunction
 import org.khronos.webgl.ArrayBuffer
 import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.HashChangeEvent
-import org.w3c.dom.events.EventTarget
-import org.w3c.dom.events.InputEvent
 import org.w3c.files.FileReader
 import org.w3c.files.get
 import kotlin.js.Json
@@ -38,8 +35,27 @@ private fun importMenu() {
     }
 }
 
+//var jsZip = require('jszip')
+//jsZip.loadAsync(file).then(function (zip) {
+//    Object.keys(zip.files).forEach(function (filename) {
+//        zip.files[filename].async('string').then(function (fileData) {
+//            console.log(fileData) // These are your file contents
+//        })
+//    })
+//})
+
 fun importZip(data: ArrayBuffer) {
     println(data.byteLength)
+    JSZip().loadAsync(data).then { zip ->
+        JsonObject.entries(zip.files).forEach { entry ->
+            println(entry[0])
+        }
+    }
+//    JSZip.loadAsync(ev.target.result).then(function(zip) {
+//        for(let [filename, file] of Object.entries(zip.files)) {
+//        console.log(filename);
+//    }
+//    })
 }
 
 private fun displayExample() {
@@ -58,6 +74,16 @@ private fun displayExample() {
             src = "./example/body.png"
         }
 
+    }
+}
+
+object JsonObject {
+    fun keys(obj: Any): Array<*>{
+        return js("Object.keys(obj)") as Array<*>
+    }
+
+    fun entries(obj: Any): Array<Array<Any>>{
+        return js("Object.entries(obj)") as Array<Array<Any>>
     }
 }
 
