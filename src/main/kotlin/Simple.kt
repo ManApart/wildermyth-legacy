@@ -9,8 +9,8 @@ import org.w3c.files.get
 import kotlin.js.Json
 
 fun main() {
-    importMenu()
     displayExample()
+    importMenu()
 }
 
 private fun importMenu() {
@@ -45,17 +45,35 @@ private fun importMenu() {
 //})
 
 fun importZip(data: ArrayBuffer) {
-    println(data.byteLength)
     JSZip().loadAsync(data).then { zip ->
-        JsonObject.entries(zip.files).forEach { entry ->
-            println(entry[0])
+        val entries = JsonObject.entries(zip.files)
+        handleZipCharacterData(zip, entries)
+        handleZipPictures(entries)
+    }
+}
+
+private fun handleZipCharacterData(zipObject: JSZip.ZipObject, entries: List<Pair<Any, Any>>) {
+    entries.filter { (fileName, _) ->
+        val name = (fileName as String)
+        name.endsWith("data.json")
+    }.forEach { (fileName, file) ->
+        val f2 = zipObject.file(fileName as String)
+        println(JSON.stringify(f2))
+        println("here")
+
+        f2.async<String>("string").then { contents ->
+            println(contents)
         }
     }
-//    JSZip.loadAsync(ev.target.result).then(function(zip) {
-//        for(let [filename, file] of Object.entries(zip.files)) {
-//        console.log(filename);
-//    }
-//    })
+}
+
+private fun handleZipPictures(entries: List<Pair<Any, Any>>) {
+    entries.filter { (fileName, _) ->
+        val name = (fileName as String)
+        name.endsWith("default.png")
+    }.forEach { (fileName, file) ->
+        println(fileName)
+    }
 }
 
 private fun displayExample() {
@@ -74,16 +92,6 @@ private fun displayExample() {
             src = "./example/body.png"
         }
 
-    }
-}
-
-object JsonObject {
-    fun keys(obj: Any): Array<*>{
-        return js("Object.keys(obj)") as Array<*>
-    }
-
-    fun entries(obj: Any): Array<Array<Any>>{
-        return js("Object.entries(obj)") as Array<Array<Any>>
     }
 }
 
