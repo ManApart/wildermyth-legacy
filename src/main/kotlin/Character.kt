@@ -7,6 +7,6 @@ fun parseFromJson(json: Json): Character {
     val base = (json["entities"] as Array<Array<Json>>)[0][2]
     val name = base["name"] as String
 
-    println(JSON.stringify(base))
+//    println(JSON.stringify(base))
     return Character(name)
 }

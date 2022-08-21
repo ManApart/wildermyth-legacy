@@ -1,16 +1,51 @@
 import kotlinx.browser.*
 import kotlinx.html.*
 import kotlinx.html.dom.*
+import kotlinx.html.js.onChangeFunction
+import org.khronos.webgl.ArrayBuffer
+import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.HashChangeEvent
+import org.w3c.dom.events.EventTarget
+import org.w3c.dom.events.InputEvent
+import org.w3c.files.FileReader
+import org.w3c.files.get
 import kotlin.js.Json
 
 fun main() {
+    importMenu()
     displayExample()
 }
 
-fun displayExample() {
+private fun importMenu() {
+    document.body!!.append.div {
+        fileInput {
+            id = "importInput"
+            type = InputType.file
+            onChangeFunction = {
+                val element = document.getElementById(id) as HTMLInputElement
+                if (element.files != undefined) {
+                    val reader = FileReader()
+                    reader.onload = {
+                        importZip(reader.result as ArrayBuffer)
+                    }
+                    reader.onerror = { error ->
+                        console.error("Failed to read File $error")
+                    }
+                    reader.readAsArrayBuffer(element.files!![0]!!)
+                }
+            }
+        }
+    }
+}
+
+fun importZip(data: ArrayBuffer) {
+    println(data.byteLength)
+}
+
+private fun displayExample() {
     val json = JSON.parse<Json>(defaultData)
     val example = parseFromJson(json)
-    println(JSON.stringify(example))
+//    println(JSON.stringify(example))
 
     document.body!!.append.div {
         h1 {
