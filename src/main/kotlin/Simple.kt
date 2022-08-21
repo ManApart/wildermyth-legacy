@@ -4,6 +4,8 @@ import kotlinx.html.dom.*
 import kotlinx.html.js.onChangeFunction
 import org.khronos.webgl.ArrayBuffer
 import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.url.URL
+import org.w3c.files.Blob
 import org.w3c.files.FileReader
 import org.w3c.files.get
 import kotlin.js.Json
@@ -48,16 +50,24 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
         fileName.endsWith("data.json")
     }.forEach { fileName ->
         zip.file(fileName).async<String>("string").then { contents ->
-            println(contents)
+            println(fileName)
         }
     }
 }
 
 private fun handleZipPictures(zip: JSZip.ZipObject, keys: List<String>) {
     keys.filter { fileName ->
-        fileName.endsWith("default.png")
+        fileName.endsWith("default.png") || fileName.endsWith("body.png")
     }.forEach { fileName ->
         println(fileName)
+        zip.file(fileName).async<Blob>("Blob").then { contents ->
+            println(contents)
+            document.body?.append {
+                img {
+                    src = URL.Companion.createObjectURL(contents)
+                }
+            }
+        }
     }
 }
 
