@@ -6,7 +6,6 @@ import kotlin.js.Promise
 @JsNonModule
 external class JSZip {
     fun loadAsync(content: ArrayBuffer): Promise<ZipObject>
-//    fun ZipObject(name: String, data: Any?, options: Any?)
     class ZipObject {
         val files: Json
         fun file(name: String): ZipObject
@@ -14,16 +13,10 @@ external class JSZip {
     }
 }
 
-
-//@JsModule("jszip")
-//@JsNonModule
-//external class ZipEntry {
-//    fun async(kind: String): Promise<Any>
-//}
-
 object JsonObject {
-    fun keys(obj: Any): Array<*> {
-        return js("Object.keys(obj)") as Array<*>
+    fun keys(obj: Any): List<String> {
+        val raw = js("Object.keys(obj)") as Array<*>
+        return raw.map { it as String }
     }
 
     fun entries(obj: Any): List<Pair<Any, Any>> {

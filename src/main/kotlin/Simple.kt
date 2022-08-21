@@ -35,43 +35,28 @@ private fun importMenu() {
     }
 }
 
-//var jsZip = require('jszip')
-//jsZip.loadAsync(file).then(function (zip) {
-//    Object.keys(zip.files).forEach(function (filename) {
-//        zip.files[filename].async('string').then(function (fileData) {
-//            console.log(fileData) // These are your file contents
-//        })
-//    })
-//})
-
 fun importZip(data: ArrayBuffer) {
     JSZip().loadAsync(data).then { zip ->
-        val entries = JsonObject.entries(zip.files)
-        handleZipCharacterData(zip, entries)
-        handleZipPictures(entries)
+        val keys = JsonObject.keys(zip.files)
+        handleZipCharacterData(zip, keys)
+        handleZipPictures(zip, keys)
     }
 }
 
-private fun handleZipCharacterData(zipObject: JSZip.ZipObject, entries: List<Pair<Any, Any>>) {
-    entries.filter { (fileName, _) ->
-        val name = (fileName as String)
-        name.endsWith("data.json")
-    }.forEach { (fileName, file) ->
-        val f2 = zipObject.file(fileName as String)
-        println(JSON.stringify(f2))
-        println("here")
-
-        f2.async<String>("string").then { contents ->
+private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
+    keys.filter { fileName ->
+        fileName.endsWith("data.json")
+    }.forEach { fileName ->
+        zip.file(fileName).async<String>("string").then { contents ->
             println(contents)
         }
     }
 }
 
-private fun handleZipPictures(entries: List<Pair<Any, Any>>) {
-    entries.filter { (fileName, _) ->
-        val name = (fileName as String)
-        name.endsWith("default.png")
-    }.forEach { (fileName, file) ->
+private fun handleZipPictures(zip: JSZip.ZipObject, keys: List<String>) {
+    keys.filter { fileName ->
+        fileName.endsWith("default.png")
+    }.forEach { fileName ->
         println(fileName)
     }
 }
