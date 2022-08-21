@@ -1,3 +1,21 @@
 body {
-    background-color: #dac8a4;
+  background-color: #dac8a4;
+}
+
+.portrait {
+    position: relative;
+    height: 500px
+}
+
+.character-head {
+    position: absolute;
+    left: 150px;
+    top: -45px;
+}
+
+.character-body {
+  position: absolute;
+  top: -65px;
+  left: 0;
+  right: 0;
 }

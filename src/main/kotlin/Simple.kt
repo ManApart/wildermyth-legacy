@@ -1,74 +1,14 @@
-import kotlinx.browser.*
-import kotlinx.html.*
-import kotlinx.html.dom.*
-import kotlinx.html.js.onChangeFunction
-import org.khronos.webgl.ArrayBuffer
-import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.url.URL
-import org.w3c.files.Blob
-import org.w3c.files.FileReader
-import org.w3c.files.get
+import kotlinx.browser.document
+import kotlinx.html.classes
+import kotlinx.html.div
+import kotlinx.html.dom.append
+import kotlinx.html.h1
+import kotlinx.html.img
 import kotlin.js.Json
 
 fun main() {
     displayExample()
     importMenu()
-}
-
-private fun importMenu() {
-    document.body!!.append.div {
-        fileInput {
-            id = "importInput"
-            type = InputType.file
-            onChangeFunction = {
-                val element = document.getElementById(id) as HTMLInputElement
-                if (element.files != undefined) {
-                    val reader = FileReader()
-                    reader.onload = {
-                        importZip(reader.result as ArrayBuffer)
-                    }
-                    reader.onerror = { error ->
-                        console.error("Failed to read File $error")
-                    }
-                    reader.readAsArrayBuffer(element.files!![0]!!)
-                }
-            }
-        }
-    }
-}
-
-fun importZip(data: ArrayBuffer) {
-    JSZip().loadAsync(data).then { zip ->
-        val keys = JsonObject.keys(zip.files)
-        handleZipCharacterData(zip, keys)
-        handleZipPictures(zip, keys)
-    }
-}
-
-private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
-    keys.filter { fileName ->
-        fileName.endsWith("data.json")
-    }.forEach { fileName ->
-        zip.file(fileName).async<String>("string").then { contents ->
-            println(fileName)
-        }
-    }
-}
-
-private fun handleZipPictures(zip: JSZip.ZipObject, keys: List<String>) {
-    keys.filter { fileName ->
-        fileName.endsWith("default.png") || fileName.endsWith("body.png")
-    }.forEach { fileName ->
-        println(fileName)
-        zip.file(fileName).async<Blob>("Blob").then { contents ->
-            println(contents)
-            document.body?.append {
-                img {
-                    src = URL.Companion.createObjectURL(contents)
-                }
-            }
-        }
-    }
 }
 
 private fun displayExample() {
@@ -80,11 +20,16 @@ private fun displayExample() {
         h1 {
             +example.name
         }
-        img {
-            src = "./example/default.png"
-        }
-        img {
-            src = "./example/body.png"
+        div {
+            classes = setOf("portrait")
+            img {
+                src = "./example/body.png"
+                classes = setOf("character-body")
+            }
+            img {
+                src = "./example/default.png"
+                classes = setOf("character-head")
+            }
         }
 
     }
