@@ -1,0 +1,46 @@
+body {
+  background-color: #dac8a4;
+}
+
+h1 {
+    margin: 2px;
+}
+
+.character-card {
+    background-color: #aa8960;
+    display: inline-block;
+    width: 470px;
+    margin: 10px;
+    padding: 20px;
+    padding-bottom: 40px;
+}
+
+.character-portrait {
+    background-color: #3f4254;
+    position: relative;
+    height: 500px
+}
+
+.character-head {
+    position: absolute;
+    left: 150px;
+    top: -30px;
+}
+
+.character-body {
+  position: absolute;
+  top: -50px;
+  left: 0;
+  right: 0;
+}
+
+.character-summary{
+    margin: 20px;
+}
+
+.character-bio{
+    background-color: #ebdbb8;
+    padding: 5px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
