@@ -26,7 +26,12 @@ private fun loadExample() {
     val json = JSON.parse<Json>(defaultData)
     val example = parseFromJson(json)
 //    println(JSON.stringify(example))
-    localStorage[example.fileName] = JSON.stringify(example)
+    localStorage[example.fileName] = JSON.stringify(example) { key, value ->
+        when {
+            key == "characterClass" && value is CharacterClass -> value.name
+            else -> value
+        }
+    }
     val characters = getCharacterList()
     characters.add(example.fileName)
     saveCharacterList(characters)
@@ -84,6 +89,7 @@ private fun displayCharacters() {
             .map { JSON.parse<Character>(it) }
             .forEach { character ->
                 println("Building ${character.name}")
+                println(JSON.stringify(character))
                 div("character-card") {
                     h1 {
                         +character.name
@@ -99,7 +105,7 @@ private fun displayCharacters() {
                         }
                     }
                     div("character-summary") {
-                        +"33 year old bronzehorn warrior"
+                        +"${character.age} year old bronzehorn ${character.characterClass}"
                     }
                     div("character-bio") {
                         +"Interested in killing gorgons and eating cheese."
@@ -108,27 +114,3 @@ private fun displayCharacters() {
             }
     }
 }
-
-/*
-Upload character process
-Export character in game
-Upload Face
-Upload Body
-Upload data
-Save parsed character in local storage
-Export thin legacy data?
- */
-
-/*
- var hero;
-
-  if ( localStorage.getItem('heroImg')) {
-    hero = localStorage.getItem('heroImg');
-  }
-  else {
-    hero = '/9j/4AAQSkZJRgABAgAAZABkAAD/7    /.../    6p+3dIR//9k=';
-    localStorage.setItem('heroImg',hero);
-  }
-
-  document.getElementById("hero-graphic").src='data:image/png;base64,' + hero;
- */
