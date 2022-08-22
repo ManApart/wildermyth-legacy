@@ -17,18 +17,25 @@ private fun displayExample() {
 //    println(JSON.stringify(example))
 
     document.body!!.append.div {
-        h1 {
-            +example.name
-        }
-        div {
-            classes = setOf("portrait")
-            img {
-                src = "./example/body.png"
-                classes = setOf("character-body")
+        div("character-card") {
+            h1 {
+                +example.name
             }
-            img {
-                src = "./example/default.png"
-                classes = setOf("character-head")
+            div("character-portrait") {
+                img {
+                    src = "./example/body.png"
+                    classes = setOf("character-body")
+                }
+                img {
+                    src = "./example/default.png"
+                    classes = setOf("character-head")
+                }
+            }
+            div("character-summary") {
+                +"33 year old bronzehorn warrior"
+            }
+            div("character-bio") {
+                +"Interested in killing gorgons and eating cheese."
             }
         }
 
