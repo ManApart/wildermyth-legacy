@@ -1,6 +1,8 @@
 import kotlin.js.Json
 
-data class Character(val name: String)
+data class Character(val name: String) {
+    val fileName = name.replace(Regex.fromLiteral("[^a-zA-Z\\d\\s:]"), "").trim()
+}
 
 
 fun parseFromJson(json: Json): Character {
