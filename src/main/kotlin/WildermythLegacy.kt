@@ -52,15 +52,16 @@ private fun loadBlob(url: String, callBack: (Blob) -> Unit) {
     }
 }
 
-private fun getCharacterList(): MutableSet<String> {
+fun getCharacterList(): MutableSet<String> {
     return localStorage["character-list"]?.split(",")?.toMutableSet() ?: mutableSetOf()
 }
 
-private fun saveCharacterList(list: Set<String>) {
-    localStorage["character-list"] = list.joinToString()
+fun saveCharacterList(list: Set<String>) {
+    println("Saving $list")
+    localStorage["character-list"] = list.joinToString(",")
 }
 
-private fun savePicture(path: String, blob: Blob) {
+fun savePicture(path: String, blob: Blob) {
     val fr = FileReader()
     fr.onload = { e ->
         localStorage[path] = fr.result as String
@@ -70,7 +71,7 @@ private fun savePicture(path: String, blob: Blob) {
 
 }
 
-private fun getPicture(path: String): String {
+fun getPicture(path: String): String {
     return localStorage[path] ?: ""
 }
 
@@ -82,6 +83,7 @@ private fun displayCharacters() {
             .mapNotNull { localStorage[it] }
             .map { JSON.parse<Character>(it) }
             .forEach { character ->
+                println("Building ${character.name}")
                 div("character-card") {
                     h1 {
                         +character.name
