@@ -65,8 +65,7 @@ private fun handleZipPictures(zip: JSZip.ZipObject, keys: List<String>) {
     }.forEach { fileName ->
         println(fileName)
         zip.file(fileName).async<Blob>("Blob").then { contents ->
-            println(contents)
-            savePicture("$fileName/body", contents)
+            savePicture(createZipPicFilePath(fileName), contents)
             document.body?.append {
                 img {
                     src = URL.Companion.createObjectURL(contents)
@@ -74,4 +73,10 @@ private fun handleZipPictures(zip: JSZip.ZipObject, keys: List<String>) {
             }
         }
     }
+}
+
+private fun createZipPicFilePath(fileName:String): String {
+    val isHead = fileName.endsWith("default.png")
+    val characterName = fileName.substring(0, fileName.indexOf("/"))
+    return if (isHead) "$characterName/head" else "$characterName/body"
 }
