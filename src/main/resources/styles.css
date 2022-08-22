@@ -8,8 +8,9 @@ h1 {
 
 .character-card {
     background-color: #aa8960;
+    display: inline-block;
     width: 470px;
-    margin: auto;
+    margin: 10px;
     padding: 20px;
     padding-bottom: 40px;
 }

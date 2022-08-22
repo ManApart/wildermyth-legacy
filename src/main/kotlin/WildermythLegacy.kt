@@ -1,22 +1,29 @@
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.html.classes
 import kotlinx.html.div
 import kotlinx.html.dom.append
 import kotlinx.html.h1
 import kotlinx.html.img
+import org.w3c.dom.Element
+import org.w3c.dom.HTMLElement
 import kotlin.js.Json
 
 fun main() {
-    displayExample()
-    importMenu()
+    window.onload = {
+        displayExample()
+        importMenu()
+    }
 }
 
 private fun displayExample() {
     val json = JSON.parse<Json>(defaultData)
     val example = parseFromJson(json)
 //    println(JSON.stringify(example))
-
-    document.body!!.append.div {
+    println("Here")
+    val section = document.getElementById("character-cards-section")!!
+    section.innerHTML = ""
+    section.append {
         div("character-card") {
             h1 {
                 +example.name
