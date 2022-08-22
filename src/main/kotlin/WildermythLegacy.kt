@@ -1,13 +1,17 @@
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
-import kotlinx.html.classes
-import kotlinx.html.div
+import kotlinx.html.*
 import kotlinx.html.dom.append
-import kotlinx.html.h1
-import kotlinx.html.img
+import org.w3c.dom.Image
 import org.w3c.dom.get
 import org.w3c.dom.set
+import org.w3c.dom.url.URL
+import org.w3c.files.Blob
+import org.w3c.files.FileReader
+import org.w3c.xhr.BLOB
+import org.w3c.xhr.XMLHttpRequest
+import org.w3c.xhr.XMLHttpRequestResponseType
 import kotlin.js.Json
 
 fun main() {
@@ -22,12 +26,30 @@ private fun loadExample() {
     val json = JSON.parse<Json>(defaultData)
     val example = parseFromJson(json)
 //    println(JSON.stringify(example))
-    println("[${example.fileName}]")
     localStorage[example.fileName] = JSON.stringify(example)
     val characters = getCharacterList()
     characters.add(example.fileName)
     saveCharacterList(characters)
-    println(getCharacterList())
+
+    loadBlob("./example/body.png") {
+        savePicture(example.fileName + "/body", it)
+    }
+    loadBlob("./example/default.png") {
+        savePicture(example.fileName + "/head", it)
+    }
+
+}
+
+private fun loadBlob(url: String, callBack: (Blob) -> Unit) {
+    XMLHttpRequest().apply {
+        open("GET", url)
+        responseType = XMLHttpRequestResponseType.BLOB
+        onerror = { println("Failed to get image") }
+        onload = {
+            callBack(response as Blob)
+        }
+        send()
+    }
 }
 
 private fun getCharacterList(): MutableSet<String> {
@@ -36,6 +58,20 @@ private fun getCharacterList(): MutableSet<String> {
 
 private fun saveCharacterList(list: Set<String>) {
     localStorage["character-list"] = list.joinToString()
+}
+
+private fun savePicture(path: String, blob: Blob) {
+    val fr = FileReader()
+    fr.onload = { e ->
+        localStorage[path] = fr.result as String
+        Unit
+    }
+    fr.readAsDataURL(blob)
+
+}
+
+private fun getPicture(path: String): String {
+    return localStorage[path] ?: ""
 }
 
 private fun displayCharacters() {
@@ -52,11 +88,11 @@ private fun displayCharacters() {
                     }
                     div("character-portrait") {
                         img {
-                            src = "./example/body.png"
+                            src = getPicture(character.fileName +"/body")
                             classes = setOf("character-body")
                         }
                         img {
-                            src = "./example/default.png"
+                            src = getPicture(character.fileName +"/head")
                             classes = setOf("character-head")
                         }
                     }
