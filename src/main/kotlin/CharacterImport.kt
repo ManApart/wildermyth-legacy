@@ -11,6 +11,8 @@ import org.w3c.files.Blob
 import org.w3c.files.FileReader
 import org.w3c.files.get
 import kotlin.js.Json
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json as jsonMapper
 
 fun importMenu() {
     document.body!!.append.div {
@@ -51,8 +53,7 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
             val json = JSON.parse<Json>(contents)
             val character = parseFromJson(json)
             println(character.fileName)
-//    println(JSON.stringify(example))
-            localStorage[character.fileName] = JSON.stringify(character)
+            localStorage[character.fileName] = jsonMapper.encodeToString(character)
             characters.add(character.fileName)
             saveCharacterList(characters)
         }
@@ -66,11 +67,6 @@ private fun handleZipPictures(zip: JSZip.ZipObject, keys: List<String>) {
         println(fileName)
         zip.file(fileName).async<Blob>("Blob").then { contents ->
             savePicture(createZipPicFilePath(fileName), contents)
-            document.body?.append {
-                img {
-                    src = URL.Companion.createObjectURL(contents)
-                }
-            }
         }
     }
 }

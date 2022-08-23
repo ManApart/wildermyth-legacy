@@ -61,23 +61,23 @@ fun getCharacterList(): MutableSet<String> {
 fun saveCharacterList(list: Set<String>) {
     println("Saving $list")
     localStorage["character-list"] = list.joinToString(",")
+    displayCharacters()
 }
 
 fun savePicture(path: String, blob: Blob) {
     val fr = FileReader()
     fr.onload = { e ->
         localStorage[path] = fr.result as String
-        Unit
+        displayCharacters()
     }
     fr.readAsDataURL(blob)
-
 }
 
 fun getPicture(path: String): String {
     return localStorage[path] ?: ""
 }
 
-private fun displayCharacters() {
+fun displayCharacters() {
     val section = document.getElementById("character-cards-section")!!
     section.innerHTML = ""
     section.append {
