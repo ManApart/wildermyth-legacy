@@ -1,5 +1,15 @@
 import kotlinx.serialization.Serializable
 
+/*
+Stats to display
+Is bio possible? Seems like I'd need to do interpolation which I'd like to avoid. Maybe use Text override
+Personality stats
+Class Level
+Class Stats
+Relationships
+Hometown
+ */
+
 @Serializable
 data class Character(
     val uuid: String,
