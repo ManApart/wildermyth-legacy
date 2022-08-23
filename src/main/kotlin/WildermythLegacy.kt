@@ -3,16 +3,17 @@ import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import kotlinx.html.*
 import kotlinx.html.dom.append
-import org.w3c.dom.Image
+import kotlinx.serialization.decodeFromString
 import org.w3c.dom.get
 import org.w3c.dom.set
-import org.w3c.dom.url.URL
 import org.w3c.files.Blob
 import org.w3c.files.FileReader
 import org.w3c.xhr.BLOB
 import org.w3c.xhr.XMLHttpRequest
 import org.w3c.xhr.XMLHttpRequestResponseType
 import kotlin.js.Json
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json as jsonMapper
 
 fun main() {
     window.onload = {
@@ -26,12 +27,8 @@ private fun loadExample() {
     val json = JSON.parse<Json>(defaultData)
     val example = parseFromJson(json)
 //    println(JSON.stringify(example))
-    localStorage[example.fileName] = JSON.stringify(example) { key, value ->
-        when {
-            key == "characterClass" && value is CharacterClass -> value.name
-            else -> value
-        }
-    }
+    println(jsonMapper.encodeToString(example))
+    localStorage[example.fileName] = jsonMapper.encodeToString(example)
     val characters = getCharacterList()
     characters.add(example.fileName)
     saveCharacterList(characters)
@@ -86,10 +83,10 @@ private fun displayCharacters() {
     section.append {
         getCharacterList()
             .mapNotNull { localStorage[it] }
-            .map { JSON.parse<Character>(it) }
+            .map { jsonMapper.decodeFromString<Character>(it) }
             .forEach { character ->
                 println("Building ${character.name}")
-                println(JSON.stringify(character))
+//                println(JSON.stringify(character))
                 div("character-card") {
                     h1 {
                         +character.name
@@ -105,7 +102,7 @@ private fun displayCharacters() {
                         }
                     }
                     div("character-summary") {
-                        +"${character.age} year old bronzehorn ${character.characterClass}"
+                        +"${character.age} year old bronzehorn ${character.characterClass.name.lowercase()}"
                     }
                     div("character-bio") {
                         +"Interested in killing gorgons and eating cheese."

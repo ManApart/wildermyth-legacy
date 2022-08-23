@@ -1,13 +1,23 @@
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlin.js.Json
 
-data class Character(val name: String, val aspects: List<Aspect> = listOf(), val temporal: Map<String, Int> = mapOf()) {
+@Serializable
+data class Character(
+    val name: String,
+    val characterClass: CharacterClass,
+    val age: Int,
+    val aspects: List<Aspect> = listOf(),
+    val temporal: Map<String, Int> = mapOf()
+) {
+    @Transient
     val fileName = name.replace(Regex.fromLiteral("[^a-zA-Z\\d\\s:]"), "").trim()
-    val characterClass = determineClass(aspects)
-    val age = determineAge(temporal)
 }
 
 enum class CharacterClass { WARRIOR, HUNTER, MYSTIC }
 
+@Serializable
 data class Aspect(val name: String, val values: List<String> = listOf())
 
 fun parseFromJson(json: Json): Character {
@@ -16,7 +26,7 @@ fun parseFromJson(json: Json): Character {
     val aspects = parseAspects(base)
     val temporal = parseTemporal(base)
 
-    return Character(name, aspects)
+    return Character(name, determineClass(aspects), determineAge(temporal), aspects, temporal)
 }
 
 private fun parseAspects(base: Json): List<Aspect> {
@@ -38,8 +48,8 @@ fun String.toAspect(): Aspect {
 }
 
 private fun determineClass(aspects: List<Aspect>): CharacterClass {
-    val className = aspects.firstOrNull { it.name == "classLevel" }?.values?.first() ?: "warrior"
-    return CharacterClass.valueOf(className.uppercase())
+    val className = aspects.firstOrNull { it.name == "classLevel" }?.values?.firstOrNull()?.uppercase() ?: "WARRIOR"
+    return CharacterClass.valueOf(className)
 }
 
 private fun determineAge(temporal: Map<String, Int>): Int {
