@@ -1,5 +1,4 @@
 import kotlinx.serialization.Serializable
-import kotlin.js.Json
 
 @Serializable
 data class Character(
@@ -8,49 +7,29 @@ data class Character(
     val characterClass: CharacterClass,
     val age: Int,
     val aspects: List<Aspect> = listOf(),
-    val temporal: Map<String, Int> = mapOf()
+    val temporal: Map<String, Int> = mapOf(),
+    val history: List<HistoryEntry> = listOf(),
 ) {
 }
 
 enum class CharacterClass { WARRIOR, HUNTER, MYSTIC }
+enum class Personality { BOOKISH, COWARD, GOOFBALL, GREEDY, HEALER, HOTHEAD, LEADER, LONER, POET, ROMANTIC, SNARK }
 
 @Serializable
 data class Aspect(val name: String, val values: List<String> = listOf())
 
-fun parseFromJson(json: Json): Character {
-    val entities = (json["entities"] as Array<Array<Json>>)
-    val base = entities[0][2]
-    val uuid = entities[0][0]["value"] as String
-    val name = base["name"] as String
-    val aspects = parseAspects(base)
-    val temporal = parseTemporal(base)
+@Serializable
+data class HistoryEntry(val id: String, val acquisitionTime: Long, val associatedAspects: List<Aspect>, val forbiddenAspects: List<Aspect>, val showInSummary: Boolean)
 
-    return Character(uuid, name, determineClass(aspects), determineAge(temporal), aspects, temporal)
-}
-
-private fun parseAspects(base: Json): List<Aspect> {
-    val aspectJson = (base["aspects"] as Json)["entries"] as Array<Array<Any>>
-    val stringAspects = aspectJson.flatten().filterIsInstance<String>()
-    return stringAspects.map { it.toAspect() }
-}
-
-private fun parseTemporal(base: Json): Map<String, Int> {
-    val temporalJson = (base["temporal"] as Json)["entries"] as Array<Array<Any>>
-    return temporalJson.associate { values -> values.first() as String to values.last() as Int }
-}
-
-fun String.toAspect(): Aspect {
-    return if (contains("|")) {
-        val parts = this.split("|")
-        Aspect(parts.first(), parts.subList(1, parts.size))
-    } else Aspect(this)
-}
-
-private fun determineClass(aspects: List<Aspect>): CharacterClass {
-    val className = aspects.firstOrNull { it.name == "classLevel" }?.values?.firstOrNull()?.uppercase() ?: "WARRIOR"
-    return CharacterClass.valueOf(className)
-}
-
-private fun determineAge(temporal: Map<String, Int>): Int {
-    return temporal["AGE"] ?: 20
+@Serializable
+data class HistoryEntryRaw(
+    val id: String = "",
+    val acquisitionTime: Long = 0,
+    val associatedAspects: List<String> = listOf(),
+    val forbiddenAspects: List<String> = listOf(),
+    val showInSummary: Boolean = false
+) {
+    fun toHistoryEntry(): HistoryEntry {
+        return HistoryEntry(id, acquisitionTime, associatedAspects.map { it.toAspect() }, forbiddenAspects.map { it.toAspect() }, showInSummary)
+    }
 }

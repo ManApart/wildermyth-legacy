@@ -3,6 +3,7 @@ import kotlinx.browser.localStorage
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.onChangeFunction
+import kotlinx.serialization.decodeFromString
 import org.khronos.webgl.ArrayBuffer
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.set
@@ -11,7 +12,6 @@ import org.w3c.files.FileReader
 import org.w3c.files.get
 import kotlin.js.Json
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json as jsonMapper
 
 fun importMenu() {
     document.body!!.append.div {
@@ -69,4 +69,50 @@ private fun handleZipPictures(zip: JSZip.ZipObject, character: Character) {
     zip.file(bodyPath).async<Blob>("Blob").then { contents ->
         savePicture("${character.uuid}/body", contents)
     }
+}
+
+
+fun parseFromJson(json: Json): Character {
+    val entities = (json["entities"] as Array<Array<Json>>)[0]
+    val base = entities[2]
+    val uuid = entities[0]["value"] as String
+    val name = base["name"] as String
+    val aspects = parseAspects(base)
+    val temporal = parseTemporal(base)
+    val rawHistory = entities[12]["entries"] as Array<Json>
+    val history = rawHistory.map { parseHistoryEntry(it) }
+
+    return Character(uuid, name, determineClass(aspects), determineAge(temporal), aspects, temporal, history)
+}
+
+private fun parseAspects(base: Json): List<Aspect> {
+    val aspectJson = (base["aspects"] as Json)["entries"] as Array<Array<Any>>
+    val stringAspects = aspectJson.flatten().filterIsInstance<String>()
+    return stringAspects.map { it.toAspect() }
+}
+
+private fun parseTemporal(base: Json): Map<String, Int> {
+    val temporalJson = (base["temporal"] as Json)["entries"] as Array<Array<Any>>
+    return temporalJson.associate { values -> values.first() as String to values.last() as Int }
+}
+
+fun String.toAspect(): Aspect {
+    return if (contains("|")) {
+        val parts = this.split("|")
+        Aspect(parts.first(), parts.subList(1, parts.size))
+    } else Aspect(this)
+}
+
+private fun determineClass(aspects: List<Aspect>): CharacterClass {
+    val className = aspects.firstOrNull { it.name == "classLevel" }?.values?.firstOrNull()?.uppercase() ?: "WARRIOR"
+    return CharacterClass.valueOf(className)
+}
+
+private fun determineAge(temporal: Map<String, Int>): Int {
+    return temporal["AGE"] ?: 20
+}
+
+private fun parseHistoryEntry(base: Json): HistoryEntry {
+    val raw: HistoryEntryRaw = jsonMapper.decodeFromString(JSON.stringify(base))
+    return raw.toHistoryEntry()
 }

@@ -10,9 +10,7 @@ import kotlin.js.Json
 fun loadExample() {
     val json = JSON.parse<Json>(defaultData)
     val example = parseFromJson(json)
-//    println(JSON.stringify(example))
-    println(kotlinx.serialization.json.Json.encodeToString(example))
-    localStorage[example.uuid] = kotlinx.serialization.json.Json.encodeToString(example)
+    localStorage[example.uuid] = jsonMapper.encodeToString(example)
     val characters = getCharacterList()
     characters.add(example.uuid)
     saveCharacterList(characters)

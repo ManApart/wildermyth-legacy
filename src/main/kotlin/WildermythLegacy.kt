@@ -11,7 +11,8 @@ import org.w3c.dom.get
 import org.w3c.dom.set
 import org.w3c.files.Blob
 import org.w3c.files.FileReader
-import kotlinx.serialization.json.Json as jsonMapper
+
+val jsonMapper = kotlinx.serialization.json.Json {ignoreUnknownKeys = true}
 
 fun main() {
     window.onload = {
