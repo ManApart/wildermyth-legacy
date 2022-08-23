@@ -1,18 +1,15 @@
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import kotlin.js.Json
 
 @Serializable
 data class Character(
+    val uuid: String,
     val name: String,
     val characterClass: CharacterClass,
     val age: Int,
     val aspects: List<Aspect> = listOf(),
     val temporal: Map<String, Int> = mapOf()
 ) {
-    @Transient
-    val fileName = name.replace(Regex.fromLiteral("[^a-zA-Z\\d\\s:]"), "").trim()
 }
 
 enum class CharacterClass { WARRIOR, HUNTER, MYSTIC }
@@ -21,12 +18,14 @@ enum class CharacterClass { WARRIOR, HUNTER, MYSTIC }
 data class Aspect(val name: String, val values: List<String> = listOf())
 
 fun parseFromJson(json: Json): Character {
-    val base = (json["entities"] as Array<Array<Json>>)[0][2]
+    val entities = (json["entities"] as Array<Array<Json>>)
+    val base = entities[0][2]
+    val uuid = entities[0][0]["value"] as String
     val name = base["name"] as String
     val aspects = parseAspects(base)
     val temporal = parseTemporal(base)
 
-    return Character(name, determineClass(aspects), determineAge(temporal), aspects, temporal)
+    return Character(uuid, name, determineClass(aspects), determineAge(temporal), aspects, temporal)
 }
 
 private fun parseAspects(base: Json): List<Aspect> {

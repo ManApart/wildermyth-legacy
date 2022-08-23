@@ -6,7 +6,6 @@ import kotlinx.html.js.onChangeFunction
 import org.khronos.webgl.ArrayBuffer
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.set
-import org.w3c.dom.url.URL
 import org.w3c.files.Blob
 import org.w3c.files.FileReader
 import org.w3c.files.get
@@ -40,7 +39,6 @@ fun importZip(data: ArrayBuffer) {
     JSZip().loadAsync(data).then { zip ->
         val keys = JsonObject.keys(zip.files)
         handleZipCharacterData(zip, keys)
-        handleZipPictures(zip, keys)
     }
 }
 
@@ -52,27 +50,23 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
         zip.file(fileName).async<String>("string").then { contents ->
             val json = JSON.parse<Json>(contents)
             val character = parseFromJson(json)
-            println(character.fileName)
-            localStorage[character.fileName] = jsonMapper.encodeToString(character)
-            characters.add(character.fileName)
+            println(character.uuid)
+            localStorage[character.uuid] = jsonMapper.encodeToString(character)
+            characters.add(character.uuid)
             saveCharacterList(characters)
+            handleZipPictures(zip, character)
         }
     }
 }
 
-private fun handleZipPictures(zip: JSZip.ZipObject, keys: List<String>) {
-    keys.filter { fileName ->
-        fileName.endsWith("default.png") || fileName.endsWith("body.png")
-    }.forEach { fileName ->
-        println(fileName)
-        zip.file(fileName).async<Blob>("Blob").then { contents ->
-            savePicture(createZipPicFilePath(fileName), contents)
-        }
+private fun handleZipPictures(zip: JSZip.ZipObject, character: Character) {
+    val headPath = "${character.name}/default.png"
+    zip.file(headPath).async<Blob>("Blob").then { contents ->
+        savePicture("${character.uuid}/head", contents)
     }
-}
 
-private fun createZipPicFilePath(fileName:String): String {
-    val isHead = fileName.endsWith("default.png")
-    val characterName = fileName.substring(0, fileName.indexOf("/"))
-    return if (isHead) "$characterName/head" else "$characterName/body"
+    val bodyPath = "${character.name}/body.png"
+    zip.file(bodyPath).async<Blob>("Blob").then { contents ->
+        savePicture("${character.uuid}/body", contents)
+    }
 }

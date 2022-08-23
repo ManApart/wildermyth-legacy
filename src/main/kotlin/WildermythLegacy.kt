@@ -1,18 +1,16 @@
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
-import kotlinx.html.*
+import kotlinx.html.classes
+import kotlinx.html.div
 import kotlinx.html.dom.append
+import kotlinx.html.h1
+import kotlinx.html.img
 import kotlinx.serialization.decodeFromString
 import org.w3c.dom.get
 import org.w3c.dom.set
 import org.w3c.files.Blob
 import org.w3c.files.FileReader
-import org.w3c.xhr.BLOB
-import org.w3c.xhr.XMLHttpRequest
-import org.w3c.xhr.XMLHttpRequestResponseType
-import kotlin.js.Json
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json as jsonMapper
 
 fun main() {
@@ -20,37 +18,6 @@ fun main() {
         loadExample()
         displayCharacters()
         importMenu()
-    }
-}
-
-private fun loadExample() {
-    val json = JSON.parse<Json>(defaultData)
-    val example = parseFromJson(json)
-//    println(JSON.stringify(example))
-    println(jsonMapper.encodeToString(example))
-    localStorage[example.fileName] = jsonMapper.encodeToString(example)
-    val characters = getCharacterList()
-    characters.add(example.fileName)
-    saveCharacterList(characters)
-
-    loadBlob("./example/body.png") {
-        savePicture(example.fileName + "/body", it)
-    }
-    loadBlob("./example/default.png") {
-        savePicture(example.fileName + "/head", it)
-    }
-
-}
-
-private fun loadBlob(url: String, callBack: (Blob) -> Unit) {
-    XMLHttpRequest().apply {
-        open("GET", url)
-        responseType = XMLHttpRequestResponseType.BLOB
-        onerror = { println("Failed to get image") }
-        onload = {
-            callBack(response as Blob)
-        }
-        send()
     }
 }
 
@@ -66,7 +33,7 @@ fun saveCharacterList(list: Set<String>) {
 
 fun savePicture(path: String, blob: Blob) {
     val fr = FileReader()
-    fr.onload = { e ->
+    fr.onload = { _ ->
         localStorage[path] = fr.result as String
         displayCharacters()
     }
@@ -93,11 +60,11 @@ fun displayCharacters() {
                     }
                     div("character-portrait") {
                         img {
-                            src = getPicture(character.fileName +"/body")
+                            src = getPicture(character.uuid +"/body")
                             classes = setOf("character-body")
                         }
                         img {
-                            src = getPicture(character.fileName +"/head")
+                            src = getPicture(character.uuid +"/head")
                             classes = setOf("character-head")
                         }
                     }
