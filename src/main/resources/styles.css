@@ -16,22 +16,60 @@ h1 {
 }
 
 .character-portrait {
-    background-color: #3f4254;
     position: relative;
-    height: 500px
+    height: 500px;
+    overflow: hidden;
+}
+
+.warrior-portrait {
+    background-color: #3f4254;
+}
+
+.hunter-portrait {
+    background-color: #2f342e;
+}
+
+.mystic-portrait {
+    background-color: #37313b;
 }
 
 .character-head {
     position: absolute;
-    left: 150px;
-    top: -30px;
+}
+
+.warrior-head {
+  left: 150px;
+  top: -30px;
+}
+
+.hunter-head {
+  left: 161px;
+  top: 40px;
+}
+
+.mystic-head {
+  left: 150px;
+  top: -5px;
 }
 
 .character-body {
   position: absolute;
+}
+
+.warrior-body {
   top: -50px;
   left: 0;
   right: 0;
+}
+
+.hunter-body {
+  top: -50px;
+  left: -30px;
+}
+
+.mystic-body {
+  top: -50px;
+  left: -20px;
 }
 
 .character-summary{

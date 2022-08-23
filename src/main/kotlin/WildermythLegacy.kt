@@ -52,27 +52,29 @@ fun displayCharacters() {
             .mapNotNull { localStorage[it] }
             .map { jsonMapper.decodeFromString<Character>(it) }
             .forEach { character ->
-                println("Building ${character.name}")
-//                println(JSON.stringify(character))
-                div("character-card") {
-                    h1 {
-                        +character.name
-                    }
-                    div("character-portrait") {
-                        img {
-                            src = getPicture(character.uuid +"/body")
-                            classes = setOf("character-body")
+                with(character) {
+                    println("Building ${character.name}")
+                    val className = characterClass.name.lowercase()
+                    div("character-card") {
+                        h1 {
+                            +name
                         }
-                        img {
-                            src = getPicture(character.uuid +"/head")
-                            classes = setOf("character-head")
+                        div("character-portrait ${className}-portrait") {
+                            img {
+                                src = getPicture("$uuid/body")
+                                classes = setOf("character-body", "${className}-body")
+                            }
+                            img {
+                                src = getPicture("$uuid/head")
+                                classes = setOf("character-head", "${className}-head")
+                            }
                         }
-                    }
-                    div("character-summary") {
-                        +"${character.age} year old bronzehorn ${character.characterClass.name.lowercase()}"
-                    }
-                    div("character-bio") {
-                        +"Interested in killing gorgons and eating cheese."
+                        div("character-summary") {
+                            +"${character.age} year old bronzehorn ${className.capitalize()}"
+                        }
+                        div("character-bio") {
+                            +"Interested in killing gorgons and eating cheese."
+                        }
                     }
                 }
             }
