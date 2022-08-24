@@ -1,18 +1,16 @@
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
-import kotlinx.html.classes
-import kotlinx.html.div
+import kotlinx.html.*
 import kotlinx.html.dom.append
-import kotlinx.html.h1
-import kotlinx.html.img
+import kotlinx.html.js.onClickFunction
 import kotlinx.serialization.decodeFromString
 import org.w3c.dom.get
 import org.w3c.dom.set
 import org.w3c.files.Blob
 import org.w3c.files.FileReader
 
-val jsonMapper = kotlinx.serialization.json.Json {ignoreUnknownKeys = true}
+val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
 
 fun main() {
     window.onload = {
