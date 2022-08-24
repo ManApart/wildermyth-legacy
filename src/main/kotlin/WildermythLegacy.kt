@@ -72,7 +72,7 @@ fun displayCharacters() {
                             +"${character.age} year old bronzehorn ${className.capitalize()}"
                         }
                         div("character-bio") {
-                            +"Interested in killing gorgons and eating cheese."
+                            +character.getBio()
                         }
                     }
                 }
