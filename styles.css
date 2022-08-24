@@ -1,18 +1,51 @@
+:root {
+  --background: #dac8a4;
+  --card-background: #aa8960;
+  --bio-background: #ebdbb8;
+}
+
 body {
-  background-color: #dac8a4;
+  background-color: var(--background);
 }
 
 h1 {
     margin: 2px;
 }
 
+button {
+  background-color: var(--card-background);
+  border: none;
+  color: black;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+button:hover{
+  background-color: var(--bio-background);
+}
+
+input::file-selector-button {
+  background-color: var(--card-background);
+  border: none;
+  color: black;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
 .character-card {
-    background-color: #aa8960;
+    background-color: var(--card-background);
     display: inline-block;
     width: 470px;
     margin: 10px;
     padding: 20px;
     padding-bottom: 40px;
+    overflow: hidden;
 }
 
 .character-portrait {
@@ -41,10 +74,9 @@ h1 {
 }
 
 .warrior-head {
-  left: 137px;
+  left: 26%;
   top: -30px;
   animation-name: warrior-idle-head;
-  animation-delay: 0.05s;
 }
 
 @keyframes warrior-idle-head {
@@ -53,10 +85,9 @@ h1 {
 }
 
 .hunter-head {
-  left: 161px;
+  left: 34%;
   top: 45px;
   animation-name: hunter-idle-head;
-  animation-delay: 0.25s;
 }
 
 @keyframes hunter-idle-head {
@@ -65,15 +96,14 @@ h1 {
 }
 
 .mystic-head {
-  left: 150px;
+  left: 31%;
   top: 8px;
   animation-name: mystic-idle-head;
-  animation-delay: 0.15s;
 }
 
 @keyframes mystic-idle-head {
-  0% {top: -10px;}
-  100% {top: 8px;}
+  0% {top: -8px;}
+  100% {top: 10px;}
 }
 
 .character-body {
@@ -81,6 +111,8 @@ h1 {
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+  width: 100%;
+  height: 100%;
 }
 
 .warrior-body {
@@ -94,14 +126,12 @@ h1 {
   bottom: 50px;
   left: 0px;
   animation-name: character-idle-body;
-  animation-delay: 0.2s;
 }
 
 .mystic-body {
   bottom: 50px;
   left: 5px;
   animation-name: character-idle-body;
-  animation-delay: 0.1s;
 }
 
 .character-summary{
@@ -114,8 +144,60 @@ h1 {
 }
 
 .character-bio{
-    background-color: #ebdbb8;
+    background-color: var(--bio-background);
     padding: 5px;
     padding-top: 20px;
     padding-bottom: 20px;
+    height: 200px;
+    overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bio-background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--card-background);
+}
+
+@media (max-width: 1000px) {
+::-webkit-scrollbar-track {
+  background: var(--bio-background);
+}
+.character-card {
+    display: block;
+    width: 90%;
+    margin: 2%;
+    margin-bottom: 50px;
+    padding: 2%;
+}
+
+.character-portrait {
+    width: 100%;
+    height: 800px;
+}
+
+.character-head {
+    width: 40%;
+}
+
+.hunter-head {
+  left: 36%;
+}
+
+.hunter-body {
+  bottom: 65px;
+}
+
+.character-bio{
+  font-size: 1.8em;
+}
 }
