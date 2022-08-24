@@ -13,6 +13,7 @@ h1 {
     margin: 10px;
     padding: 20px;
     padding-bottom: 40px;
+    overflow: hidden;
 }
 
 .character-portrait {
@@ -44,7 +45,6 @@ h1 {
   left: 137px;
   top: -30px;
   animation-name: warrior-idle-head;
-  animation-delay: 0.05s;
 }
 
 @keyframes warrior-idle-head {
@@ -56,7 +56,6 @@ h1 {
   left: 161px;
   top: 45px;
   animation-name: hunter-idle-head;
-  animation-delay: 0.25s;
 }
 
 @keyframes hunter-idle-head {
@@ -68,7 +67,6 @@ h1 {
   left: 150px;
   top: 8px;
   animation-name: mystic-idle-head;
-  animation-delay: 0.15s;
 }
 
 @keyframes mystic-idle-head {
@@ -94,14 +92,12 @@ h1 {
   bottom: 50px;
   left: 0px;
   animation-name: character-idle-body;
-  animation-delay: 0.2s;
 }
 
 .mystic-body {
   bottom: 50px;
   left: 5px;
   animation-name: character-idle-body;
-  animation-delay: 0.1s;
 }
 
 .character-summary{
@@ -118,4 +114,5 @@ h1 {
     padding: 5px;
     padding-top: 20px;
     padding-bottom: 20px;
+    height: 200px;
 }

@@ -57,21 +57,24 @@ fun displayCharacters() {
                     val personality = getPersonality()
                     val topTrait = personality.entries.maxBy { it.value }.key
                     val secondTrait = personality.entries.filterNot { it.key == topTrait }.maxBy { it.value }.key
+                    val animDelay = (0..10).random() / 10.0
                     div("character-card") {
                         h1 {
                             +name
                         }
-                        div("character-personality"){
+                        div("character-personality") {
                             +"${topTrait.format()} ${secondTrait.format()}"
                         }
                         div("character-portrait ${className}-portrait") {
                             img {
                                 src = getPicture("$uuid/body")
                                 classes = setOf("character-body", "${className}-body")
+                                style = "animation-delay: ${animDelay}s"
                             }
                             img {
                                 src = getPicture("$uuid/head")
                                 classes = setOf("character-head", "${className}-head")
+                                style = "animation-delay: ${animDelay + .05}s"
                             }
                         }
                         div("character-summary") {
