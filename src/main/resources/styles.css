@@ -38,7 +38,6 @@ input::file-selector-button {
   font-size: 16px;
 }
 
-
 .character-card {
     background-color: var(--card-background);
     display: inline-block;
@@ -75,7 +74,7 @@ input::file-selector-button {
 }
 
 .warrior-head {
-  left: 123px;
+  left: 26%;
   top: -30px;
   animation-name: warrior-idle-head;
 }
@@ -86,7 +85,7 @@ input::file-selector-button {
 }
 
 .hunter-head {
-  left: 161px;
+  left: 34%;
   top: 45px;
   animation-name: hunter-idle-head;
 }
@@ -97,7 +96,7 @@ input::file-selector-button {
 }
 
 .mystic-head {
-  left: 145px;
+  left: 31%;
   top: 8px;
   animation-name: mystic-idle-head;
 }
@@ -112,6 +111,8 @@ input::file-selector-button {
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+  width: 100%;
+  height: 100%;
 }
 
 .warrior-body {
@@ -148,6 +149,7 @@ input::file-selector-button {
     padding-top: 20px;
     padding-bottom: 20px;
     height: 200px;
+    overflow-y: scroll;
 }
 
 ::-webkit-scrollbar {
@@ -166,13 +168,36 @@ input::file-selector-button {
   background: var(--card-background);
 }
 
-@media (max-width: 600px) {
-  .mobile-only {
-        display: block;
-	}
+@media (max-width: 1000px) {
+::-webkit-scrollbar-track {
+  background: var(--bio-background);
+}
+.character-card {
+    display: block;
+    width: 90%;
+    margin: 2%;
+    margin-bottom: 50px;
+    padding: 2%;
+}
 
-  .not-mobile {
-        display: none;
-	}
+.character-portrait {
+    width: 100%;
+    height: 800px;
+}
 
+.character-head {
+    width: 40%;
+}
+
+.hunter-head {
+  left: 36%;
+}
+
+.hunter-body {
+  bottom: 65px;
+}
+
+.character-bio{
+  font-size: 1.8em;
+}
 }
