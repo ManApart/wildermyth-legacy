@@ -6,6 +6,33 @@ h1 {
     margin: 2px;
 }
 
+button {
+  background-color: #aa8960;
+  border: none;
+  color: black;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+button:hover{
+  background-color: #ebdbb8;
+}
+
+input::file-selector-button {
+  background-color: #aa8960;
+  border: none;
+  color: black;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+
 .character-card {
     background-color: #aa8960;
     display: inline-block;
@@ -42,7 +69,7 @@ h1 {
 }
 
 .warrior-head {
-  left: 137px;
+  left: 123px;
   top: -30px;
   animation-name: warrior-idle-head;
 }
@@ -64,14 +91,14 @@ h1 {
 }
 
 .mystic-head {
-  left: 150px;
+  left: 145px;
   top: 8px;
   animation-name: mystic-idle-head;
 }
 
 @keyframes mystic-idle-head {
-  0% {top: -10px;}
-  100% {top: 8px;}
+  0% {top: -8px;}
+  100% {top: 10px;}
 }
 
 .character-body {
