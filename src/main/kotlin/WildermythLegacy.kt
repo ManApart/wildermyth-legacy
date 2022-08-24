@@ -3,12 +3,12 @@ import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import kotlinx.html.*
 import kotlinx.html.dom.append
-import kotlinx.html.js.onClickFunction
 import kotlinx.serialization.decodeFromString
 import org.w3c.dom.get
 import org.w3c.dom.set
 import org.w3c.files.Blob
 import org.w3c.files.FileReader
+import kotlin.reflect.KClass
 
 val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
 
@@ -54,9 +54,15 @@ fun displayCharacters() {
                 with(character) {
                     println("Building ${character.name}")
                     val className = getCharacterClass().name.lowercase()
+                    val personality = getPersonality()
+                    val topTrait = personality.entries.maxBy { it.value }.key
+                    val secondTrait = personality.entries.filterNot { it.key == topTrait }.maxBy { it.value }.key
                     div("character-card") {
                         h1 {
                             +name
+                        }
+                        div("character-personality"){
+                            +"${topTrait.format()} ${secondTrait.format()}"
                         }
                         div("character-portrait ${className}-portrait") {
                             img {
@@ -69,7 +75,7 @@ fun displayCharacters() {
                             }
                         }
                         div("character-summary") {
-                            +"${getAge()} year old ${getClassLevel().name.lowercase().capitalize()} ${className.capitalize()}"
+                            +"${getAge()} year old ${getClassLevel().format()} ${className.capitalize()}"
                         }
                         div("character-bio") {
                             +getBio()
@@ -78,4 +84,8 @@ fun displayCharacters() {
                 }
             }
     }
+}
+
+fun Enum<*>.format(): String {
+    return name.lowercase().capitalize()
 }

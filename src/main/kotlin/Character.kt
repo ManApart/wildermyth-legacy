@@ -1,11 +1,9 @@
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 
 /*
 Stats to display
 Is bio possible? Seems like I'd need to do interpolation which I'd like to avoid. Maybe use Text override
 Personality stats
-Class Level
 Class Stats
 Relationships
 Hometown
@@ -38,22 +36,32 @@ data class Character(
 
     fun getClassLevel(): ClassLevel {
         val level = aspects.firstOrNull { it.name == "classLevel" }?.values?.get(1)?.toIntOrNull() ?: 0
-        return classFromLevel(level)
+        return classLevelFromInt(level)
     }
 
     fun getAge(): Int {
         return temporal["AGE"] ?: 20
     }
 
+    fun getPersonality(): Map<Personality, Int>{
+        val aspect = history.firstOrNull { it.id == "humanPersonalityStats" }?.associatedAspects?.firstOrNull { it.name == "roleStats" }
+        return if (aspect != null) {
+            val personality = mutableMapOf<Personality, Int>()
+            Personality.values().forEachIndexed { i, p ->
+                personality[p] = aspect.values[i].toDouble().toInt()
+            }
+            personality
+        } else {
+            Personality.values().associateWith { 0 }
+        }
+    }
 
 }
 
 enum class CharacterClass { WARRIOR, HUNTER, MYSTIC }
 enum class ClassLevel { GREENHORN, BLOODHORN, BLUEHORN, BRONZEHORN, SILVERHORN, GOLDHORN, BLACKHORN }
 
-fun classFromLevel(level: Int): ClassLevel {
-    return ClassLevel.values()[level]
-}
+fun classLevelFromInt(level: Int) = ClassLevel.values()[level]
 
 enum class Personality { BOOKISH, COWARD, GOOFBALL, GREEDY, HEALER, HOTHEAD, LEADER, LONER, POET, ROMANTIC, SNARK }
 
