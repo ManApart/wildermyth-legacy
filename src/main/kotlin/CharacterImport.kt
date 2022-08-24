@@ -82,7 +82,7 @@ fun parseFromJson(json: Json): Character {
     val rawHistory = entities[12]["entries"] as Array<Json>
     val history = rawHistory.map { parseHistoryEntry(it) }
 
-    return Character(uuid, name, determineClass(aspects), determineAge(temporal), aspects, temporal, history)
+    return Character(uuid, name, aspects, temporal, history)
 }
 
 private fun parseAspects(base: Json): List<Aspect> {
@@ -101,15 +101,6 @@ fun String.toAspect(): Aspect {
         val parts = this.split("|")
         Aspect(parts.first(), parts.subList(1, parts.size))
     } else Aspect(this)
-}
-
-private fun determineClass(aspects: List<Aspect>): CharacterClass {
-    val className = aspects.firstOrNull { it.name == "classLevel" }?.values?.firstOrNull()?.uppercase() ?: "WARRIOR"
-    return CharacterClass.valueOf(className)
-}
-
-private fun determineAge(temporal: Map<String, Int>): Int {
-    return temporal["AGE"] ?: 20
 }
 
 private fun parseHistoryEntry(base: Json): HistoryEntry {

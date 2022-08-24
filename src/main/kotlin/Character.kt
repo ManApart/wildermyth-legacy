@@ -15,8 +15,6 @@ Hometown
 data class Character(
     val uuid: String,
     val name: String,
-    val characterClass: CharacterClass,
-    val age: Int,
     val aspects: List<Aspect> = listOf(),
     val temporal: Map<String, Int> = mapOf(),
     val history: List<HistoryEntry> = listOf(),
@@ -32,9 +30,31 @@ data class Character(
             ).joinToString(", ")
         }
     }
+
+    fun getCharacterClass(): CharacterClass {
+        val className = aspects.firstOrNull { it.name == "classLevel" }?.values?.firstOrNull()?.uppercase() ?: "WARRIOR"
+        return CharacterClass.valueOf(className)
+    }
+
+    fun getClassLevel(): ClassLevel {
+        val level = aspects.firstOrNull { it.name == "classLevel" }?.values?.get(1)?.toIntOrNull() ?: 0
+        return classFromLevel(level)
+    }
+
+    fun getAge(): Int {
+        return temporal["AGE"] ?: 20
+    }
+
+
 }
 
 enum class CharacterClass { WARRIOR, HUNTER, MYSTIC }
+enum class ClassLevel { GREENHORN, BLOODHORN, BLUEHORN, BRONZEHORN, SILVERHORN, GOLDHORN, BLACKHORN }
+
+fun classFromLevel(level: Int): ClassLevel {
+    return ClassLevel.values()[level]
+}
+
 enum class Personality { BOOKISH, COWARD, GOOFBALL, GREEDY, HEALER, HOTHEAD, LEADER, LONER, POET, ROMANTIC, SNARK }
 
 @Serializable

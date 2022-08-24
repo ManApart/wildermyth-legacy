@@ -53,7 +53,7 @@ fun displayCharacters() {
             .forEach { character ->
                 with(character) {
                     println("Building ${character.name}")
-                    val className = characterClass.name.lowercase()
+                    val className = getCharacterClass().name.lowercase()
                     div("character-card") {
                         h1 {
                             +name
@@ -69,10 +69,10 @@ fun displayCharacters() {
                             }
                         }
                         div("character-summary") {
-                            +"${character.age} year old bronzehorn ${className.capitalize()}"
+                            +"${getAge()} year old ${getClassLevel().name.lowercase().capitalize()} ${className.capitalize()}"
                         }
                         div("character-bio") {
-                            +character.getBio()
+                            +getBio()
                         }
                     }
                 }
