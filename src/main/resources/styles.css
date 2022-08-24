@@ -1,5 +1,11 @@
+:root {
+  --background: #dac8a4;
+  --card-background: #aa8960;
+  --bio-background: #ebdbb8;
+}
+
 body {
-  background-color: #dac8a4;
+  background-color: var(--background);
 }
 
 h1 {
@@ -7,7 +13,7 @@ h1 {
 }
 
 button {
-  background-color: #aa8960;
+  background-color: var(--card-background);
   border: none;
   color: black;
   padding: 15px 32px;
@@ -18,11 +24,11 @@ button {
 }
 
 button:hover{
-  background-color: #ebdbb8;
+  background-color: var(--bio-background);
 }
 
 input::file-selector-button {
-  background-color: #aa8960;
+  background-color: var(--card-background);
   border: none;
   color: black;
   padding: 15px 32px;
@@ -34,7 +40,7 @@ input::file-selector-button {
 
 
 .character-card {
-    background-color: #aa8960;
+    background-color: var(--card-background);
     display: inline-block;
     width: 470px;
     margin: 10px;
@@ -137,9 +143,36 @@ input::file-selector-button {
 }
 
 .character-bio{
-    background-color: #ebdbb8;
+    background-color: var(--bio-background);
     padding: 5px;
     padding-top: 20px;
     padding-bottom: 20px;
     height: 200px;
+}
+
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bio-background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--card-background);
+}
+
+@media (max-width: 600px) {
+  .mobile-only {
+        display: block;
+	}
+
+  .not-mobile {
+        display: none;
+	}
+
 }
