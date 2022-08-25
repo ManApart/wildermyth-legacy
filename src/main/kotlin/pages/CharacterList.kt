@@ -1,6 +1,7 @@
 package pages
 
 import Character
+import clearSections
 import getCharacterList
 import getPicture
 import jsonMapper
@@ -18,7 +19,7 @@ import org.w3c.dom.get
 
 fun displayCharacters() {
     val section = document.getElementById("character-cards-section")!!
-    section.innerHTML = ""
+    clearSections()
     section.append {
         getCharacterList()
             .mapNotNull { localStorage[it] }

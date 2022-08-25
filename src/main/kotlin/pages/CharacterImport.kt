@@ -23,12 +23,23 @@ import org.w3c.files.FileReader
 import org.w3c.files.get
 import kotlin.js.Json
 import kotlinx.serialization.encodeToString
+import org.w3c.dom.HTMLButtonElement
 import saveCharacterList
 import savePicture
 import kotlin.js.Promise
 
+fun importButton(){
+    val button = document.getElementById("upload-button") as HTMLButtonElement
+    button.onclick = {
+        importMenu()
+    }
+
+}
+
 fun importMenu() {
     val section = document.getElementById("import-section")!!
+    section.innerHTML = ""
+    document.getElementById("character-detail-section")!!.innerHTML = ""
     section.append {
         input(InputType.file) {
             id = "importInput"

@@ -38,6 +38,10 @@ input::file-selector-button {
   font-size: 16px;
 }
 
+#clear-button {
+  float: right;
+}
+
 .character-card {
     background-color: var(--card-background);
     display: inline-block;
