@@ -1,4 +1,5 @@
 import kotlinx.serialization.Serializable
+import pages.toAspect
 
 /*
 Stats to display

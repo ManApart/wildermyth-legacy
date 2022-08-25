@@ -1,7 +1,18 @@
+package pages
+
+import Aspect
+import Character
+import HistoryEntry
+import HistoryEntryRaw
+import JSZip
+import JsonObject
+import getCharacterList
+import jsonMapper
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.html.*
 import kotlinx.html.dom.append
+import kotlinx.html.js.input
 import kotlinx.html.js.onChangeFunction
 import kotlinx.serialization.decodeFromString
 import org.khronos.webgl.ArrayBuffer
@@ -12,10 +23,14 @@ import org.w3c.files.FileReader
 import org.w3c.files.get
 import kotlin.js.Json
 import kotlinx.serialization.encodeToString
+import saveCharacterList
+import savePicture
+import kotlin.js.Promise
 
 fun importMenu() {
-    document.body!!.append.div {
-        fileInput {
+    val section = document.getElementById("import-section")!!
+    section.append {
+        input(InputType.file) {
             id = "importInput"
             type = InputType.file
             onChangeFunction = {
@@ -44,9 +59,9 @@ fun importZip(data: ArrayBuffer) {
 
 private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
     val characters = getCharacterList()
-    keys.filter { fileName ->
+    val promises = keys.filter { fileName ->
         fileName.endsWith("data.json")
-    }.forEach { fileName ->
+    }.map { fileName ->
         zip.file(fileName).async<String>("string").then { contents ->
             val json = JSON.parse<Json>(contents)
             val character = parseFromJson(json)
@@ -55,7 +70,11 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
             characters.add(character.uuid)
             saveCharacterList(characters)
             handleZipPictures(zip, character)
+            true
         }
+    }.toTypedArray()
+    Promise.all(promises).then {
+        displayCharacters()
     }
 }
 
@@ -70,7 +89,6 @@ private fun handleZipPictures(zip: JSZip.ZipObject, character: Character) {
         savePicture("${character.uuid}/body", contents)
     }
 }
-
 
 fun parseFromJson(json: Json): Character {
     val entities = (json["entities"] as Array<Array<Json>>)[0]

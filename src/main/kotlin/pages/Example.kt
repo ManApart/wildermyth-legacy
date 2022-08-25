@@ -1,3 +1,8 @@
+package pages
+
+import defaultData
+import getCharacterList
+import jsonMapper
 import kotlinx.browser.localStorage
 import kotlinx.serialization.encodeToString
 import org.w3c.dom.set
@@ -5,6 +10,8 @@ import org.w3c.files.Blob
 import org.w3c.xhr.BLOB
 import org.w3c.xhr.XMLHttpRequest
 import org.w3c.xhr.XMLHttpRequestResponseType
+import saveCharacterList
+import savePicture
 import kotlin.js.Json
 
 fun loadExample() {
@@ -15,13 +22,13 @@ fun loadExample() {
     characters.add(example.uuid)
     saveCharacterList(characters)
 
-    loadBlob("./example/body.png") {
+    loadBlob("example/body.png") {
         savePicture(example.uuid + "/body", it)
     }
-    loadBlob("./example/default.png") {
+    loadBlob("example/default.png") {
         savePicture(example.uuid + "/head", it)
     }
-
+    displayCharacters()
 }
 
 private fun loadBlob(url: String, callBack: (Blob) -> Unit) {
