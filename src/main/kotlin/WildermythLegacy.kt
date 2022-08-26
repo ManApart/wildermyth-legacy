@@ -64,35 +64,4 @@ fun clearSections() {
     document.getElementById("nav")!!.innerHTML = ""
 }
 
-fun getCharacterList(): MutableSet<String> {
-    return localStorage["character-list"]?.split(",")?.toMutableSet() ?: mutableSetOf()
-}
-
-fun saveCharacterList(list: Set<String>) {
-    localStorage["character-list"] = list.joinToString(",")
-}
-
-fun getCharacter(uuid: String): Character? {
-    return localStorage[uuid]?.let { jsonMapper.decodeFromString(it) }
-}
-
-fun saveCharacter(character: Character){
-    localStorage[character.uuid] = jsonMapper.encodeToString(character)
-}
-
-fun getPicture(path: String): String {
-    return localStorage[path] ?: ""
-}
-
-fun savePicture(path: String, blob: Blob): Promise<Unit> {
-    return Promise { resolve, reject ->
-        val fr = FileReader()
-        fr.onload = { _ ->
-            localStorage[path] = fr.result as String
-            resolve(Unit)
-        }
-        fr.readAsDataURL(blob)
-    }
-}
-
 
