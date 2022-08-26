@@ -26,6 +26,7 @@ fun displayCharacters() {
     val section = document.getElementById("character-cards-section")!!
     clearSections()
     document.title = "Wildermyth Legacy"
+    window.location.hash = ""
     buildNav()
     section.append {
         getCharacterList().also { println("Building ${it.size} characters.") }

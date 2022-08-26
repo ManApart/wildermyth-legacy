@@ -29,18 +29,6 @@ import saveCharacterList
 import savePicture
 import kotlin.js.Promise
 
-/*
-Make import process a promise so we don't reload everything constantly
- */
-
-//fun importButton() {
-//    val button = document.getElementById("upload-button") as HTMLButtonElement
-//    button.onclick = {
-//        importMenu()
-//    }
-//
-//}
-
 fun importMenu() {
     val section = document.getElementById("import-section")!!
     section.innerHTML = ""

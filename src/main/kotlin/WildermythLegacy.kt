@@ -57,16 +57,6 @@ fun buildNav() {
     }
 }
 
-//fun clearButton() {
-//    val button = document.getElementById("clear-button") as HTMLButtonElement
-//    button.onclick = {
-//        if (window.confirm("This will delete all your uploaded characters. You'll need to re-upload them. Are you sure?")) {
-//            localStorage.clear()
-//            loadExample()
-//        }
-//    }
-//}
-
 fun clearSections() {
     document.getElementById("character-cards-section")!!.innerHTML = ""
     document.getElementById("import-section")!!.innerHTML = ""
