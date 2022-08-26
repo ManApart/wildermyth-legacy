@@ -1,11 +1,13 @@
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
+import kotlinx.serialization.decodeFromString
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.get
 import org.w3c.dom.set
 import org.w3c.files.Blob
 import org.w3c.files.FileReader
+import pages.characterDetail
 import pages.displayCharacters
 import pages.importButton
 import pages.loadExample
@@ -17,6 +19,18 @@ fun main() {
     window.onload = {
         clearButton()
         importButton()
+        doRouting()
+    }
+}
+
+fun doRouting() {
+    if (window.location.hash.isNotBlank()) {
+        val hash = window.location.hash.replace("#", "")
+        localStorage[hash]?.let { data ->
+            val character = jsonMapper.decodeFromString<Character>(data)
+            characterDetail(character)
+        } ?: loadExample()
+    } else {
         loadExample()
     }
 }
