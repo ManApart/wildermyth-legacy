@@ -19,7 +19,7 @@ val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
 
 fun main() {
     window.onload = {
-        doRouting()
+        loadExample()
     }
 }
 
@@ -28,9 +28,9 @@ fun doRouting() {
         val hash = window.location.hash.replace("#", "")
         getCharacter(hash)?.let { character ->
             characterDetail(character)
-        } ?: loadExample()
+        } ?: displayCharacters()
     } else {
-        loadExample()
+        displayCharacters()
     }
 }
 

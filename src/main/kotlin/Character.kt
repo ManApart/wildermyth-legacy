@@ -82,7 +82,7 @@ enum class Personality { BOOKISH, COWARD, GOOFBALL, GREEDY, HEALER, HOTHEAD, LEA
 data class Aspect(val name: String, val values: List<String> = listOf())
 
 @Serializable
-data class HistoryEntry(val id: String, val acquisitionTime: Long, val textOverride: String, val associatedAspects: List<Aspect>, val forbiddenAspects: List<Aspect>, val showInSummary: Boolean)
+data class HistoryEntry(val id: String, val acquisitionTime: Long, val textOverride: String, val associatedAspects: List<Aspect> = listOf(), val forbiddenAspects: List<Aspect> = listOf(), val showInSummary: Boolean = false)
 
 @Serializable
 data class HistoryEntryRaw(
@@ -97,3 +97,7 @@ data class HistoryEntryRaw(
         return HistoryEntry(id, acquisitionTime, textOverride, associatedAspects.map { it.toAspect() }, forbiddenAspects.map { it.toAspect() }, showInSummary)
     }
 }
+
+
+@Serializable
+data class AdditionalInfo(val favorite: Boolean = false, val history: List<HistoryEntry>)

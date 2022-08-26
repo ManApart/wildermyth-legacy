@@ -1,6 +1,7 @@
 package pages
 
 import defaultData
+import doRouting
 import getCharacterList
 import jsonMapper
 import kotlinx.browser.localStorage
@@ -35,7 +36,7 @@ fun loadExample() {
             }
         )
     ).then {
-        displayCharacters()
+        doRouting()
     }
 }
 

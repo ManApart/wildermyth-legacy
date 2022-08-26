@@ -39,3 +39,11 @@ fun savePicture(path: String, blob: Blob): Promise<Unit> {
         fr.readAsDataURL(blob)
     }
 }
+
+fun getAdditionalInfo(): MutableMap<String, AdditionalInfo>{
+    return localStorage["additional-info"]?.let { jsonMapper.decodeFromString(it) } ?: mutableMapOf()
+}
+
+fun saveAdditionalInfo(info: MutableMap<String, AdditionalInfo>){
+    localStorage["additional-info"] = jsonMapper.encodeToString(info)
+}

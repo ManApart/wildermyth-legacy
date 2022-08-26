@@ -8,6 +8,7 @@ import kotlinx.html.dom.append
 import kotlinx.html.js.button
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
+import org.w3c.dom.Element
 
 fun characterDetail(character: Character) {
     println("Detail for ${character.name}")
@@ -25,4 +26,13 @@ fun characterDetail(character: Character) {
         characterCard(character)
     }
 
+    historySection(section)
+}
+
+fun historySection(parent: Element){
+    parent.append {
+        div {
+            +"History"
+        }
+    }
 }
