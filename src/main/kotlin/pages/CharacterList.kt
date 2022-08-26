@@ -12,6 +12,7 @@ import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import kotlinx.html.js.h1
 import kotlinx.html.js.img
+import kotlinx.html.js.onClickFunction
 import kotlinx.html.style
 import kotlinx.serialization.decodeFromString
 import org.w3c.dom.get
@@ -27,12 +28,12 @@ fun displayCharacters() {
             .forEach { character ->
                 with(character) {
                     println("Building ${character.name}")
-                    val className = getCharacterClass().name.lowercase()
-                    val personality = getPersonality()
+                    val className = characterClass.name.lowercase()
                     val topTrait = personality.entries.maxBy { it.value }.key
                     val secondTrait = personality.entries.filterNot { it.key == topTrait }.maxBy { it.value }.key
                     val animDelay = (0..10).random() / 10.0
                     div("character-card") {
+                        onClickFunction = { characterDetail(character) }
                         h1 {
                             +name
                         }
@@ -52,10 +53,10 @@ fun displayCharacters() {
                             }
                         }
                         div("character-summary") {
-                            +"${getAge()} year old ${getClassLevel().format()} ${className.capitalize()}"
+                            +"$age year old ${classLevel.format()} ${className.capitalize()}"
                         }
                         div("character-bio") {
-                            +getBio()
+                            +bio
                         }
                     }
                 }

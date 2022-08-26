@@ -1,4 +1,5 @@
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import pages.toAspect
 
 /*
@@ -19,7 +20,18 @@ data class Character(
     val history: List<HistoryEntry> = listOf(),
 ) {
 
-    fun getBio(): String {
+    @Transient
+    val bio = getBio()
+    @Transient
+    val characterClass = getCharacterClass()
+    @Transient
+    val classLevel = getClassLevel()
+    @Transient
+    val age = getAge()
+    @Transient
+    val personality = getPersonality()
+
+    private fun getBio(): String {
         val historyOverrides = history.joinToString(" ") { it.textOverride }
         return historyOverrides.ifBlank {
             listOfNotNull(
@@ -30,21 +42,21 @@ data class Character(
         }
     }
 
-    fun getCharacterClass(): CharacterClass {
+    private fun getCharacterClass(): CharacterClass {
         val className = aspects.firstOrNull { it.name == "classLevel" }?.values?.firstOrNull()?.uppercase() ?: "WARRIOR"
         return CharacterClass.valueOf(className)
     }
 
-    fun getClassLevel(): ClassLevel {
+    private fun getClassLevel(): ClassLevel {
         val level = aspects.firstOrNull { it.name == "classLevel" }?.values?.get(1)?.toIntOrNull() ?: 0
         return classLevelFromInt(level)
     }
 
-    fun getAge(): Int {
+    private fun getAge(): Int {
         return temporal["AGE"] ?: 20
     }
 
-    fun getPersonality(): Map<Personality, Int>{
+    private fun getPersonality(): Map<Personality, Int>{
         val aspect = history.firstOrNull { it.id == "humanPersonalityStats" }?.associatedAspects?.firstOrNull { it.name == "roleStats" }
         return if (aspect != null) {
             val personality = mutableMapOf<Personality, Int>()
