@@ -42,6 +42,14 @@ input::file-selector-button {
   float: right;
 }
 
+#import-section {
+  margin-left: 1%
+}
+
+#import-input {
+  margin-left: 38%
+}
+
 .character-card {
     background-color: var(--card-background);
     display: inline-block;
