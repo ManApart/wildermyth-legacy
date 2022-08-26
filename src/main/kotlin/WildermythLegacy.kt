@@ -6,6 +6,7 @@ import kotlinx.html.id
 import kotlinx.html.js.button
 import kotlinx.html.js.onClickFunction
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.get
 import org.w3c.dom.set
@@ -25,8 +26,7 @@ fun main() {
 fun doRouting() {
     if (window.location.hash.isNotBlank()) {
         val hash = window.location.hash.replace("#", "")
-        localStorage[hash]?.let { data ->
-            val character = jsonMapper.decodeFromString<Character>(data)
+        getCharacter(hash)?.let { character ->
             characterDetail(character)
         } ?: loadExample()
     } else {
@@ -72,6 +72,18 @@ fun saveCharacterList(list: Set<String>) {
     localStorage["character-list"] = list.joinToString(",")
 }
 
+fun getCharacter(uuid: String): Character? {
+    return localStorage[uuid]?.let { jsonMapper.decodeFromString(it) }
+}
+
+fun saveCharacter(character: Character){
+    localStorage[character.uuid] = jsonMapper.encodeToString(character)
+}
+
+fun getPicture(path: String): String {
+    return localStorage[path] ?: ""
+}
+
 fun savePicture(path: String, blob: Blob): Promise<Unit> {
     return Promise { resolve, reject ->
         val fr = FileReader()
@@ -83,6 +95,4 @@ fun savePicture(path: String, blob: Blob): Promise<Unit> {
     }
 }
 
-fun getPicture(path: String): String {
-    return localStorage[path] ?: ""
-}
+

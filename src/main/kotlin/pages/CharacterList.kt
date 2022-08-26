@@ -3,6 +3,7 @@ package pages
 import Character
 import buildNav
 import clearSections
+import getCharacter
 import getCharacterList
 import getPicture
 import jsonMapper
@@ -30,8 +31,7 @@ fun displayCharacters() {
     buildNav()
     section.append {
         getCharacterList().also { println("Building ${it.size} characters.") }
-            .mapNotNull { localStorage[it] }
-            .map { jsonMapper.decodeFromString<Character>(it) }
+            .mapNotNull { getCharacter(it) }
             .forEach { character ->
                 characterCard(character)
             }

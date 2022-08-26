@@ -25,6 +25,7 @@ import org.w3c.files.get
 import kotlin.js.Json
 import kotlinx.serialization.encodeToString
 import org.w3c.dom.HTMLButtonElement
+import saveCharacter
 import saveCharacterList
 import savePicture
 import kotlin.js.Promise
@@ -100,7 +101,7 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
         zip.file(fileName).async<String>("string").then { contents ->
             val json = JSON.parse<Json>(contents)
             val character = parseFromJson(json)
-            localStorage[character.uuid] = jsonMapper.encodeToString(character)
+            saveCharacter(character)
             characters.add(character.uuid)
             saveCharacterList(characters)
             handleZipPictures(zip, character)

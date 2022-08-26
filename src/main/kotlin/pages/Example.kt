@@ -11,6 +11,7 @@ import org.w3c.files.Blob
 import org.w3c.xhr.BLOB
 import org.w3c.xhr.XMLHttpRequest
 import org.w3c.xhr.XMLHttpRequestResponseType
+import saveCharacter
 import saveCharacterList
 import savePicture
 import kotlin.js.Json
@@ -19,7 +20,7 @@ import kotlin.js.Promise
 fun loadExample() {
     val json = JSON.parse<Json>(defaultData)
     val example = parseFromJson(json)
-    localStorage[example.uuid] = jsonMapper.encodeToString(example)
+    saveCharacter(example)
     val characters = getCharacterList()
     characters.add(example.uuid)
     saveCharacterList(characters)
