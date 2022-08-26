@@ -45,5 +45,15 @@ fun getAdditionalInfo(): MutableMap<String, AdditionalInfo>{
 }
 
 fun saveAdditionalInfo(info: MutableMap<String, AdditionalInfo>){
-    localStorage["additional-info"] = jsonMapper.encodeToString(info)
+    localStorage["additional-info"] = jsonMapper.encodeToString(info).also { println("Saved $it") }
+}
+
+fun getAdditionalInfo(uuid: String): AdditionalInfo{
+    return localStorage["additional-info"]?.let { jsonMapper.decodeFromString<Map<String, AdditionalInfo>>(it)[uuid] } ?: AdditionalInfo(uuid)
+}
+
+fun saveAdditionalInfo(info: AdditionalInfo){
+    val allInfo = getAdditionalInfo()
+    allInfo[info.uuid] = info
+    saveAdditionalInfo(allInfo)
 }

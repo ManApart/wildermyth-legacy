@@ -4,6 +4,22 @@
   --bio-background: #ebdbb8;
 }
 
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bio-background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--card-background);
+}
+
 body {
   background-color: var(--background);
 }
@@ -164,52 +180,47 @@ input::file-selector-button {
     overflow-y: scroll;
 }
 
-::-webkit-scrollbar {
-  width: 20px;
+#history-entries{
+    display: inline-block;
+    vertical-align: top;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--background);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--bio-background);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--card-background);
+textarea{
+    width: 500px;
+    height: 200px;
+    background-color: var(--bio-background);
 }
 
 @media (max-width: 1000px) {
-::-webkit-scrollbar-track {
-  background: var(--bio-background);
-}
-.character-card {
-    display: block;
-    width: 90%;
-    margin: 2%;
-    margin-bottom: 50px;
-    padding: 2%;
-}
+    ::-webkit-scrollbar-track {
+      background: var(--bio-background);
+    }
+    .character-card {
+        display: block;
+        width: 90%;
+        margin: 2%;
+        margin-bottom: 50px;
+        padding: 2%;
+    }
 
-.character-portrait {
-    width: 100%;
-    height: 800px;
-}
+    .character-portrait {
+        width: 100%;
+        height: 800px;
+    }
 
-.character-head {
-    width: 40%;
-}
+    .character-head {
+        width: 40%;
+    }
 
-.hunter-head {
-  left: 36%;
-}
+    .hunter-head {
+      left: 36%;
+    }
 
-.hunter-body {
-  bottom: 65px;
-}
+    .hunter-body {
+      bottom: 65px;
+    }
 
-.character-bio{
-  font-size: 1.8em;
-}
+    .character-bio{
+      font-size: 1.8em;
+    }
 }

@@ -47,6 +47,7 @@ fun importMenu() {
                         li { +"Click 'Customize' (or press 7)" }
                         li { +"Click 'Export Character'" }
                         li { +"This should open a new window, which you can ignore until you've exported each character." }
+                        li { +"Click the change hero arrow abover their name to go to the next hero." }
                     }
                 }
                 li { +"Navigate to your '<Game Install>/out' folder." }
