@@ -26,18 +26,15 @@ fun loadExample() {
 
     Promise.all(
         arrayOf(
-            loadBlob("example/body.png"),
-            loadBlob("example/default.png")
+            loadBlob("example/body.png").then {
+                savePicture(example.uuid + "/body", it)
+            },
+            loadBlob("example/default.png").then {
+                savePicture(example.uuid + "/head", it)
+            }
         )
-    ).then { blobs ->
-        Promise.all(
-            arrayOf(
-                savePicture(example.uuid + "/body", blobs.first()),
-                savePicture(example.uuid + "/head", blobs.last())
-            )
-        ).then {
-            displayCharacters()
-        }
+    ).then {
+        displayCharacters()
     }
 }
 
