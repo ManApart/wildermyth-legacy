@@ -22,12 +22,12 @@ fun displayCharacters() {
     val section = document.getElementById("character-cards-section")!!
     clearSections()
     section.append {
-        getCharacterList()
+        getCharacterList().also { println("Building ${it.size} characters.") }
             .mapNotNull { localStorage[it] }
             .map { jsonMapper.decodeFromString<Character>(it) }
             .forEach { character ->
                 with(character) {
-                    println("Building ${character.name}")
+//                    println("Building ${character.name}")
                     val className = characterClass.name.lowercase()
                     val topTrait = personality.entries.maxBy { it.value }.key
                     val secondTrait = personality.entries.filterNot { it.key == topTrait }.maxBy { it.value }.key

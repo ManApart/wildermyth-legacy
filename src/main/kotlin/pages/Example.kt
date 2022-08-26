@@ -52,16 +52,3 @@ private fun loadBlob(url: String): Promise<Blob> {
     }
 
 }
-
-//private fun loadBlob(url: String, callBack: (Blob) -> Unit) {
-//    XMLHttpRequest().apply {
-//        open("GET", url)
-//        responseType = XMLHttpRequestResponseType.BLOB
-//        onerror = { println("Failed to get image") }
-//        onload = {
-//            callBack(response as Blob)
-//        }
-//        send()
-//    }
-//
-//}

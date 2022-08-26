@@ -112,11 +112,10 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
         zip.file(fileName).async<String>("string").then { contents ->
             val json = JSON.parse<Json>(contents)
             val character = parseFromJson(json)
-            println(character.uuid)
             localStorage[character.uuid] = jsonMapper.encodeToString(character)
             characters.add(character.uuid)
             saveCharacterList(characters)
-            Promise.all(handleZipPictures(zip, character))
+            handleZipPictures(zip, character)
         }
     }.toTypedArray()
     Promise.all(promises).then {
@@ -124,17 +123,17 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
     }
 }
 
-private fun handleZipPictures(zip: JSZip.ZipObject, character: Character): Array<Promise<*>> {
+private fun handleZipPictures(zip: JSZip.ZipObject, character: Character): Promise<*> {
     val headPath = "${character.name}/default.png"
     val bodyPath = "${character.name}/body.png"
 
-    return arrayOf(
+    return Promise.all(arrayOf(
         zip.file(headPath).async<Blob>("Blob").then { contents ->
             savePicture("${character.uuid}/head", contents)
         },
         zip.file(bodyPath).async<Blob>("Blob").then { contents ->
             savePicture("${character.uuid}/body", contents)
-        })
+        }))
 
 }
 

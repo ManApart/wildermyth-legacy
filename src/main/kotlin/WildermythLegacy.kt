@@ -18,7 +18,6 @@ fun main() {
         clearButton()
         importButton()
         loadExample()
-        displayCharacters()
     }
 }
 
@@ -28,7 +27,6 @@ fun clearButton() {
         if (window.confirm("This will delete all your uploaded characters. You'll need to re-upload them. Are you sure?")) {
             localStorage.clear()
             loadExample()
-            displayCharacters()
         }
     }
 }
@@ -44,30 +42,19 @@ fun getCharacterList(): MutableSet<String> {
 }
 
 fun saveCharacterList(list: Set<String>) {
-    println("Saving $list")
     localStorage["character-list"] = list.joinToString(",")
 }
 
 fun savePicture(path: String, blob: Blob): Promise<Unit> {
-    return Promise<Unit> { resolve, reject ->
+    return Promise { resolve, reject ->
         val fr = FileReader()
         fr.onload = { _ ->
             localStorage[path] = fr.result as String
-            println("Saved $path")
             resolve(Unit)
         }
         fr.readAsDataURL(blob)
     }
 }
-//fun savePicture(path: String, blob: Blob) {
-//    val fr = FileReader()
-//    fr.onload = { _ ->
-//        localStorage[path] = fr.result as String
-//        println("Saved $path")
-//        Unit
-//    }
-//    fr.readAsDataURL(blob)
-//}
 
 fun getPicture(path: String): String {
     return localStorage[path] ?: ""
