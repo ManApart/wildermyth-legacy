@@ -67,7 +67,7 @@ fun importMenu() {
                 }
                 li { +"Select all the character folders and create a zip file." }
                 ul {
-                    li { a("https://www.7-zip.org/", target = "_blank") { +"7Zip is a good tool for this." }}
+                    li { a("https://www.7-zip.org/", target = "_blank") { +"7Zip is a good tool for this." } }
 //                    li { +"${a("https://www.7-zip.org/", target = "_blank") { +"7Zip" }} is a good tool for this." }
                 }
                 li { +"Upload the zip using the button below. Your characters should all load and be locally saved!" }
@@ -116,8 +116,7 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
             localStorage[character.uuid] = jsonMapper.encodeToString(character)
             characters.add(character.uuid)
             saveCharacterList(characters)
-            handleZipPictures(zip, character)
-            true
+            Promise.all(handleZipPictures(zip, character))
         }
     }.toTypedArray()
     Promise.all(promises).then {
@@ -125,16 +124,18 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
     }
 }
 
-private fun handleZipPictures(zip: JSZip.ZipObject, character: Character) {
+private fun handleZipPictures(zip: JSZip.ZipObject, character: Character): Array<Promise<*>> {
     val headPath = "${character.name}/default.png"
-    zip.file(headPath).async<Blob>("Blob").then { contents ->
-        savePicture("${character.uuid}/head", contents)
-    }
-
     val bodyPath = "${character.name}/body.png"
-    zip.file(bodyPath).async<Blob>("Blob").then { contents ->
-        savePicture("${character.uuid}/body", contents)
-    }
+
+    return arrayOf(
+        zip.file(headPath).async<Blob>("Blob").then { contents ->
+            savePicture("${character.uuid}/head", contents)
+        },
+        zip.file(bodyPath).async<Blob>("Blob").then { contents ->
+            savePicture("${character.uuid}/body", contents)
+        })
+
 }
 
 fun parseFromJson(json: Json): Character {

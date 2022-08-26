@@ -9,6 +9,7 @@ import org.w3c.files.FileReader
 import pages.displayCharacters
 import pages.importButton
 import pages.loadExample
+import kotlin.js.Promise
 
 val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
 
@@ -24,7 +25,6 @@ fun main() {
 fun clearButton() {
     val button = document.getElementById("clear-button") as HTMLButtonElement
     button.onclick = {
-        println("clicked")
         if (window.confirm("This will delete all your uploaded characters. You'll need to re-upload them. Are you sure?")) {
             localStorage.clear()
             loadExample()
@@ -48,14 +48,26 @@ fun saveCharacterList(list: Set<String>) {
     localStorage["character-list"] = list.joinToString(",")
 }
 
-fun savePicture(path: String, blob: Blob) {
-    val fr = FileReader()
-    fr.onload = { _ ->
-        localStorage[path] = fr.result as String
-        displayCharacters()
+fun savePicture(path: String, blob: Blob): Promise<Unit> {
+    return Promise<Unit> { resolve, reject ->
+        val fr = FileReader()
+        fr.onload = { _ ->
+            localStorage[path] = fr.result as String
+            println("Saved $path")
+            resolve(Unit)
+        }
+        fr.readAsDataURL(blob)
     }
-    fr.readAsDataURL(blob)
 }
+//fun savePicture(path: String, blob: Blob) {
+//    val fr = FileReader()
+//    fr.onload = { _ ->
+//        localStorage[path] = fr.result as String
+//        println("Saved $path")
+//        Unit
+//    }
+//    fr.readAsDataURL(blob)
+//}
 
 fun getPicture(path: String): String {
     return localStorage[path] ?: ""
