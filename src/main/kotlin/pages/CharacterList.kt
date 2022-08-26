@@ -32,6 +32,7 @@ fun displayCharacters() {
     section.append {
         getCharacterList().also { println("Building ${it.size} characters.") }
             .mapNotNull { getCharacter(it) }
+            .sortedWith(compareBy<Character> { it.name.split(" ").last() }.thenBy { it.name.split(" ").first() })
             .forEach { character ->
                 characterCard(character)
             }
