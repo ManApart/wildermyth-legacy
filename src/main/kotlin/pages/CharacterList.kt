@@ -1,12 +1,14 @@
 package pages
 
 import Character
+import buildNav
 import clearSections
 import getCharacterList
 import getPicture
 import jsonMapper
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
+import kotlinx.browser.window
 import kotlinx.html.TagConsumer
 import kotlinx.html.classes
 import kotlinx.html.dom.append
@@ -23,6 +25,8 @@ import org.w3c.dom.get
 fun displayCharacters() {
     val section = document.getElementById("character-cards-section")!!
     clearSections()
+    document.title = "Wildermyth Legacy"
+    buildNav()
     section.append {
         getCharacterList().also { println("Building ${it.size} characters.") }
             .mapNotNull { localStorage[it] }

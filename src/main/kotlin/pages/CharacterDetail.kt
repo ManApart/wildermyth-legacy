@@ -14,6 +14,7 @@ fun characterDetail(character: Character) {
     val section = document.getElementById("character-cards-section")!!
     clearSections()
     window.location.hash = character.uuid
+    document.title = character.name
     section.append {
         div {
             button {
