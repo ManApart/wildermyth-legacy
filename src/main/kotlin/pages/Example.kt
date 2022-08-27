@@ -7,8 +7,10 @@ import jsonMapper
 import kotlinx.browser.localStorage
 import kotlinx.html.InputType
 import kotlinx.serialization.encodeToString
+import org.khronos.webgl.ArrayBuffer
 import org.w3c.dom.set
 import org.w3c.files.Blob
+import org.w3c.files.FileReader
 import org.w3c.xhr.BLOB
 import org.w3c.xhr.XMLHttpRequest
 import org.w3c.xhr.XMLHttpRequestResponseType
@@ -37,6 +39,7 @@ fun loadExample() {
         )
     ).then {
         doRouting()
+        loadZipIfPresent()
     }
 }
 
@@ -45,7 +48,7 @@ private fun loadBlob(url: String): Promise<Blob> {
         XMLHttpRequest().apply {
             open("GET", url)
             responseType = XMLHttpRequestResponseType.BLOB
-            onerror = { println("Failed to get image") }
+            onerror = { println("Failed to get blob") }
             onload = {
                 resolve(response as Blob)
             }
@@ -53,4 +56,20 @@ private fun loadBlob(url: String): Promise<Blob> {
         }
     }
 
+}
+
+private fun loadZipIfPresent() {
+    loadBlob("characters.zip").then { blob ->
+        if (blob.size.toInt() > 200) {
+            println("Found Zip")
+            val reader = FileReader()
+            reader.onload = {
+                importZip(reader.result as ArrayBuffer)
+            }
+            reader.onerror = { error ->
+                console.error("Failed to read File $error")
+            }
+            reader.readAsArrayBuffer(blob)
+        }
+    }
 }

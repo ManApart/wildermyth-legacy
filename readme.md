@@ -2,7 +2,7 @@
 
 ## Deploying
 ```
-cp -r ../wildermyth-legacy/build/distributions/* .
+cp -r ../wildermyth-legacy/build/distributions/* . && rm characters.zip
 ```
 
 ## TODO
