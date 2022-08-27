@@ -81,7 +81,6 @@ fun parseLegacyCharacter(json: Json): LegacyCharacter {
 }
 
 fun parseCharacter(uuid: String, json: Json): Character {
-    println("Parsing $uuid")
     val allEntities = (json["entities"] as Array<Array<Json>>)
     val characterEntities = allEntities.first { option ->
         option[0]["value"] == uuid

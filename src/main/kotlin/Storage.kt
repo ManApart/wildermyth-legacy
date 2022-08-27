@@ -18,7 +18,6 @@ fun saveCharacterList(list: Set<String>) {
 }
 
 fun getCharacter(uuid: String): Character? {
-    println(inMemoryStorage.keys)
     return inMemoryStorage[uuid]?.let { jsonMapper.decodeFromString(it) }
 }
 

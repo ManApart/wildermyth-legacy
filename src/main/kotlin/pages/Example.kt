@@ -1,18 +1,13 @@
 package pages
 
-import defaultData
 import doRouting
 import getCharacterList
-import jsonMapper
-import kotlinx.browser.localStorage
 import kotlinx.browser.window
-import kotlinx.html.InputType
-import kotlinx.serialization.encodeToString
 import org.khronos.webgl.ArrayBuffer
-import org.w3c.dom.set
 import org.w3c.files.Blob
 import org.w3c.files.FileReader
 import org.w3c.xhr.BLOB
+import org.w3c.xhr.JSON
 import org.w3c.xhr.XMLHttpRequest
 import org.w3c.xhr.XMLHttpRequestResponseType
 import saveCharacter
@@ -21,29 +16,29 @@ import savePicture
 import kotlin.js.Json
 import kotlin.js.Promise
 
-private const val loadZip = true
+private const val loadZip = false
 
 fun loadExample() {
-    println("Loading data")
-    val json = JSON.parse<Json>(defaultData)
-    val example = parseLegacyCharacter(json)
-    saveCharacter(example.snapshots.first())
-    val characters = getCharacterList()
-    characters.add(example.uuid)
-    saveCharacterList(characters)
+    loadJson("example/data.json").then { json ->
+        val example = parseLegacyCharacter(json)
+        saveCharacter(example.snapshots.first())
+        val characters = getCharacterList()
+        characters.add(example.uuid)
+        saveCharacterList(characters)
 
-    Promise.all(
-        arrayOf(
-            loadBlob("example/body.png").then {
-                savePicture(example.uuid + "/body", it)
-            },
-            loadBlob("example/default.png").then {
-                savePicture(example.uuid + "/head", it)
-            }
-        )
-    ).then {
-        doRouting()
-        if (loadZip) loadZipIfPresent(window.location.hash.isBlank())
+        Promise.all(
+            arrayOf(
+                loadBlob("example/body.png").then {
+                    savePicture(example.uuid + "/body", it)
+                },
+                loadBlob("example/default.png").then {
+                    savePicture(example.uuid + "/head", it)
+                }
+            )
+        ).then {
+            doRouting()
+            if (loadZip) loadZipIfPresent(window.location.hash.isBlank())
+        }
     }
 }
 
@@ -55,6 +50,20 @@ private fun loadBlob(url: String): Promise<Blob> {
             onerror = { println("Failed to get blob") }
             onload = {
                 resolve(response as Blob)
+            }
+            send()
+        }
+    }
+}
+
+private fun loadJson(url: String): Promise<Json> {
+    return Promise { resolve, reject ->
+        XMLHttpRequest().apply {
+            open("GET", url)
+            responseType = XMLHttpRequestResponseType.JSON
+            onerror = { println("Failed to get Json") }
+            onload = {
+                resolve(response as Json)
             }
             send()
         }
