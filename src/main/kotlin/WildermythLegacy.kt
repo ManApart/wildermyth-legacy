@@ -18,10 +18,11 @@ fun main() {
     window.onload = {
         loadExample()
     }
+    window.addEventListener("popstate", { doRouting() })
 }
 
 fun doRouting() {
-     doRouting(window.location.hash)
+    doRouting(window.location.hash)
 }
 
 fun doRouting(windowHash: String) {

@@ -25,8 +25,8 @@ fun saveCharacter(character: Character){
     inMemoryStorage[character.uuid] = jsonMapper.encodeToString(character)
 }
 
-fun getPicture(path: String): String {
-    return inMemoryStorage[path] ?: ""
+fun getPicture(path: String): String? {
+    return inMemoryStorage[path]
 }
 
 fun savePicture(path: String, blob: Blob): Promise<Unit> {
