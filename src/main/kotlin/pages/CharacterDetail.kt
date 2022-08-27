@@ -37,7 +37,7 @@ fun characterDetail(character: Character) {
                 }
             }
         }
-        characterCard(character)
+        characterCard(character, false)
         div("character-section") { id = "history-entries" }
             .historySection(character, additionalInfo)
         div("character-section") { id = "abilities-section" }

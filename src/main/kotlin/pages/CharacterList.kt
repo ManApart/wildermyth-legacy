@@ -34,7 +34,7 @@ fun displayCharacters() {
             .mapNotNull { getCharacter(it) }
             .sortedWith(compareBy<Character> { it.name.split(" ").last() }.thenBy { it.name.split(" ").first() })
             .forEach { character ->
-                characterCard(character)
+                characterCard(character, true)
             }
     }
     scrollToCharacter()
@@ -47,15 +47,15 @@ private fun scrollToCharacter() {
     }
 }
 
-fun TagConsumer<HTMLElement>.characterCard(character: Character) {
+fun TagConsumer<HTMLElement>.characterCard(character: Character, clickable: Boolean) {
     with(character) {
         val className = characterClass.name.lowercase()
         val topTrait = personality.entries.maxBy { it.value }.key
         val secondTrait = personality.entries.filterNot { it.key == topTrait }.maxBy { it.value }.key
         val animDelay = (0..10).random() / 10.0
         div("character-card") {
-            id= character.uuid
-            onClickFunction = { characterDetail(character) }
+            id = character.uuid
+            if (clickable) onClickFunction = { characterDetail(character) }
             h1 {
                 +name
             }

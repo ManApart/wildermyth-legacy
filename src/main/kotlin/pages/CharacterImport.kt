@@ -1,5 +1,6 @@
 package pages
 
+import AdditionalInfo
 import Aspect
 import Character
 import Company
@@ -12,8 +13,10 @@ import doRouting
 import getCharacterList
 import jsonMapper
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.JsonNull.content
 import org.khronos.webgl.ArrayBuffer
 import org.w3c.files.Blob
+import saveAdditionalInfo
 import saveCompanies
 import kotlin.js.Json
 import saveCharacter
@@ -26,7 +29,14 @@ private val companies = mutableMapOf<String, Company>()
 fun importZip(data: ArrayBuffer, originalHash: String) {
     JSZip().loadAsync(data).then { zip ->
         val keys = JsonObject.keys(zip.files)
+        handleAdditionalInfo(zip, keys)
         handleZipCharacterData(zip, keys, originalHash)
+    }
+}
+
+private fun handleAdditionalInfo(zip: JSZip.ZipObject, keys: List<String>){
+    zip.file("AdditionalInfo.json")?.async<String>("string")?.then { content ->
+        saveAdditionalInfo(jsonMapper.decodeFromString<MutableMap<String, AdditionalInfo>>(content))
     }
 }
 

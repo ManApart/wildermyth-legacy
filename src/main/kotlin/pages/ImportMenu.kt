@@ -62,27 +62,14 @@ fun importMenu() {
                     val file = element.files!![0]!!
                     val reader = FileReader()
                     reader.onload = {
-                        if (file.name == "AdditionalInfo.json") {
-                            importAdditionalInfo(reader.result as String)
-                        } else {
-                            importZip(reader.result as ArrayBuffer, window.location.hash)
-                        }
+                        importZip(reader.result as ArrayBuffer, window.location.hash)
                     }
                     reader.onerror = { error ->
                         console.error("Failed to read File $error")
                     }
-                    if (file.name == "AdditionalInfo.json") {
-                        reader.readAsText(file)
-                    } else {
-                        reader.readAsArrayBuffer(file)
-                    }
+                    reader.readAsArrayBuffer(file)
                 }
             }
         }
     }
-}
-
-fun importAdditionalInfo(content: String) {
-    saveAdditionalInfo(jsonMapper.decodeFromString<MutableMap<String, AdditionalInfo>>(content))
-    displayCharacters()
 }
