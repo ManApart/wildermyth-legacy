@@ -3,19 +3,14 @@ import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import kotlinx.html.*
 import kotlinx.html.dom.append
-import kotlinx.html.js.button
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.table
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
-import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.get
-import org.w3c.dom.set
-import org.w3c.files.Blob
-import org.w3c.files.FileReader
-import pages.*
-import kotlin.js.Promise
+import pages.characterDetail
+import pages.displayCharacters
+import pages.importMenu
+import pages.loadExample
 
 val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
 
@@ -83,7 +78,7 @@ fun buildNav() {
 private fun downloadAdditionalInfo() {
     val download = document.createElement("a") as HTMLElement
     download.setAttribute("href", "data:text/plain;charset=utf-8," + jsonMapper.encodeToString(getAdditionalInfo()))
-    download.setAttribute("download", "additionalInfo.json")
+    download.setAttribute("download", "AdditionalInfo.json")
     document.body?.append(download)
     download.click()
     document.body?.removeChild(download)
