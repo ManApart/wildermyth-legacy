@@ -22,19 +22,18 @@ import saveAdditionalInfo
 import kotlin.js.Date
 
 fun characterDetail(character: Character) {
-    println("Detail for ${character.name}")
     val additionalInfo = getAdditionalInfo(character.uuid)
     val section = document.getElementById("character-cards-section")!!
     clearSections()
     document.title = character.name
     document.documentElement?.scrollTop = 0.0
-    window.history.pushState(null, "null", "#" + character.uuid)
+    window.history.pushState(null, "null", "#detail/" + character.uuid)
     section.append {
         div {
             button {
                 +"Back"
                 onClickFunction = {
-                    window.location.hash = "#"
+                    window.location.hash = "#${character.uuid}"
                 }
             }
         }

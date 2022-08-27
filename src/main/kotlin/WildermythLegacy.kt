@@ -28,8 +28,8 @@ fun doRouting() {
 }
 
 fun doRouting(windowHash: String) {
-    if (windowHash.isNotBlank()) {
-        val hash = windowHash.replace("#", "")
+    if (windowHash.startsWith("#detail/")) {
+        val hash = windowHash.replace("#detail/", "")
         getCharacter(hash)?.let { character ->
             characterDetail(character)
         } ?: displayCharacters()

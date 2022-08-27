@@ -28,9 +28,7 @@ fun displayCharacters() {
     val section = document.getElementById("character-cards-section")!!
     clearSections()
     document.title = "Wildermyth Legacy"
-    window.history.pushState(null, "null", "")
     buildNav()
-//    document.documentElement?.scrollTop = 0.0
     section.append {
         getCharacterList().also { println("Building ${it.size} characters.") }
             .mapNotNull { getCharacter(it) }
@@ -39,11 +37,18 @@ fun displayCharacters() {
                 characterCard(character)
             }
     }
+    scrollToCharacter()
+}
+
+private fun scrollToCharacter() {
+    val hashId = window.location.hash.replace("#", "")
+    document.getElementById(hashId)?.let { scroll ->
+        scroll.scrollIntoView()
+    }
 }
 
 fun TagConsumer<HTMLElement>.characterCard(character: Character) {
     with(character) {
-//                    println("Building ${character.name}")
         val className = characterClass.name.lowercase()
         val topTrait = personality.entries.maxBy { it.value }.key
         val secondTrait = personality.entries.filterNot { it.key == topTrait }.maxBy { it.value }.key
