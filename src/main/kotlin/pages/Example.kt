@@ -5,6 +5,7 @@ import doRouting
 import getCharacterList
 import jsonMapper
 import kotlinx.browser.localStorage
+import kotlinx.browser.window
 import kotlinx.html.InputType
 import kotlinx.serialization.encodeToString
 import org.khronos.webgl.ArrayBuffer
@@ -39,7 +40,7 @@ fun loadExample() {
         )
     ).then {
         doRouting()
-        loadZipIfPresent()
+        loadZipIfPresent(window.location.hash.isBlank())
     }
 }
 
@@ -55,16 +56,14 @@ private fun loadBlob(url: String): Promise<Blob> {
             send()
         }
     }
-
 }
 
-private fun loadZipIfPresent() {
+private fun loadZipIfPresent(refreshCharacters: Boolean) {
     loadBlob("characters.zip").then { blob ->
         if (blob.size.toInt() > 200) {
-            println("Found Zip")
             val reader = FileReader()
             reader.onload = {
-                importZip(reader.result as ArrayBuffer)
+                importZip(reader.result as ArrayBuffer, refreshCharacters)
             }
             reader.onerror = { error ->
                 console.error("Failed to read File $error")

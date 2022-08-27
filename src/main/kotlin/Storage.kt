@@ -18,6 +18,7 @@ fun saveCharacterList(list: Set<String>) {
 }
 
 fun getCharacter(uuid: String): Character? {
+//    println(inMemoryStorage.keys)
     return inMemoryStorage[uuid]?.let { jsonMapper.decodeFromString(it) }
 }
 
@@ -45,7 +46,7 @@ fun getAdditionalInfo(): MutableMap<String, AdditionalInfo>{
 }
 
 fun saveAdditionalInfo(info: MutableMap<String, AdditionalInfo>){
-    localStorage["additional-info"] = jsonMapper.encodeToString(info).also { println("Saved $it") }
+    localStorage["additional-info"] = jsonMapper.encodeToString(info)
 }
 
 fun getAdditionalInfo(uuid: String): AdditionalInfo{

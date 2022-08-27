@@ -8,36 +8,23 @@ import JSZip
 import JsonObject
 import getCharacterList
 import jsonMapper
-import kotlinx.browser.document
-import kotlinx.browser.localStorage
-import kotlinx.html.*
-import kotlinx.html.dom.append
-import kotlinx.html.js.input
-import kotlinx.html.js.onChangeFunction
-import kotlinx.html.js.onClickFunction
 import kotlinx.serialization.decodeFromString
 import org.khronos.webgl.ArrayBuffer
-import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.set
 import org.w3c.files.Blob
-import org.w3c.files.FileReader
-import org.w3c.files.get
 import kotlin.js.Json
-import kotlinx.serialization.encodeToString
-import org.w3c.dom.HTMLButtonElement
 import saveCharacter
 import saveCharacterList
 import savePicture
 import kotlin.js.Promise
 
-fun importZip(data: ArrayBuffer) {
+fun importZip(data: ArrayBuffer, refreshCharacters: Boolean = true) {
     JSZip().loadAsync(data).then { zip ->
         val keys = JsonObject.keys(zip.files)
-        handleZipCharacterData(zip, keys)
+        handleZipCharacterData(zip, keys, refreshCharacters)
     }
 }
 
-private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
+private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, refreshCharacters: Boolean) {
     val characters = getCharacterList()
     val promises = keys.filter { fileName ->
         fileName.endsWith("data.json")
@@ -52,7 +39,9 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>) {
         }
     }.toTypedArray()
     Promise.all(promises).then {
-        displayCharacters()
+        if (refreshCharacters) {
+            displayCharacters()
+        }
     }
 }
 

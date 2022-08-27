@@ -144,7 +144,8 @@ fun Element.aspectsSection(character: Character, additionalInfo: AdditionalInfo)
 
 fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relationship: String) {
     val relative = getCharacter(relativeUuid)
-    if (relative != null){
+
+    if (relative != null) {
         div {
             onClickFunction = { characterDetail(relative) }
             div {
@@ -157,7 +158,8 @@ fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relationship: St
         }
     } else {
         div {
-            +relativeUuid
+            h4 { +relationship }
+            p { +relativeUuid }
         }
     }
 }
