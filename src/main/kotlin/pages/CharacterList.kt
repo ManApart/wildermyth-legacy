@@ -13,6 +13,7 @@ import kotlinx.browser.window
 import kotlinx.html.TagConsumer
 import kotlinx.html.classes
 import kotlinx.html.dom.append
+import kotlinx.html.id
 import kotlinx.html.js.div
 import kotlinx.html.js.h1
 import kotlinx.html.js.img
@@ -27,9 +28,9 @@ fun displayCharacters() {
     val section = document.getElementById("character-cards-section")!!
     clearSections()
     document.title = "Wildermyth Legacy"
-    window.location.hash = ""
+    window.history.pushState(null, "null", "")
     buildNav()
-    document.documentElement?.scrollTop = 0.0
+//    document.documentElement?.scrollTop = 0.0
     section.append {
         getCharacterList().also { println("Building ${it.size} characters.") }
             .mapNotNull { getCharacter(it) }
@@ -48,6 +49,7 @@ fun TagConsumer<HTMLElement>.characterCard(character: Character) {
         val secondTrait = personality.entries.filterNot { it.key == topTrait }.maxBy { it.value }.key
         val animDelay = (0..10).random() / 10.0
         div("character-card") {
+            id= character.uuid
             onClickFunction = { characterDetail(character) }
             h1 {
                 +name

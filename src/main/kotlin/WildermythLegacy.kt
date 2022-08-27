@@ -18,7 +18,9 @@ fun main() {
     window.onload = {
         loadExample()
     }
-    window.addEventListener("popstate", { doRouting() })
+    window.addEventListener("popstate", { e ->
+        doRouting()
+    })
 }
 
 fun doRouting() {

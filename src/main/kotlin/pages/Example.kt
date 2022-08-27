@@ -44,7 +44,7 @@ fun loadExample() {
 }
 
 private fun loadBlob(url: String): Promise<Blob> {
-    return Promise { resolve, reject ->
+    return Promise { resolve, _ ->
         XMLHttpRequest().apply {
             open("GET", url)
             responseType = XMLHttpRequestResponseType.BLOB
@@ -58,7 +58,7 @@ private fun loadBlob(url: String): Promise<Blob> {
 }
 
 private fun loadJson(url: String): Promise<Json> {
-    return Promise { resolve, reject ->
+    return Promise { resolve, _ ->
         XMLHttpRequest().apply {
             open("GET", url)
             responseType = XMLHttpRequestResponseType.JSON

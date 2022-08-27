@@ -4,6 +4,7 @@ import AdditionalInfo
 import Character
 import HistoryEntry
 import clearSections
+import doRouting
 import el
 import getAdditionalInfo
 import getCharacter
@@ -25,14 +26,16 @@ fun characterDetail(character: Character) {
     val additionalInfo = getAdditionalInfo(character.uuid)
     val section = document.getElementById("character-cards-section")!!
     clearSections()
-    window.location.hash = character.uuid
     document.title = character.name
     document.documentElement?.scrollTop = 0.0
+    window.history.pushState(null, "null", "#" + character.uuid)
     section.append {
         div {
             button {
                 +"Back"
-                onClickFunction = { displayCharacters() }
+                onClickFunction = {
+                    window.location.hash = "#"
+                }
             }
         }
         characterCard(character)
@@ -140,8 +143,10 @@ private fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relation
     if (relative != null) {
         div("relationship") {
             onClickFunction = { characterDetail(relative) }
-            img(classes = "relationship-pic") {
-                src = getPicture("$relativeUuid/head")
+            getPicture("$relativeUuid/head")?.let { picture ->
+                img(classes = "relationship-pic") {
+                    src = picture
+                }
             }
             div("relationship-text") {
                 h4 { +relationship }
