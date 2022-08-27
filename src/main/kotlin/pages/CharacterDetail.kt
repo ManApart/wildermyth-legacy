@@ -138,15 +138,16 @@ private fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relation
     val relative = getCharacter(relativeUuid)
 
     if (relative != null) {
-        div {
+        div("relationship") {
             onClickFunction = { characterDetail(relative) }
-            div {
+            img(classes = "relationship-pic") {
+                src = getPicture("$relativeUuid/head")
+            }
+            div("relationship-text") {
                 h4 { +relationship }
                 p { +relative.name }
             }
-            img {
-                src = getPicture("$relativeUuid/head")
-            }
+
         }
     } else {
         div {
