@@ -1,22 +1,215 @@
-val simpleDefault = """{"name": "Guy", "age": 5}"""
-
 val defaultData  = """
     {
-      "roles": {
-        "class": "roleMap",
-        "legend": [
-          {
-            "class": "actionTarget",
-            "entityId": {
-              "value": "a0640950-920d-44b4-ab56-8ff934845d21"
-            }
-          }
-        ]
+
+  "id": {
+    "value": "57d5bc24-2960-450c-8561-d0530ca2f6a8"
+  },
+  "type": "INDIVIDUAL",
+  "snapshots": [
+    {
+      "gameId": {
+        "value": "a7b7e62c-76d5-477d-8da6-0aabf6cab345"
       },
+      "date": 1659812197753,
       "entities": [
         [
           {
-            "value": "a0640950-920d-44b4-ab56-8ff934845d21"
+            "value": "3e009b15-ffee-4d85-ab3b-9c7fcecdcb69"
+          },
+          "status",
+          {
+            "name": "The Star Lance",
+            "nameGenData": {
+              "name": "The Star Lance",
+              "tokens": {
+                "spear2handName": "The Star Lance",
+                "spear2handName.raw": "The <Spear2handVirtue> <Spear2handWord>",
+                "spear2handVirtue": "star",
+                "spear2handVirtue.raw": "star",
+                "spear2handWord": "lance",
+                "spear2handWord.raw": "lance"
+              }
+            },
+            "localizableName": "item.spear2hand_t1_basic",
+            "aspects": {
+              "keyType": "java.lang.String",
+              "valueType": "aspectInstance",
+              "entries": [
+                [
+                  "melee",
+                  {
+                    "aspect": "melee",
+                    "value": 1
+                  }
+                ],
+                [
+                  "slot_MAIN_HAND",
+                  {
+                    "aspect": "slot_MAIN_HAND",
+                    "value": 1
+                  }
+                ],
+                [
+                  "slot_OFF_HAND",
+                  {
+                    "aspect": "slot_OFF_HAND",
+                    "value": 1
+                  }
+                ],
+                [
+                  "weapon",
+                  {
+                    "aspect": "weapon",
+                    "value": 1
+                  }
+                ],
+                [
+                  "weaponDamage",
+                  {
+                    "aspect": "weaponDamage",
+                    "value": 6
+                  }
+                ],
+                [
+                  "weaponMaxRange",
+                  {
+                    "aspect": "weaponMaxRange",
+                    "value": 2.1
+                  }
+                ],
+                [
+                  "weaponWield",
+                  {
+                    "aspect": "weaponWield",
+                    "value": 2
+                  }
+                ]
+              ]
+            }
+          },
+          "item",
+          {
+            "itemId": "spear2hand_t1_basic",
+            "category": "spear",
+            "subCategory": "twoHandedSpear",
+            "tier": 1,
+            "slots": [
+              "MAIN_HAND",
+              "OFF_HAND"
+            ],
+            "ownerAspects": [
+              "attackRange|0|2.1|melee",
+              "weaponAttack_basicMelee",
+              "voiceSpear",
+              "slotFilled_MAIN_HAND",
+              "slotFilled_OFF_HAND"
+            ],
+            "owner": {
+              "value": "57d5bc24-2960-450c-8561-d0530ca2f6a8"
+            },
+            "isEquipped": true,
+            "layers": [
+              {
+                "name": "item_spear2_t1_basicA_untinted",
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "rigUsage": "rigGeneral",
+                "grip": "mainHand",
+                "inactiveGrip": "highBack",
+                "gripOffset": {
+                  "x": 170,
+                  "y": 350
+                }
+              },
+              {
+                "name": "item_spear2_t1_basicB_tint1_100",
+                "tint": "secondary",
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "depth": 1,
+                "rigUsage": "rigGeneral",
+                "grip": "mainHand",
+                "inactiveGrip": "highBack",
+                "gripOffset": {
+                  "x": 170,
+                  "y": 350
+                }
+              }
+            ]
+          },
+          "history",
+          {
+            "entries": [
+              {
+                "staticName": "item.spear2hand_t1_basic"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            "value": "3e14e00e-7c08-4622-b236-37b245c1d6ca"
+          },
+          "status",
+          {
+            "name": "Spellshard",
+            "localizableName": "item.spellshard",
+            "aspects": {
+              "keyType": "java.lang.String",
+              "valueType": "aspectInstance",
+              "entries": [
+                [
+                  "slot_OFF_HAND",
+                  {
+                    "aspect": "slot_OFF_HAND",
+                    "value": 1
+                  }
+                ]
+              ]
+            }
+          },
+          "item",
+          {
+            "itemId": "spellshard",
+            "category": "offHand",
+            "uniqueCategory": "spellshard",
+            "artifact": true,
+            "tier": 1,
+            "slots": [
+              "OFF_HAND"
+            ],
+            "ownerAspects": [
+              "spellshard",
+              "slotFilled_OFF_HAND"
+            ],
+            "owner": {
+              "value": "57d5bc24-2960-450c-8561-d0530ca2f6a8"
+            },
+            "layers": [
+              {
+                "name": "item_offhand_spellshard",
+                "rigUsage": "rigGeneral",
+                "grip": "offHand",
+                "gripOffset": {
+                  "x": 23,
+                  "y": 93
+                },
+                "useGripRotation": false
+              }
+            ]
+          },
+          "history",
+          {
+            "entries": [
+              {
+                "staticName": "item.spellshard"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            "value": "57d5bc24-2960-450c-8561-d0530ca2f6a8"
           },
           "status",
           {
@@ -108,27 +301,27 @@ val defaultData  = """
                   "childOf|666d7dfe-a262-44d1-9f07-bddc229ea037",
                   {
                     "aspect": "childOf|666d7dfe-a262-44d1-9f07-bddc229ea037",
-                    "value": 1
+                    "value": 37
                   }
                 ],
                 [
                   "childOf|b962b2c2-5ce0-4f0d-98ab-9effccb06bb6",
                   {
                     "aspect": "childOf|b962b2c2-5ce0-4f0d-98ab-9effccb06bb6",
+                    "value": 37
+                  }
+                ],
+                [
+                  "classLevel|warrior|2",
+                  {
+                    "aspect": "classLevel|warrior|2",
                     "value": 1
                   }
                 ],
                 [
-                  "classLevel|warrior|1",
+                  "earlyMiddleAge",
                   {
-                    "aspect": "classLevel|warrior|1",
-                    "value": 1
-                  }
-                ],
-                [
-                  "doNotShowWeapons",
-                  {
-                    "aspect": "doNotShowWeapons",
+                    "aspect": "earlyMiddleAge",
                     "value": 1
                   }
                 ],
@@ -143,6 +336,20 @@ val defaultData  = """
                   "exFarmer",
                   {
                     "aspect": "exFarmer",
+                    "value": 1
+                  }
+                ],
+                [
+                  "familyWith|666d7dfe-a262-44d1-9f07-bddc229ea037",
+                  {
+                    "aspect": "familyWith|666d7dfe-a262-44d1-9f07-bddc229ea037",
+                    "value": 1
+                  }
+                ],
+                [
+                  "familyWith|b962b2c2-5ce0-4f0d-98ab-9effccb06bb6",
+                  {
+                    "aspect": "familyWith|b962b2c2-5ce0-4f0d-98ab-9effccb06bb6",
                     "value": 1
                   }
                 ],
@@ -357,12 +564,6 @@ val defaultData  = """
                   }
                 ],
                 [
-                  "legacyTier",
-                  {
-                    "aspect": "legacyTier"
-                  }
-                ],
-                [
                   "male",
                   {
                     "aspect": "male",
@@ -387,6 +588,41 @@ val defaultData  = """
                   "myHometownIs|3408a1a3-4075-475b-9953-7a9e945c8fd0",
                   {
                     "aspect": "myHometownIs|3408a1a3-4075-475b-9953-7a9e945c8fd0",
+                    "value": 1
+                  }
+                ],
+                [
+                  "relationship_friend_1|33075f8d-03a9-4b3a-a872-2cbed93a23fa",
+                  {
+                    "aspect": "relationship_friend_1|33075f8d-03a9-4b3a-a872-2cbed93a23fa",
+                    "value": 1
+                  }
+                ],
+                [
+                  "relationship_friend_1|5ef9325b-ac4c-46c3-bb7e-c66c948a65e6",
+                  {
+                    "aspect": "relationship_friend_1|5ef9325b-ac4c-46c3-bb7e-c66c948a65e6",
+                    "value": 1
+                  }
+                ],
+                [
+                  "relationship_friend_1|666d7dfe-a262-44d1-9f07-bddc229ea037",
+                  {
+                    "aspect": "relationship_friend_1|666d7dfe-a262-44d1-9f07-bddc229ea037",
+                    "value": 1
+                  }
+                ],
+                [
+                  "relationship_friend_2|b962b2c2-5ce0-4f0d-98ab-9effccb06bb6",
+                  {
+                    "aspect": "relationship_friend_2|b962b2c2-5ce0-4f0d-98ab-9effccb06bb6",
+                    "value": 1
+                  }
+                ],
+                [
+                  "relationship_friend_5|29b8d04f-de98-49bd-b1ab-5552ab5039b8",
+                  {
+                    "aspect": "relationship_friend_5|29b8d04f-de98-49bd-b1ab-5552ab5039b8",
                     "value": 1
                   }
                 ],
@@ -511,7 +747,7 @@ val defaultData  = """
                 ],
                 [
                   "EXPERIENCE",
-                  0
+                  20
                 ],
                 [
                   "INJURY",
@@ -530,108 +766,6 @@ val defaultData  = """
                   0
                 ]
               ]
-            }
-          },
-          "mapLocation",
-          {
-            "x": 30,
-            "y": 30,
-            "regions": {
-              "keyType": "java.lang.String",
-              "valueType": "region",
-              "entries": [
-                [
-                  "blocksEnemyMovementRegion",
-                  {
-                    "id": "blocksEnemyMovementRegion",
-                    "elements": [
-                      {}
-                    ],
-                    "associatedFaction": {
-                      "value": "3b716125-d23f-4c24-a132-2c292b687b7d"
-                    },
-                    "entryCostSameFaction": 0.5,
-                    "entryCostOtherFaction": 10000
-                  }
-                ],
-                [
-                  "presence",
-                  {
-                    "id": "presence",
-                    "elements": [
-                      {}
-                    ],
-                    "physicallyPresent": true,
-                    "visibleAtLocation": true
-                  }
-                ],
-                [
-                  "wallingRegion",
-                  {
-                    "id": "wallingRegion",
-                    "elements": [
-                      {
-                        "dy": -1
-                      },
-                      {
-                        "dx": -1
-                      },
-                      {},
-                      {
-                        "dx": 1
-                      },
-                      {
-                        "dy": 1
-                      }
-                    ],
-                    "spatialRelationship": {
-                      "testAspects": [
-                        {
-                          "id": "hidden",
-                          "forbidden": true
-                        },
-                        {
-                          "id": "stasis",
-                          "forbidden": true
-                        },
-                        {
-                          "id": "canWallWithAllies"
-                        },
-                        {
-                          "id": "forbidWallWithAllies|*",
-                          "forbidden": true
-                        },
-                        {
-                          "id": "ALLY"
-                        }
-                      ],
-                      "testMyAspects": [
-                        {
-                          "id": "hidden",
-                          "forbidden": true
-                        },
-                        {
-                          "id": "stasis",
-                          "forbidden": true
-                        },
-                        {
-                          "id": "forbidWallWithAllies|*",
-                          "forbidden": true
-                        }
-                      ],
-                      "myAspect": "wallingWith"
-                    }
-                  }
-                ]
-              ]
-            },
-            "footprint": {
-              "id": "presence",
-              "elements": [
-                {}
-              ],
-              "physicallyPresent": true,
-              "visibleAtLocation": true
             }
           },
           "attachments",
@@ -736,17 +870,6 @@ val defaultData  = """
                 "value": "85fdf0f1-6843-47a6-9a86-79ad6841d52a"
               }
             ]
-          },
-          "hero",
-          {},
-          "controlled",
-          {
-            "controllerFaction": {
-              "value": "3b716125-d23f-4c24-a132-2c292b687b7d"
-            },
-            "ownerFaction": {
-              "value": "3b716125-d23f-4c24-a132-2c292b687b7d"
-            }
           },
           "history",
           {
@@ -961,22 +1084,6 @@ val defaultData  = """
                 "removeAspects": [
                   "classLevel|warrior|1"
                 ]
-              },
-              {
-                "id": "legacyHero.tier_0",
-                "associatedAspects": [
-                  "legacyTier:0",
-                  "classLevel|warrior|1"
-                ],
-                "persistOverLegacy": "legacyInfo",
-                "removeAspects": [
-                  "classLevel|warrior|0",
-                  "classLevel|warrior|2",
-                  "classLevel|warrior|3",
-                  "classLevel|warrior|4",
-                  "classLevel|warrior|5",
-                  "classLevel|warrior|6"
-                ]
               }
             ],
             "legacyAspects": {
@@ -1023,8 +1130,8 @@ val defaultData  = """
           },
           "individual",
           {
-            "dataVersion": 450,
-            "skinVersion": 450,
+            "dataVersion": 431,
+            "skinVersion": 431,
             "scale": [
               1.0732715,
               1.0901104
@@ -1074,7 +1181,7 @@ val defaultData  = """
                 "type": "RIG_PART",
                 "slot": "BODY",
                 "depth": 1200,
-                "name": "warriorM_armL",
+                "name": "warriorM_armL2upper",
                 "multiplyColor": {
                   "r": 0.8,
                   "g": 0.6,
@@ -1086,7 +1193,7 @@ val defaultData  = """
                 "type": "RIG_PART",
                 "slot": "BODY",
                 "depth": 1200,
-                "name": "warriorM_armR",
+                "name": "warriorM_armR2",
                 "multiplyColor": {
                   "r": 0.8,
                   "g": 0.6,
@@ -1123,30 +1230,6 @@ val defaultData  = """
                 "slot": "BODY",
                 "depth": 2100,
                 "name": "warriorM_armor_baseChain_torso",
-                "multiplyColor": {
-                  "r": 0.4392157,
-                  "g": 0.44313726,
-                  "b": 0.6745098,
-                  "a": 1
-                }
-              },
-              {
-                "type": "RIG_PART",
-                "slot": "BODY",
-                "depth": 2200,
-                "name": "warriorM_armor_baseChain_armL",
-                "multiplyColor": {
-                  "r": 0.4392157,
-                  "g": 0.44313726,
-                  "b": 0.6745098,
-                  "a": 1
-                }
-              },
-              {
-                "type": "RIG_PART",
-                "slot": "BODY",
-                "depth": 2200,
-                "name": "warriorM_armor_baseChain_armR",
                 "multiplyColor": {
                   "r": 0.4392157,
                   "g": 0.44313726,
@@ -1205,8 +1288,44 @@ val defaultData  = """
               {
                 "type": "RIG_PART",
                 "slot": "BODY",
-                "depth": 2500,
-                "name": "warriorM_armorMail2_armL_tint1",
+                "depth": 3000,
+                "name": "warriorM_armL2lower",
+                "multiplyColor": {
+                  "r": 0.8,
+                  "g": 0.6,
+                  "b": 0.49019608,
+                  "a": 1
+                }
+              },
+              {
+                "type": "RIG_PART",
+                "slot": "BODY",
+                "depth": 3200,
+                "name": "warriorM_armor_baseChain_armL2",
+                "multiplyColor": {
+                  "r": 0.4392157,
+                  "g": 0.44313726,
+                  "b": 0.6745098,
+                  "a": 1
+                }
+              },
+              {
+                "type": "RIG_PART",
+                "slot": "BODY",
+                "depth": 3200,
+                "name": "warriorM_armor_baseChain_armR2",
+                "multiplyColor": {
+                  "r": 0.4392157,
+                  "g": 0.44313726,
+                  "b": 0.6745098,
+                  "a": 1
+                }
+              },
+              {
+                "type": "RIG_PART",
+                "slot": "BODY",
+                "depth": 3500,
+                "name": "warriorM_armorMail2_armL2_tint1",
                 "multiplyColor": {
                   "r": 0.57843137,
                   "g": 0.65294117,
@@ -1217,8 +1336,8 @@ val defaultData  = """
               {
                 "type": "RIG_PART",
                 "slot": "BODY",
-                "depth": 2500,
-                "name": "warriorM_armorMail2_armR_tint1",
+                "depth": 3500,
+                "name": "warriorM_armorMail2_armR2_tint1",
                 "multiplyColor": {
                   "r": 0.57843137,
                   "g": 0.65294117,
@@ -1916,8 +2035,52 @@ val defaultData  = """
               {
                 "type": "RIG_PART",
                 "slot": "BODY",
-                "depth": 6000,
-                "name": "warriorM_handL_open",
+                "depth": 7000,
+                "name": "item_spear2_t1_basicA_untinted",
+                "position": {
+                  "x": 225,
+                  "y": 209
+                },
+                "origin": {
+                  "x": 170,
+                  "y": 350
+                },
+                "scale": {
+                  "x": 0.5,
+                  "y": 0.5
+                },
+                "rotateDegrees": -58
+              },
+              {
+                "type": "RIG_PART",
+                "slot": "BODY",
+                "depth": 7001,
+                "name": "item_spear2_t1_basicB_tint1_100",
+                "multiplyColor": {
+                  "r": 0.4392157,
+                  "g": 0.44313726,
+                  "b": 0.6745098,
+                  "a": 1
+                },
+                "position": {
+                  "x": 225,
+                  "y": 209
+                },
+                "origin": {
+                  "x": 170,
+                  "y": 350
+                },
+                "scale": {
+                  "x": 0.5,
+                  "y": 0.5
+                },
+                "rotateDegrees": -58
+              },
+              {
+                "type": "RIG_PART",
+                "slot": "BODY",
+                "depth": 8000,
+                "name": "warriorM_handL_2handed",
                 "multiplyColor": {
                   "r": 0.8,
                   "g": 0.6,
@@ -1929,7 +2092,7 @@ val defaultData  = """
                 "type": "RIG_PART",
                 "slot": "BODY",
                 "depth": 8000,
-                "name": "warriorM_handR",
+                "name": "warriorM_handR_2handed",
                 "multiplyColor": {
                   "r": 0.8,
                   "g": 0.6,
@@ -1943,74 +2106,21 @@ val defaultData  = """
         ],
         [
           {
-            "value": "3e009b15-ffee-4d85-ab3b-9c7fcecdcb69"
+            "value": "85fdf0f1-6843-47a6-9a86-79ad6841d52a"
           },
           "status",
           {
-            "name": "The Star Lance",
-            "nameGenData": {
-              "name": "The Star Lance",
-              "tokens": {
-                "spear2handName": "The Star Lance",
-                "spear2handName.raw": "The <Spear2handVirtue> <Spear2handWord>",
-                "spear2handVirtue": "star",
-                "spear2handVirtue.raw": "star",
-                "spear2handWord": "lance",
-                "spear2handWord.raw": "lance"
-              }
-            },
-            "localizableName": "item.spear2hand_t1_basic",
+            "name": "Pauldrons of Faith",
+            "localizableName": "item.augment_pauldronStructure",
             "aspects": {
               "keyType": "java.lang.String",
               "valueType": "aspectInstance",
               "entries": [
                 [
-                  "melee",
+                  "slot_AUGMENT_PAULDRON",
                   {
-                    "aspect": "melee",
+                    "aspect": "slot_AUGMENT_PAULDRON",
                     "value": 1
-                  }
-                ],
-                [
-                  "slot_MAIN_HAND",
-                  {
-                    "aspect": "slot_MAIN_HAND",
-                    "value": 1
-                  }
-                ],
-                [
-                  "slot_OFF_HAND",
-                  {
-                    "aspect": "slot_OFF_HAND",
-                    "value": 1
-                  }
-                ],
-                [
-                  "weapon",
-                  {
-                    "aspect": "weapon",
-                    "value": 1
-                  }
-                ],
-                [
-                  "weaponDamage",
-                  {
-                    "aspect": "weaponDamage",
-                    "value": 6
-                  }
-                ],
-                [
-                  "weaponMaxRange",
-                  {
-                    "aspect": "weaponMaxRange",
-                    "value": 2.1
-                  }
-                ],
-                [
-                  "weaponWield",
-                  {
-                    "aspect": "weaponWield",
-                    "value": 2
                   }
                 ]
               ]
@@ -2018,51 +2128,48 @@ val defaultData  = """
           },
           "item",
           {
-            "itemId": "spear2hand_t1_basic",
-            "category": "spear",
-            "subCategory": "twoHandedSpear",
+            "itemId": "augment_pauldronStructure",
+            "variantId": "hpInStructures",
+            "category": "augment",
             "tier": 1,
+            "upgrades": [
+              "hpInStructures"
+            ],
             "slots": [
-              "MAIN_HAND",
-              "OFF_HAND"
+              "AUGMENT_PAULDRON"
             ],
             "ownerAspects": [
-              "attackRange|0|2.1|melee",
-              "weaponAttack_basicMelee",
-              "voiceSpear",
-              "slotFilled_MAIN_HAND",
-              "slotFilled_OFF_HAND"
+              "slotFilled_AUGMENT_PAULDRON",
+              "augmentBuffHealth"
             ],
             "owner": {
-              "value": "a0640950-920d-44b4-ab56-8ff934845d21"
+              "value": "57d5bc24-2960-450c-8561-d0530ca2f6a8"
             },
             "isEquipped": true,
             "layers": [
               {
-                "name": "item_spear2_t1_basicA_untinted",
-                "scaleX": 0.5,
-                "scaleY": 0.5,
-                "rigUsage": "rigGeneral",
-                "grip": "mainHand",
-                "inactiveGrip": "highBack",
-                "gripOffset": {
-                  "x": 170,
-                  "y": 350
-                }
+                "name": "augment_pauldronFieldLA_untinted",
+                "bodyPart": "leftArm",
+                "depth": 3580
               },
               {
-                "name": "item_spear2_t1_basicB_tint1_100",
+                "name": "augment_pauldronFieldLB_tint2",
                 "tint": "secondary",
-                "scaleX": 0.5,
-                "scaleY": 0.5,
-                "depth": 1,
-                "rigUsage": "rigGeneral",
-                "grip": "mainHand",
-                "inactiveGrip": "highBack",
-                "gripOffset": {
-                  "x": 170,
-                  "y": 350
-                }
+                "tintAmount": 0.8,
+                "bodyPart": "leftArm",
+                "depth": 3581
+              },
+              {
+                "name": "augment_pauldronFieldRA_untinted",
+                "bodyPart": "rightArm",
+                "depth": 3980
+              },
+              {
+                "name": "augment_pauldronFieldRB_tint2",
+                "tint": "secondary",
+                "tintAmount": 0.8,
+                "bodyPart": "rightArm",
+                "depth": 3981
               }
             ]
           },
@@ -2070,68 +2177,7 @@ val defaultData  = """
           {
             "entries": [
               {
-                "staticName": "item.spear2hand_t1_basic"
-              }
-            ]
-          }
-        ],
-        [
-          {
-            "value": "3e14e00e-7c08-4622-b236-37b245c1d6ca"
-          },
-          "status",
-          {
-            "name": "Spellshard",
-            "localizableName": "item.spellshard",
-            "aspects": {
-              "keyType": "java.lang.String",
-              "valueType": "aspectInstance",
-              "entries": [
-                [
-                  "slot_OFF_HAND",
-                  {
-                    "aspect": "slot_OFF_HAND",
-                    "value": 1
-                  }
-                ]
-              ]
-            }
-          },
-          "item",
-          {
-            "itemId": "spellshard",
-            "category": "offHand",
-            "uniqueCategory": "spellshard",
-            "artifact": true,
-            "tier": 1,
-            "slots": [
-              "OFF_HAND"
-            ],
-            "ownerAspects": [
-              "spellshard",
-              "slotFilled_OFF_HAND"
-            ],
-            "owner": {
-              "value": "a0640950-920d-44b4-ab56-8ff934845d21"
-            },
-            "layers": [
-              {
-                "name": "item_offhand_spellshard",
-                "rigUsage": "rigGeneral",
-                "grip": "offHand",
-                "gripOffset": {
-                  "x": 23,
-                  "y": 93
-                },
-                "useGripRotation": false
-              }
-            ]
-          },
-          "history",
-          {
-            "entries": [
-              {
-                "staticName": "item.spellshard"
+                "staticName": "item.augment_pauldronStructure"
               }
             ]
           }
@@ -2178,7 +2224,7 @@ val defaultData  = """
               "slotFilled_ARMOR"
             ],
             "owner": {
-              "value": "a0640950-920d-44b4-ab56-8ff934845d21"
+              "value": "57d5bc24-2960-450c-8561-d0530ca2f6a8"
             },
             "isEquipped": true,
             "layers": [
@@ -2294,85 +2340,56 @@ val defaultData  = """
               }
             ]
           }
-        ],
-        [
-          {
-            "value": "85fdf0f1-6843-47a6-9a86-79ad6841d52a"
-          },
-          "status",
-          {
-            "name": "Pauldrons of Faith",
-            "localizableName": "item.augment_pauldronStructure",
-            "aspects": {
-              "keyType": "java.lang.String",
-              "valueType": "aspectInstance",
-              "entries": [
-                [
-                  "slot_AUGMENT_PAULDRON",
-                  {
-                    "aspect": "slot_AUGMENT_PAULDRON",
-                    "value": 1
-                  }
-                ]
-              ]
-            }
-          },
-          "item",
-          {
-            "itemId": "augment_pauldronStructure",
-            "variantId": "hpInStructures",
-            "category": "augment",
-            "tier": 1,
-            "upgrades": [
-              "hpInStructures"
-            ],
-            "slots": [
-              "AUGMENT_PAULDRON"
-            ],
-            "ownerAspects": [
-              "slotFilled_AUGMENT_PAULDRON",
-              "augmentBuffHealth"
-            ],
-            "owner": {
-              "value": "a0640950-920d-44b4-ab56-8ff934845d21"
-            },
-            "isEquipped": true,
-            "layers": [
-              {
-                "name": "augment_pauldronFieldLA_untinted",
-                "bodyPart": "leftArm",
-                "depth": 3580
-              },
-              {
-                "name": "augment_pauldronFieldLB_tint2",
-                "tint": "secondary",
-                "tintAmount": 0.8,
-                "bodyPart": "leftArm",
-                "depth": 3581
-              },
-              {
-                "name": "augment_pauldronFieldRA_untinted",
-                "bodyPart": "rightArm",
-                "depth": 3980
-              },
-              {
-                "name": "augment_pauldronFieldRB_tint2",
-                "tint": "secondary",
-                "tintAmount": 0.8,
-                "bodyPart": "rightArm",
-                "depth": 3981
-              }
-            ]
-          },
-          "history",
-          {
-            "entries": [
-              {
-                "staticName": "item.augment_pauldronStructure"
-              }
-            ]
-          }
         ]
       ]
     }
+  ],
+  "usedInGames": [
+    {
+      "value": "a7b7e62c-76d5-477d-8da6-0aabf6cab345"
+    }
+  ],
+  "legacyAspects": {
+    "keyType": "java.lang.String",
+    "valueType": "java.lang.Float",
+    "entries": [
+      [
+        "childOf|666d7dfe-a262-44d1-9f07-bddc229ea037",
+        1
+      ],
+      [
+        "childOf|b962b2c2-5ce0-4f0d-98ab-9effccb06bb6",
+        1
+      ]
+    ]
+  },
+  "legacyAchievementInfo": {
+    "keyType": "java.lang.String",
+    "entries": [
+      [
+        "killCounter",
+        {
+          "entryId": "killCounter",
+          "firstEarned": 1659791823739,
+          "value": 3
+        }
+      ]
+    ]
+  },
+  "legacyCompanyInfo": [
+    {
+      "date": 1659717437542,
+      "gameId": {
+        "value": "a7b7e62c-76d5-477d-8da6-0aabf6cab345"
+      },
+      "companyId": {
+        "value": "7b9519b4-ad1b-4e7e-baef-dc49ac630211"
+      },
+      "companyName": "The Spiders of the Staff",
+      "mainThreat": "gorgon",
+      "scenarioId": "threeChapters_v3"
+    }
+  ],
+  "usage": "background"
+}
 """

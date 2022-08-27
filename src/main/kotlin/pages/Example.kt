@@ -21,10 +21,13 @@ import savePicture
 import kotlin.js.Json
 import kotlin.js.Promise
 
+private const val loadZip = true
+
 fun loadExample() {
+    println("Loading data")
     val json = JSON.parse<Json>(defaultData)
-    val example = parseFromJson(json)
-    saveCharacter(example)
+    val example = parseLegacyCharacter(json)
+    saveCharacter(example.snapshots.first())
     val characters = getCharacterList()
     characters.add(example.uuid)
     saveCharacterList(characters)
@@ -40,7 +43,7 @@ fun loadExample() {
         )
     ).then {
         doRouting()
-        loadZipIfPresent(window.location.hash.isBlank())
+        if (loadZip) loadZipIfPresent(window.location.hash.isBlank())
     }
 }
 

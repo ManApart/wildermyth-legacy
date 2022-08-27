@@ -16,7 +16,6 @@ data class Character(
     val uuid: String,
     val name: String,
     val aspects: List<Aspect> = listOf(),
-    val legacyAspects: List<Aspect> = listOf(),
     val temporal: Map<String, Int> = mapOf(),
     val history: List<HistoryEntry> = listOf(),
 ) {
@@ -78,9 +77,9 @@ data class Character(
     }
 
     private fun getFamily(): Family {
-        val parents = legacyAspects.filter { it.name == "childOf" }.map { it.values.first() }
-        val children = legacyAspects.filter { it.name == "parentOf" }.map { it.values.first() }
-        val lover = legacyAspects.firstOrNull { it.name == "lockedRelationship" && it.values.first() == "lover" }?.values?.last()
+        val parents = aspects.filter { it.name == "childOf" }.map { it.values.first() }
+        val children = aspects.filter { it.name == "parentOf" }.map { it.values.first() }
+        val lover = aspects.firstOrNull { it.name == "lockedRelationship" && it.values.first() == "lover" }?.values?.last()
         return Family(lover, parents, children)
     }
 
