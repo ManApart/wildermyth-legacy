@@ -82,5 +82,5 @@ fun TagConsumer<HTMLElement>.characterCard(character: Character) {
 }
 
 fun Enum<*>.format(): String {
-    return name.lowercase().capitalize()
+    return if (this == undefined) "" else name.lowercase().capitalize()
 }

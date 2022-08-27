@@ -70,7 +70,7 @@ fun parseLegacy(json: Json): List<Character> {
     println("Parsing $player's legacy")
     return (json["entries"] as Array<Json>)
         .map { parseLegacyCharacter(it) }
-        .map { it.snapshots.first() }
+        .map { it.snapshots.last() }
 }
 
 fun parseLegacyCharacter(json: Json): LegacyCharacter {
