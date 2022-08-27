@@ -2,6 +2,7 @@ package pages
 
 import Aspect
 import Character
+import Company
 import HistoryEntry
 import HistoryEntryRaw
 import JSZip
@@ -13,11 +14,14 @@ import jsonMapper
 import kotlinx.serialization.decodeFromString
 import org.khronos.webgl.ArrayBuffer
 import org.w3c.files.Blob
+import saveCompanies
 import kotlin.js.Json
 import saveCharacter
 import saveCharacterList
 import savePicture
 import kotlin.js.Promise
+
+private val companies = mutableMapOf<String, Company>()
 
 fun importZip(data: ArrayBuffer, originalHash: String) {
     JSZip().loadAsync(data).then { zip ->
@@ -70,13 +74,25 @@ fun parseLegacy(json: Json): List<Character> {
     println("Parsing $player's legacy")
     return (json["entries"] as Array<Json>)
         .map { parseLegacyCharacter(it) }
-        .map { it.snapshots.last() }
+        .map { it.snapshots.last() }.also {
+            saveCompanies(companies)
+        }
 }
 
 fun parseLegacyCharacter(json: Json): LegacyCharacter {
     val uuid = (json["id"] as Json)["value"] as String
     val snapshots = (json["snapshots"] as Array<Json>).map { parseCharacter(uuid, it) }
-    return LegacyCharacter(uuid, snapshots)
+    val companyIds = (json["legacyCompanyInfo"] as Array<Json>).map { companyJson ->
+        ((companyJson["companyId"] as Json)["value"] as String).also { companyId ->
+            if (!companies.containsKey(companyId)) {
+                val name = companyJson["companyName"] as String
+                val date = companyJson["date"] as Int
+                companies[companyId] = Company(companyId, date, name)
+            }
+            companies[companyId]?.characters?.add(uuid)
+        }
+    }
+    return LegacyCharacter(uuid, snapshots, companyIds)
 }
 
 fun parseCharacter(uuid: String, json: Json): Character {

@@ -41,4 +41,7 @@ data class AdditionalInfo(val uuid: String, val favorite: Boolean = false, val h
 
 data class Family(val soulMate: String? = null, val parents: List<String> = listOf(), val children: List<String> = listOf())
 
-data class LegacyCharacter(val uuid: String, val snapshots: List<Character>)
+data class LegacyCharacter(val uuid: String, val snapshots: List<Character>, val companyIds: List<String>)
+
+@Serializable
+data class Company(val id: String, val date: Int, val name: String, val characters: MutableList<String> = mutableListOf())

@@ -57,3 +57,11 @@ fun saveAdditionalInfo(info: AdditionalInfo){
     allInfo[info.uuid] = info
     saveAdditionalInfo(allInfo)
 }
+
+fun getCompany(uuid: String): Company{
+    return localStorage["companies"]?.let { jsonMapper.decodeFromString<Map<String, Company>>(it)[uuid] } ?: Company(uuid, 0, "Unknown")
+}
+
+fun saveCompanies(companies: Map<String, Company>){
+    inMemoryStorage["companies"] = jsonMapper.encodeToString(companies)
+}
