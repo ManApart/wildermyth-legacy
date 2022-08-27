@@ -40,3 +40,5 @@ data class HistoryEntryRaw(
 data class AdditionalInfo(val uuid: String, val favorite: Boolean = false, val history: MutableList<HistoryEntry> = mutableListOf())
 
 data class Family(val soulMate: String? = null, val parents: List<String> = listOf(), val children: List<String> = listOf())
+
+data class LegacyCharacter(val uuid: String, val snapshots: List<Character>)

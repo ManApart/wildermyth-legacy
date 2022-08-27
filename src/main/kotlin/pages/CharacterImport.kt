@@ -6,6 +6,7 @@ import HistoryEntry
 import HistoryEntryRaw
 import JSZip
 import JsonObject
+import LegacyCharacter
 import getCharacterList
 import jsonMapper
 import kotlinx.serialization.decodeFromString
@@ -25,40 +26,77 @@ fun importZip(data: ArrayBuffer, refreshCharacters: Boolean = true) {
 }
 
 private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, refreshCharacters: Boolean) {
-    val characters = getCharacterList()
-    val promises = keys.filter { fileName ->
-        fileName.endsWith("data.json")
-    }.map { fileName ->
-        zip.file(fileName).async<String>("string").then { contents ->
-            val json = JSON.parse<Json>(contents)
-            val character = parseFromJson(json)
-            saveCharacter(character)
-            characters.add(character.uuid)
-            saveCharacterList(characters)
-            handleZipPictures(zip, character)
-        }
-    }.toTypedArray()
-    Promise.all(promises).then {
-        if (refreshCharacters) {
-            displayCharacters()
-        }
+    val legacyJson = keys.first { fileName ->
+        fileName.endsWith("legacy.json")
     }
+    zip.file(legacyJson)!!.async<String>("string")
+        .then { contents ->
+            val json = JSON.parse<Json>(contents)
+            val characters = parseLegacy(json)
+            characters.forEach { saveCharacter(it) }
+            val characterList = getCharacterList()
+            characterList.addAll(characters.map { it.uuid })
+            saveCharacterList(characterList)
+            Promise.all(characters.map { handleZipPictures(zip, it) }.toTypedArray())
+        }.then {
+            if (refreshCharacters) {
+                displayCharacters()
+            }
+        }
 }
 
 private fun handleZipPictures(zip: JSZip.ZipObject, character: Character): Promise<*> {
-    val headPath = "${character.name}/default.png"
-    val bodyPath = "${character.name}/body.png"
-
     return Promise.all(
-        arrayOf(
-            zip.file(headPath).async<Blob>("Blob").then { contents ->
-                savePicture("${character.uuid}/head", contents)
-            },
-            zip.file(bodyPath).async<Blob>("Blob").then { contents ->
-                savePicture("${character.uuid}/body", contents)
-            })
+        listOfNotNull(
+            handleSinglePicture(zip, character, "default", "head"),
+            handleSinglePicture(zip, character, "body", "body"),
+        ).toTypedArray()
     )
 
+}
+
+private fun handleSinglePicture(zip: JSZip.ZipObject, character: Character, zipName: String, saveName: String): Promise<*>? {
+    val filePath = "${character.name}/$zipName.png"
+    val file = zip.file(filePath)
+    return if (file != null && file != undefined) {
+        file.async<Blob>("Blob").then { contents ->
+            savePicture("${character.uuid}/$saveName", contents)
+        }
+    } else null
+
+}
+
+fun parseLegacy(json: Json): List<Character> {
+    val player = json["playerName"] as String
+    println("Parsing $player's legacy")
+    return (json["entries"] as Array<Json>)
+        .map { parseLegacyCharacter(it) }
+        .map { it.snapshots.first() }
+}
+
+fun parseLegacyCharacter(json: Json): LegacyCharacter {
+    val uuid = (json["id"] as Json)["value"] as String
+    val snapshots = (json["snapshots"] as Array<Json>).map { parseCharacter(uuid, it) }
+    return LegacyCharacter(uuid, snapshots)
+}
+
+fun parseCharacter(uuid: String, json: Json): Character {
+    val allEntities = (json["entities"] as Array<Array<Json>>)
+    val characterEntities = allEntities.first { option ->
+        option[0]["value"] == uuid
+    }
+    val base = characterEntities[2]
+//    println(JSON.stringify(base))
+    val name = base["name"] as String
+    val aspects = parseAspects(base)
+//    val legacyAspects = parseLegacyAspects(characterEntities[12]["legacyAspects"] as Json?)
+    val legacyAspects = listOf<Aspect>()
+    val temporal = parseTemporal(base)
+//    val rawHistory = characterEntities[12]["entries"] as Array<Json>
+//    val history = rawHistory.map { parseHistoryEntry(it) }
+    val history = listOf<HistoryEntry>()
+
+    return Character(uuid, name, aspects, legacyAspects, temporal, history)
 }
 
 fun parseFromJson(json: Json): Character {

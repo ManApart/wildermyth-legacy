@@ -8,7 +8,7 @@ external class JSZip {
     fun loadAsync(content: ArrayBuffer): Promise<ZipObject>
     class ZipObject {
         val files: Json
-        fun file(name: String): ZipObject
+        fun file(name: String): ZipObject?
         fun <T> async(kind: String): Promise<T>
     }
 }
