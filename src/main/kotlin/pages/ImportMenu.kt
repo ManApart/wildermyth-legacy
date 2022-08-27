@@ -3,6 +3,7 @@ package pages
 import AdditionalInfo
 import jsonMapper
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.input
@@ -64,7 +65,7 @@ fun importMenu() {
                         if (file.name == "AdditionalInfo.json") {
                             importAdditionalInfo(reader.result as String)
                         } else {
-                            importZip(reader.result as ArrayBuffer)
+                            importZip(reader.result as ArrayBuffer, window.location.hash)
                         }
                     }
                     reader.onerror = { error ->

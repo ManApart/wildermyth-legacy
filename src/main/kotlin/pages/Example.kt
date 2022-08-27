@@ -16,9 +16,10 @@ import savePicture
 import kotlin.js.Json
 import kotlin.js.Promise
 
-private const val loadZip = false
+private const val loadZip = true
 
 fun loadExample() {
+    val windowHash = window.location.hash
     loadJson("example/data.json").then { json ->
         val example = parseLegacyCharacter(json)
         saveCharacter(example.snapshots.first())
@@ -36,8 +37,8 @@ fun loadExample() {
                 }
             )
         ).then {
-            doRouting()
-            if (loadZip) loadZipIfPresent(window.location.hash.isBlank())
+            doRouting(windowHash)
+            if (loadZip) loadZipIfPresent(windowHash)
         }
     }
 }
@@ -70,12 +71,12 @@ private fun loadJson(url: String): Promise<Json> {
     }
 }
 
-private fun loadZipIfPresent(refreshCharacters: Boolean) {
+private fun loadZipIfPresent(originalHash: String) {
     loadBlob("characters.zip").then { blob ->
         if (blob.size.toInt() > 200) {
             val reader = FileReader()
             reader.onload = {
-                importZip(reader.result as ArrayBuffer, refreshCharacters)
+                importZip(reader.result as ArrayBuffer, originalHash)
             }
             reader.onerror = { error ->
                 console.error("Failed to read File $error")

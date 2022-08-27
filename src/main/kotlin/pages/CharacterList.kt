@@ -29,6 +29,7 @@ fun displayCharacters() {
     document.title = "Wildermyth Legacy"
     window.location.hash = ""
     buildNav()
+    document.documentElement?.scrollTop = 0.0
     section.append {
         getCharacterList().also { println("Building ${it.size} characters.") }
             .mapNotNull { getCharacter(it) }

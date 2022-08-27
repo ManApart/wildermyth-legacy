@@ -21,8 +21,12 @@ fun main() {
 }
 
 fun doRouting() {
-    if (window.location.hash.isNotBlank()) {
-        val hash = window.location.hash.replace("#", "")
+     doRouting(window.location.hash)
+}
+
+fun doRouting(windowHash: String) {
+    if (windowHash.isNotBlank()) {
+        val hash = windowHash.replace("#", "")
         getCharacter(hash)?.let { character ->
             characterDetail(character)
         } ?: displayCharacters()

@@ -27,6 +27,7 @@ fun characterDetail(character: Character) {
     clearSections()
     window.location.hash = character.uuid
     document.title = character.name
+    document.documentElement?.scrollTop = 0.0
     section.append {
         div {
             button {
@@ -133,16 +134,7 @@ fun Element.relationshipsSection(character: Character, additionalInfo: Additiona
     }
 }
 
-fun Element.aspectsSection(character: Character, additionalInfo: AdditionalInfo) {
-    innerHTML = ""
-    append {
-        div {
-            h2 { +"Aspects" }
-        }
-    }
-}
-
-fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relationship: String) {
+private fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relationship: String) {
     val relative = getCharacter(relativeUuid)
 
     if (relative != null) {
@@ -163,3 +155,13 @@ fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relationship: St
         }
     }
 }
+
+fun Element.aspectsSection(character: Character, additionalInfo: AdditionalInfo) {
+    innerHTML = ""
+    append {
+        div {
+            h2 { +"Aspects" }
+        }
+    }
+}
+

@@ -7,6 +7,7 @@ import HistoryEntryRaw
 import JSZip
 import JsonObject
 import LegacyCharacter
+import doRouting
 import getCharacterList
 import jsonMapper
 import kotlinx.serialization.decodeFromString
@@ -18,14 +19,14 @@ import saveCharacterList
 import savePicture
 import kotlin.js.Promise
 
-fun importZip(data: ArrayBuffer, refreshCharacters: Boolean = true) {
+fun importZip(data: ArrayBuffer, originalHash: String) {
     JSZip().loadAsync(data).then { zip ->
         val keys = JsonObject.keys(zip.files)
-        handleZipCharacterData(zip, keys, refreshCharacters)
+        handleZipCharacterData(zip, keys, originalHash)
     }
 }
 
-private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, refreshCharacters: Boolean) {
+private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, originalHash: String) {
     val legacyJson = keys.first { fileName ->
         fileName.endsWith("legacy.json")
     }
@@ -39,9 +40,7 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, ref
             saveCharacterList(characterList)
             Promise.all(characters.map { handleZipPictures(zip, it) }.toTypedArray())
         }.then {
-            if (refreshCharacters) {
-                displayCharacters()
-            }
+            doRouting(originalHash)
         }
 }
 
