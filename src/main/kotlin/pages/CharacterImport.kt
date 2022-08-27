@@ -60,13 +60,15 @@ private fun handleZipPictures(zip: JSZip.ZipObject, character: Character): Promi
     val headPath = "${character.name}/default.png"
     val bodyPath = "${character.name}/body.png"
 
-    return Promise.all(arrayOf(
-        zip.file(headPath).async<Blob>("Blob").then { contents ->
-            savePicture("${character.uuid}/head", contents)
-        },
-        zip.file(bodyPath).async<Blob>("Blob").then { contents ->
-            savePicture("${character.uuid}/body", contents)
-        }))
+    return Promise.all(
+        arrayOf(
+            zip.file(headPath).async<Blob>("Blob").then { contents ->
+                savePicture("${character.uuid}/head", contents)
+            },
+            zip.file(bodyPath).async<Blob>("Blob").then { contents ->
+                savePicture("${character.uuid}/body", contents)
+            })
+    )
 
 }
 
@@ -76,7 +78,7 @@ fun parseFromJson(json: Json): Character {
     val uuid = entities[0]["value"] as String
     val name = base["name"] as String
     val aspects = parseAspects(base)
-    val legacyAspects = parseLegacyAspects(entities[12]["legacyAspects"] as Json)
+    val legacyAspects = parseLegacyAspects(entities[12]["legacyAspects"] as Json?)
     val temporal = parseTemporal(base)
     val rawHistory = entities[12]["entries"] as Array<Json>
     val history = rawHistory.map { parseHistoryEntry(it) }
@@ -90,10 +92,12 @@ private fun parseAspects(base: Json): List<Aspect> {
     return stringAspects.map { it.toAspect() }
 }
 
-private fun parseLegacyAspects(base: Json): List<Aspect> {
-    val aspectJson = base["entries"] as Array<Array<Any>>
-    val stringAspects = aspectJson.flatten().filterIsInstance<String>()
-    return stringAspects.map { it.toAspect() }
+private fun parseLegacyAspects(optionalBase: Json?): List<Aspect> {
+    return optionalBase?.let { base ->
+        val aspectJson = base["entries"] as Array<Array<Any>>
+        val stringAspects = aspectJson.flatten().filterIsInstance<String>()
+        stringAspects.map { it.toAspect() }
+    } ?: listOf()
 }
 
 private fun parseTemporal(base: Json): Map<String, Int> {
