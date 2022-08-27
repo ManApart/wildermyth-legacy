@@ -92,9 +92,10 @@ fun parseCharacter(uuid: String, json: Json): Character {
 //    val legacyAspects = parseLegacyAspects(characterEntities[12]["legacyAspects"] as Json?)
     val legacyAspects = listOf<Aspect>()
     val temporal = parseTemporal(base)
-//    val rawHistory = characterEntities[12]["entries"] as Array<Json>
-//    val history = rawHistory.map { parseHistoryEntry(it) }
-    val history = listOf<HistoryEntry>()
+    val historyNode = (characterEntities.first { it["legacyAchievementInfo"] != null } as Json)
+    val rawHistory = historyNode["entries"] as Array<Json>
+    val history = rawHistory.map { parseHistoryEntry(it) }
+//    val history = listOf<HistoryEntry>()
 
     return Character(uuid, name, aspects, legacyAspects, temporal, history)
 }
