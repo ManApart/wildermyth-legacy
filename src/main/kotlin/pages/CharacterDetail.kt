@@ -4,16 +4,19 @@ import AdditionalInfo
 import Character
 import HistoryEntry
 import clearSections
+import el
 import getAdditionalInfo
+import getCharacter
+import getPicture
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.html.*
 import kotlinx.html.dom.append
-import kotlinx.html.id
 import kotlinx.html.js.*
-import org.w3c.dom.Element
-import org.w3c.dom.HTMLAreaElement
-import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.HTMLTextAreaElement
+import kotlinx.html.js.button
+import kotlinx.html.js.div
+import kotlinx.html.js.textArea
+import org.w3c.dom.*
 import saveAdditionalInfo
 import kotlin.js.Date
 
@@ -32,17 +35,27 @@ fun characterDetail(character: Character) {
             }
         }
         characterCard(character)
-        div {
-            id = "history-entries"
-        }
+        div("character-section") { id = "history-entries" }
+            .historySection(character, additionalInfo)
+        div("character-section") { id = "abilities-section" }
+            .abilitiesSection(character, additionalInfo)
+        div("character-section") { id = "gear-section" }
+            .gearSection(character, additionalInfo)
+        div("character-section") { id = "stats-section" }
+            .statsSection(character, additionalInfo)
+        div("character-section") { id = "combat-section" }
+            .combatSection(character, additionalInfo)
+        div("character-section") { id = "relationships-section" }
+            .relationshipsSection(character, additionalInfo)
+        div("character-section") { id = "aspects-section" }
+            .aspectsSection(character, additionalInfo)
     }
 
-    historySection(document.getElementById("history-entries")!!, character, additionalInfo)
 }
 
-fun historySection(parent: Element, character: Character, additionalInfo: AdditionalInfo) {
-    parent.innerHTML = ""
-    parent.append {
+fun Element.historySection(character: Character, additionalInfo: AdditionalInfo) {
+    innerHTML = ""
+    append {
         div {
             h2 { +"History" }
             additionalInfo.history.forEachIndexed { i, entry ->
@@ -63,9 +76,88 @@ fun historySection(parent: Element, character: Character, additionalInfo: Additi
                 onClickFunction = {
                     val entry = HistoryEntry("" + additionalInfo.history.size, Date().getTime().toLong(), "")
                     additionalInfo.history.add(entry)
-                    historySection(parent, character, additionalInfo)
+                    historySection(character, additionalInfo)
                 }
             }
+        }
+    }
+}
+
+fun Element.abilitiesSection(character: Character, additionalInfo: AdditionalInfo) {
+    innerHTML = ""
+    append {
+        div {
+            h2 { +"Abilities" }
+        }
+    }
+}
+
+fun Element.gearSection(character: Character, additionalInfo: AdditionalInfo) {
+    innerHTML = ""
+    append {
+        div {
+            h2 { +"Gear" }
+        }
+    }
+}
+
+fun Element.statsSection(character: Character, additionalInfo: AdditionalInfo) {
+    innerHTML = ""
+    append {
+        div {
+            h2 { +"Stats" }
+        }
+    }
+}
+
+fun Element.combatSection(character: Character, additionalInfo: AdditionalInfo) {
+    innerHTML = ""
+    append {
+        div {
+            h2 { +"Combat" }
+        }
+    }
+}
+
+fun Element.relationshipsSection(character: Character, additionalInfo: AdditionalInfo) {
+    innerHTML = ""
+    append {
+        div {
+            h2 { +"Relationships" }
+            with(character.family) {
+                parents.forEach { relativeCard(it, "Parent") }
+                soulMate?.let { relativeCard(it, "Soulmate") }
+                children.forEach { relativeCard(it, "Child") }
+            }
+        }
+    }
+}
+
+fun Element.aspectsSection(character: Character, additionalInfo: AdditionalInfo) {
+    innerHTML = ""
+    append {
+        div {
+            h2 { +"Aspects" }
+        }
+    }
+}
+
+fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relationship: String) {
+    val relative = getCharacter(relativeUuid)
+    if (relative != null){
+        div {
+            onClickFunction = { characterDetail(relative) }
+            div {
+                h4 { +relationship }
+                p { +relative.name }
+            }
+            img {
+                src = getPicture("$relativeUuid/head")
+            }
+        }
+    } else {
+        div {
+            +relativeUuid
         }
     }
 }

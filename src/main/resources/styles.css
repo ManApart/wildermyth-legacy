@@ -56,7 +56,7 @@ input::file-selector-button {
 
 textarea{
     width: 500px;
-    height: 200px;
+    height: 100px;
     background-color: var(--bio-background);
 }
 
@@ -75,11 +75,6 @@ textarea{
 
 #import-input {
   margin-left: 38%
-}
-
-#history-entries{
-    display: inline-block;
-    vertical-align: top;
 }
 
 @media (max-width: 1000px) {

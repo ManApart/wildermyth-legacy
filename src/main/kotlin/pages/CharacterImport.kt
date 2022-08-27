@@ -76,15 +76,22 @@ fun parseFromJson(json: Json): Character {
     val uuid = entities[0]["value"] as String
     val name = base["name"] as String
     val aspects = parseAspects(base)
+    val legacyAspects = parseLegacyAspects(entities[12]["legacyAspects"] as Json)
     val temporal = parseTemporal(base)
     val rawHistory = entities[12]["entries"] as Array<Json>
     val history = rawHistory.map { parseHistoryEntry(it) }
 
-    return Character(uuid, name, aspects, temporal, history)
+    return Character(uuid, name, aspects, legacyAspects, temporal, history)
 }
 
 private fun parseAspects(base: Json): List<Aspect> {
     val aspectJson = (base["aspects"] as Json)["entries"] as Array<Array<Any>>
+    val stringAspects = aspectJson.flatten().filterIsInstance<String>()
+    return stringAspects.map { it.toAspect() }
+}
+
+private fun parseLegacyAspects(base: Json): List<Aspect> {
+    val aspectJson = base["entries"] as Array<Array<Any>>
     val stringAspects = aspectJson.flatten().filterIsInstance<String>()
     return stringAspects.map { it.toAspect() }
 }

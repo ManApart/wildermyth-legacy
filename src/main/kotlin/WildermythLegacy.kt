@@ -85,10 +85,11 @@ private fun downloadAdditionalInfo() {
 }
 
 fun clearSections() {
-    document.getElementById("character-cards-section")!!.innerHTML = ""
-    document.getElementById("import-section")!!.innerHTML = ""
-    document.getElementById("character-detail-section")!!.innerHTML = ""
-    document.getElementById("nav")!!.innerHTML = ""
+    el("character-cards-section").innerHTML = ""
+    el("import-section").innerHTML = ""
+    el("character-detail-section").innerHTML = ""
+    el("nav").innerHTML = ""
 }
 
 
+fun el(id: String) = document.getElementById(id)!!

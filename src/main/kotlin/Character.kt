@@ -4,7 +4,7 @@ import pages.toAspect
 
 /*
 Stats to display
-Is bio possible? Seems like I'd need to do interpolation which I'd like to avoid. Maybe use Text override
+For Bio/history: Use text overrides + additional info overrides. If they upload a strings file, parse from that
 Personality stats
 Class Stats
 Relationships
@@ -16,20 +16,28 @@ data class Character(
     val uuid: String,
     val name: String,
     val aspects: List<Aspect> = listOf(),
+    val legacyAspects: List<Aspect> = listOf(),
     val temporal: Map<String, Int> = mapOf(),
     val history: List<HistoryEntry> = listOf(),
 ) {
 
     @Transient
     val bio = getBio()
+
     @Transient
     val characterClass = getCharacterClass()
+
     @Transient
     val classLevel = getClassLevel()
+
     @Transient
     val age = getAge()
+
     @Transient
     val personality = getPersonality()
+
+    @Transient
+    val family = getFamily()
 
     private fun getBio(): String {
         val historyOverrides = history.joinToString(" ") { it.textOverride }
@@ -56,7 +64,7 @@ data class Character(
         return temporal["AGE"] ?: 20
     }
 
-    private fun getPersonality(): Map<Personality, Int>{
+    private fun getPersonality(): Map<Personality, Int> {
         val aspect = history.firstOrNull { it.id == "humanPersonalityStats" }?.associatedAspects?.firstOrNull { it.name == "roleStats" }
         return if (aspect != null) {
             val personality = mutableMapOf<Personality, Int>()
@@ -69,35 +77,11 @@ data class Character(
         }
     }
 
-}
-
-enum class CharacterClass { WARRIOR, HUNTER, MYSTIC }
-enum class ClassLevel { GREENHORN, BLOODHORN, BLUEHORN, BRONZEHORN, SILVERHORN, GOLDHORN, BLACKHORN }
-
-fun classLevelFromInt(level: Int) = ClassLevel.values()[level]
-
-enum class Personality { BOOKISH, COWARD, GOOFBALL, GREEDY, HEALER, HOTHEAD, LEADER, LONER, POET, ROMANTIC, SNARK }
-
-@Serializable
-data class Aspect(val name: String, val values: List<String> = listOf())
-
-@Serializable
-data class HistoryEntry(val id: String, val acquisitionTime: Long, var textOverride: String, val associatedAspects: List<Aspect> = listOf(), val forbiddenAspects: List<Aspect> = listOf(), val showInSummary: Boolean = false)
-
-@Serializable
-data class HistoryEntryRaw(
-    val id: String = "",
-    val acquisitionTime: Long = 0,
-    val textOverride: String = "",
-    val associatedAspects: List<String> = listOf(),
-    val forbiddenAspects: List<String> = listOf(),
-    val showInSummary: Boolean = false
-) {
-    fun toHistoryEntry(): HistoryEntry {
-        return HistoryEntry(id, acquisitionTime, textOverride, associatedAspects.map { it.toAspect() }, forbiddenAspects.map { it.toAspect() }, showInSummary)
+    private fun getFamily(): Family {
+        val parents = legacyAspects.filter { it.name == "childOf" }.map { it.values.first() }
+        val children = legacyAspects.filter { it.name == "parentOf" }.map { it.values.first() }
+        val lover = legacyAspects.firstOrNull { it.name == "lockedRelationship" && it.values.first() == "lover" }?.values?.last()
+        return Family(lover, parents, children)
     }
+
 }
-
-
-@Serializable
-data class AdditionalInfo(val uuid: String, val favorite: Boolean = false, val history: MutableList<HistoryEntry> = mutableListOf())
