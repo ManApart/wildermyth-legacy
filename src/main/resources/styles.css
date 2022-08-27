@@ -60,6 +60,11 @@ textarea{
     background-color: var(--bio-background);
 }
 
+#nav table{
+    width: 100%;
+    text-align: center;
+}
+
 #clear-button {
   float: right;
 }

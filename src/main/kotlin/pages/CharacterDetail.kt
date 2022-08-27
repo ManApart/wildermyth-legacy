@@ -44,7 +44,7 @@ fun historySection(parent: Element, character: Character, additionalInfo: Additi
     parent.innerHTML = ""
     parent.append {
         div {
-            +"History"
+            h2 { +"History" }
             additionalInfo.history.forEachIndexed { i, entry ->
                 div {
                     textArea {
@@ -61,7 +61,7 @@ fun historySection(parent: Element, character: Character, additionalInfo: Additi
             button {
                 +"Add"
                 onClickFunction = {
-                    val entry = HistoryEntry(character.uuid + additionalInfo.history.size, Date().getMilliseconds().toLong(), "")
+                    val entry = HistoryEntry("" + additionalInfo.history.size, Date().getTime().toLong(), "")
                     additionalInfo.history.add(entry)
                     historySection(parent, character, additionalInfo)
                 }

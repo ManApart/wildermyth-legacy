@@ -1,13 +1,15 @@
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
+import kotlinx.html.*
 import kotlinx.html.dom.append
-import kotlinx.html.id
 import kotlinx.html.js.button
 import kotlinx.html.js.onClickFunction
+import kotlinx.html.js.table
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import org.w3c.dom.HTMLButtonElement
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.get
 import org.w3c.dom.set
 import org.w3c.files.Blob
@@ -37,24 +39,54 @@ fun doRouting() {
 fun buildNav() {
     val nav = document.getElementById("nav")!!
     nav.append {
-        button {
-            id = "clear-button"
-            +"Clear"
-            onClickFunction = {
-                if (window.confirm("This will delete all your uploaded characters. You'll need to re-upload them. Are you sure?")) {
-                    localStorage.clear()
-                    loadExample()
+        table {
+            tbody {
+                tr {
+                    td {
+                        button {
+                            id = "upload-button"
+                            +"Upload"
+                            onClickFunction = {
+                                importMenu()
+                            }
+                        }
+                    }
+                    td {
+                        button {
+                            id = "export-button"
+                            +"Export"
+                            onClickFunction = {
+                                downloadAdditionalInfo()
+                            }
+                        }
+                    }
+                    td {
+                        button {
+                            id = "clear-button"
+                            +"Clear"
+                            onClickFunction = {
+                                if (window.confirm("This will delete all your uploaded characters. You'll need to re-upload them. Are you sure?")) {
+                                    localStorage.clear()
+                                    loadExample()
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        button {
-            id = "upload-button"
-            +"Upload"
-            onClickFunction = {
-                importMenu()
-            }
-        }
+
+
     }
+}
+
+private fun downloadAdditionalInfo() {
+    val download = document.createElement("a") as HTMLElement
+    download.setAttribute("href", "data:text/plain;charset=utf-8," + jsonMapper.encodeToString(getAdditionalInfo()))
+    download.setAttribute("download", "additionalInfo.json")
+    document.body?.append(download)
+    download.click()
+    document.body?.removeChild(download)
 }
 
 fun clearSections() {
