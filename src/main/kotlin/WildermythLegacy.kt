@@ -43,44 +43,20 @@ fun doRouting(windowHash: String) {
 fun buildNav() {
     val nav = document.getElementById("nav")!!
     nav.append {
-        table {
-            tbody {
-                tr {
-                    td {
-                        button {
-                            id = "upload-button"
-                            +"Upload"
-                            onClickFunction = {
-                                importMenu()
-                            }
-                        }
-                    }
-                    td {
-                        button {
-                            id = "export-button"
-                            +"Export"
-                            onClickFunction = {
-                                downloadAdditionalInfo()
-                            }
-                        }
-                    }
-                    td {
-                        button {
-                            id = "clear-button"
-                            +"Clear"
-                            onClickFunction = {
-                                if (window.confirm("This will delete all your uploaded characters. You'll need to re-upload them. Are you sure?")) {
-                                    localStorage.clear()
-                                    loadExample()
-                                }
-                            }
-                        }
-                    }
-                }
+        button {
+            id = "upload-button"
+            +"Upload"
+            onClickFunction = {
+                importMenu()
             }
         }
-
-
+        button {
+            id = "export-button"
+            +"Export"
+            onClickFunction = {
+                downloadAdditionalInfo()
+            }
+        }
     }
 }
 

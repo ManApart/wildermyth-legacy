@@ -11,6 +11,7 @@ Upload menu
 - update instructions
   - Including legacy.json
   - Including additional properties
+  - Include picture of ideal Zip?
 - option to upload story properties
   - instructions
   - mention in blank bios
@@ -22,3 +23,7 @@ Character List
 Details page
 - add tag
 - show hometown?
+
+Mobile Friendly
+- Make Single Column
+- Adjust Fonts
