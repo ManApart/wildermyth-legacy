@@ -22,7 +22,7 @@ import kotlin.js.Date
 
 fun characterDetail(character: LegacyCharacter) {
     val additionalInfo = getAdditionalInfo(character.uuid)
-    val section = document.getElementById("character-cards-section")!!
+    val section = document.getElementById("character-detail-section")!!
     val snapshot = character.snapshots.last()
     clearSections()
     document.title = snapshot.name
@@ -40,14 +40,14 @@ fun characterDetail(character: LegacyCharacter) {
         characterCard(character, false)
         div("character-section") { id = "history-entries" }
             .historySection(snapshot, additionalInfo)
-        div("character-section") { id = "abilities-section" }
-            .abilitiesSection(snapshot)
-        div("character-section") { id = "gear-section" }
-            .gearSection(snapshot)
+//        div("character-section") { id = "abilities-section" }
+//            .abilitiesSection(snapshot)
+//        div("character-section") { id = "gear-section" }
+//            .gearSection(snapshot)
         div("character-section") { id = "stats-section" }
             .statsSection(snapshot)
-        div("character-section") { id = "combat-section" }
-            .combatSection(snapshot)
+//        div("character-section") { id = "combat-section" }
+//            .combatSection(snapshot)
         div("character-section") { id = "relationships-section" }
             .relationshipsSection(character)
         div("character-section") { id = "aspects-section" }
@@ -182,8 +182,16 @@ private fun TagConsumer<HTMLElement>.companyCard(companyId: String) {
 
     div("company") {
         h4 { +company.name }
-        p {
-            +company.characters.mapNotNull { getCharacter(it) }.joinToString(", ") { it.snapshots.first().name }
+        company.characters.mapNotNull { getCharacter(it) }.forEach { relative ->
+            getPicture("${relative.uuid}/head")?.let { picture ->
+                div("company-friend-pic-wrapper") {
+                    img(classes = "company-friend-pic") {
+                        src = picture
+                        alt = relative.snapshots.last().name
+                        onClickFunction = { characterDetail(relative) }
+                    }
+                }
+            }
         }
 
     }
