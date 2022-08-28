@@ -17,11 +17,11 @@ fun saveCharacterList(list: Set<String>) {
     inMemoryStorage["character-list"] = list.joinToString(",")
 }
 
-fun getCharacter(uuid: String): Character? {
+fun getCharacter(uuid: String): LegacyCharacter? {
     return inMemoryStorage[uuid]?.let { jsonMapper.decodeFromString(it) }
 }
 
-fun saveCharacter(character: Character){
+fun saveCharacter(character: LegacyCharacter) {
     inMemoryStorage[character.uuid] = jsonMapper.encodeToString(character)
 }
 
@@ -40,28 +40,28 @@ fun savePicture(path: String, blob: Blob): Promise<Unit> {
     }
 }
 
-fun getAdditionalInfo(): MutableMap<String, AdditionalInfo>{
+fun getAdditionalInfo(): MutableMap<String, AdditionalInfo> {
     return localStorage["additional-info"]?.let { jsonMapper.decodeFromString(it) } ?: mutableMapOf()
 }
 
-fun saveAdditionalInfo(info: MutableMap<String, AdditionalInfo>){
+fun saveAdditionalInfo(info: MutableMap<String, AdditionalInfo>) {
     localStorage["additional-info"] = jsonMapper.encodeToString(info)
 }
 
-fun getAdditionalInfo(uuid: String): AdditionalInfo{
+fun getAdditionalInfo(uuid: String): AdditionalInfo {
     return localStorage["additional-info"]?.let { jsonMapper.decodeFromString<Map<String, AdditionalInfo>>(it)[uuid] } ?: AdditionalInfo(uuid)
 }
 
-fun saveAdditionalInfo(info: AdditionalInfo){
+fun saveAdditionalInfo(info: AdditionalInfo) {
     val allInfo = getAdditionalInfo()
     allInfo[info.uuid] = info
     saveAdditionalInfo(allInfo)
 }
 
-fun getCompany(uuid: String): Company{
+fun getCompany(uuid: String): Company {
     return localStorage["companies"]?.let { jsonMapper.decodeFromString<Map<String, Company>>(it)[uuid] } ?: Company(uuid, 0, "Unknown")
 }
 
-fun saveCompanies(companies: Map<String, Company>){
+fun saveCompanies(companies: Map<String, Company>) {
     inMemoryStorage["companies"] = jsonMapper.encodeToString(companies)
 }

@@ -29,12 +29,12 @@ private val companies = mutableMapOf<String, Company>()
 fun importZip(data: ArrayBuffer, originalHash: String) {
     JSZip().loadAsync(data).then { zip ->
         val keys = JsonObject.keys(zip.files)
-        handleAdditionalInfo(zip, keys)
+        handleAdditionalInfo(zip)
         handleZipCharacterData(zip, keys, originalHash)
     }
 }
 
-private fun handleAdditionalInfo(zip: JSZip.ZipObject, keys: List<String>){
+private fun handleAdditionalInfo(zip: JSZip.ZipObject) {
     zip.file("AdditionalInfo.json")?.async<String>("string")?.then { content ->
         saveAdditionalInfo(jsonMapper.decodeFromString<MutableMap<String, AdditionalInfo>>(content))
     }
@@ -52,7 +52,7 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, ori
             val characterList = getCharacterList()
             characterList.addAll(characters.map { it.uuid })
             saveCharacterList(characterList)
-            Promise.all(characters.map { handleZipPictures(zip, it) }.toTypedArray())
+            Promise.all(characters.map { handleZipPictures(zip, it.snapshots.last()) }.toTypedArray())
         }.then {
             doRouting(originalHash)
         }
@@ -79,19 +79,19 @@ private fun handleSinglePicture(zip: JSZip.ZipObject, character: Character, zipN
 
 }
 
-fun parseLegacy(json: Json): List<Character> {
+fun parseLegacy(json: Json): List<LegacyCharacter> {
     val player = json["playerName"] as String
     println("Parsing $player's legacy")
     return (json["entries"] as Array<Json>)
         .map { parseLegacyCharacter(it) }
-        .map { it.snapshots.last() }.also {
+        .also {
             saveCompanies(companies)
         }
 }
 
 fun parseLegacyCharacter(json: Json): LegacyCharacter {
     val uuid = (json["id"] as Json)["value"] as String
-    val snapshots = (json["snapshots"] as Array<Json>).map { parseCharacter(uuid, it) }
+    val snapshots = (json["snapshots"] as Array<Json>).map { parseCharacter(uuid, it) }.toTypedArray()
     val companyIds = (json["legacyCompanyInfo"] as Array<Json>).map { companyJson ->
         ((companyJson["companyId"] as Json)["value"] as String).also { companyId ->
             if (!companies.containsKey(companyId)) {
@@ -116,19 +116,6 @@ fun parseCharacter(uuid: String, json: Json): Character {
     val temporal = parseTemporal(base)
     val historyNode = (characterEntities.first { it["legacyAchievementInfo"] != null })
     val rawHistory = historyNode["entries"] as Array<Json>
-    val history = rawHistory.map { parseHistoryEntry(it) }
-
-    return Character(uuid, name, aspects, temporal, history)
-}
-
-fun parseFromJson(json: Json): Character {
-    val entities = (json["entities"] as Array<Array<Json>>)[0]
-    val base = entities[2]
-    val uuid = entities[0]["value"] as String
-    val name = base["name"] as String
-    val aspects = parseAspects(base)
-    val temporal = parseTemporal(base)
-    val rawHistory = entities[12]["entries"] as Array<Json>
     val history = rawHistory.map { parseHistoryEntry(it) }
 
     return Character(uuid, name, aspects, temporal, history)

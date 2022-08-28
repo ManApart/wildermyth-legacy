@@ -31,7 +31,7 @@ fun doRouting(windowHash: String) {
     if (windowHash.startsWith("#detail/")) {
         val hash = windowHash.replace("#detail/", "")
         getCharacter(hash)?.let { character ->
-            characterDetail(character)
+            characterDetail(character.snapshots.last())
         } ?: displayCharacters()
     } else {
         displayCharacters()

@@ -31,7 +31,7 @@ fun displayCharacters() {
     buildNav()
     section.append {
         getCharacterList().also { println("Building ${it.size} characters.") }
-            .mapNotNull { getCharacter(it) }
+            .mapNotNull { getCharacter(it)?.also { println(it.uuid) }?.snapshots?.last() }
             .sortedWith(compareBy<Character> { it.name.split(" ").last() }.thenBy { it.name.split(" ").first() })
             .forEach { character ->
                 characterCard(character, true)
@@ -42,9 +42,7 @@ fun displayCharacters() {
 
 private fun scrollToCharacter() {
     val hashId = window.location.hash.replace("#", "")
-    document.getElementById(hashId)?.let { scroll ->
-        scroll.scrollIntoView()
-    }
+    document.getElementById(hashId)?.scrollIntoView()
 }
 
 fun TagConsumer<HTMLElement>.characterCard(character: Character, clickable: Boolean) {

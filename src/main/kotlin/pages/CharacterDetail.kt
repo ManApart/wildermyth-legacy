@@ -137,7 +137,7 @@ fun Element.relationshipsSection(character: Character, additionalInfo: Additiona
 }
 
 private fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relationship: String) {
-    val relative = getCharacter(relativeUuid)
+    val relative = getCharacter(relativeUuid)?.snapshots?.last()
 
     if (relative != null) {
         div("relationship") {

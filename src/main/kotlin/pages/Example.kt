@@ -22,7 +22,7 @@ fun loadExample() {
     val windowHash = window.location.hash
     loadJson("example/data.json").then { json ->
         val example = parseLegacyCharacter(json)
-        saveCharacter(example.snapshots.first())
+        saveCharacter(example)
         val characters = getCharacterList()
         characters.add(example.uuid)
         saveCharacterList(characters)
