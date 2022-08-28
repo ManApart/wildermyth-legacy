@@ -2,12 +2,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import pages.toAspect
 
-/*
-Stats to display
-For Bio/history: Use text overrides + additional info overrides. If they upload a strings file, parse from that
-Hometown
- */
-
 @Serializable
 data class LegacyCharacter(val uuid: String, val snapshots: Array<Character>, val companyIds: List<String> = listOf()){
     @Transient

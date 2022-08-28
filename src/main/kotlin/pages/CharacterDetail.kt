@@ -37,28 +37,27 @@ fun characterDetail(character: LegacyCharacter) {
                 }
             }
         }
-        characterCard(character, false)
-        div("character-section") { id = "history-entries" }
-            .historySection(snapshot, additionalInfo)
-//        div("character-section") { id = "abilities-section" }
-//            .abilitiesSection(snapshot)
-//        div("character-section") { id = "gear-section" }
-//            .gearSection(snapshot)
-        div("character-section") { id = "stats-section" }
-            .statsSection(snapshot)
-//        div("character-section") { id = "combat-section" }
-//            .combatSection(snapshot)
-        div("character-section") { id = "relationships-section" }
-            .relationshipsSection(character)
-        div("character-section") { id = "aspects-section" }
-            .aspectsSection(snapshot)
+        div {
+            id = "character-details"
+            characterCard(character, false)
+            div {
+                statsSection(snapshot)
+                familySection(character)
+            }
+            friendshipSection(character)
+            div {
+                companiesSection(character)
+                historySection(snapshot, additionalInfo)
+            }
+            aspectsSection(snapshot)
+        }
     }
 
 }
 
-fun Element.historySection(character: Character, additionalInfo: AdditionalInfo) {
-    innerHTML = ""
-    append {
+fun TagConsumer<HTMLElement>.historySection(character: Character, additionalInfo: AdditionalInfo) {
+    div("character-section") {
+        id = "history-entries"
         div {
             h2 { +"History" }
             additionalInfo.history.forEachIndexed { i, entry ->
@@ -86,16 +85,10 @@ fun Element.historySection(character: Character, additionalInfo: AdditionalInfo)
     }
 }
 
-fun Element.abilitiesSection(character: Character) {
-}
-
-fun Element.gearSection(character: Character) {
-}
-
-fun Element.statsSection(character: Character) {
+fun TagConsumer<HTMLElement>.statsSection(character: Character) {
     val rawStats = character.aspects.filter { it.name == "historyStat2" }
-    innerHTML = ""
-    append {
+    div("character-section") {
+        id = "stats-section"
         div {
             id = "stat-bonuses"
             h2 { +"Stat Bonuses" }
@@ -129,23 +122,27 @@ fun Element.statsSection(character: Character) {
     }
 }
 
-fun Element.combatSection(character: Character) {
-}
-
-fun Element.relationshipsSection(character: LegacyCharacter) {
+fun TagConsumer<HTMLElement>.familySection(character: LegacyCharacter) {
     val snapshot = character.snapshots.last()
-    innerHTML = ""
-    append {
-        div {
-            h2 { +"Family" }
-            with(snapshot.family) {
-                parents.forEach { relativeCard(it, "Parent") }
-                soulMate?.let { relativeCard(it, "Soulmate") }
-                children.forEach { relativeCard(it, "Child") }
+    with(snapshot.family) {
+        if (soulMate != null || parents.isNotEmpty() || children.isNotEmpty()) {
+            div("character-section") {
+                id = "family-section"
+                div {
+                    h2 { +"Family" }
+                    parents.forEach { relativeCard(it, "Parent") }
+                    soulMate?.let { relativeCard(it, "Soulmate") }
+                    children.forEach { relativeCard(it, "Child") }
+                }
             }
         }
+    }
+}
 
-        if (character.friendships.isNotEmpty()) {
+fun TagConsumer<HTMLElement>.friendshipSection(character: LegacyCharacter) {
+    if (character.friendships.isNotEmpty()) {
+        div("character-section") {
+            id = "friendships-section"
             div {
                 h2 { +"Relationships" }
                 character.friendships.forEach { friendShip ->
@@ -153,6 +150,12 @@ fun Element.relationshipsSection(character: LegacyCharacter) {
                 }
             }
         }
+    }
+}
+
+fun TagConsumer<HTMLElement>.companiesSection(character: LegacyCharacter) {
+    div("character-section") {
+        id = "companies-section"
         div {
             h2 { +"Companies" }
             character.companyIds.forEach { companyCard(it) }
@@ -206,18 +209,29 @@ private fun TagConsumer<HTMLElement>.companyCard(companyId: String) {
     }
 }
 
-fun Element.aspectsSection(character: Character) {
-    innerHTML = ""
-    append {
+fun TagConsumer<HTMLElement>.aspectsSection(character: Character) {
+    val allAspects = character.aspects.filterNot { it.hiddenAspect() }.sortedBy { it.name }
+    val firstHalf = allAspects.subList(0, allAspects.size / 2)
+    val secondHalf = allAspects.subList(allAspects.size / 2, allAspects.size)
+    div("character-section") {
+        id = "aspects-section"
+        h2 { +"Aspects" }
         div {
-            h2 { +"Aspects" }
-            table {
-                tbody {
-                    character.aspects.filterNot { it.hiddenAspect() }.sortedBy { it.name }.forEach { aspect ->
-                        tr {
-                            td { +aspect.name }
-                            td { +aspect.values.joinToString(", ") }
-                        }
+            id = "aspect-tables"
+            buildAspectTable(firstHalf)
+            buildAspectTable(secondHalf)
+        }
+    }
+}
+
+private fun DIV.buildAspectTable(firstHalf: List<Aspect>) {
+    div {
+        table {
+            tbody {
+                firstHalf.forEach { aspect ->
+                    tr {
+                        td { +aspect.name }
+                        td { +aspect.values.joinToString(", ") }
                     }
                 }
             }

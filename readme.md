@@ -8,12 +8,17 @@ cp -r ../wildermyth-legacy/build/distributions/* . && rm characters.zip
 ## TODO
 
 Upload menu
-- button to navigate to it
-- instructions
+- update instructions
+  - Including legacy.json
+  - Including additional properties
 - option to upload story properties
   - instructions
   - mention in blank bios
+  - Reimplement tag parser for accurate bios
+
+Character List
+- Search (filter) by name, tag, attributes
 
 Details page
-- navigation with path param
-- show relationships, stats, etc
+- add tag
+- show hometown?
