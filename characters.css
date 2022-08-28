@@ -3,6 +3,8 @@
     display: inline-block;
     width: 470px;
     margin: 10px;
+    margin-right: 50px;
+    margin-left: 50px;
     padding: 20px;
     padding-bottom: 40px;
     overflow: hidden;

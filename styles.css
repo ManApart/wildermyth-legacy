@@ -37,6 +37,7 @@ button {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
+  margin: 4px;
 }
 
 button:hover{
@@ -70,16 +71,30 @@ table {
     text-align: center;
 }
 
-#clear-button {
-  float: right;
-}
-
 #import-section {
   margin-left: 1%
 }
 
+#export-button{
+    float: right;
+}
+
+#upload-instructions{
+  display: flex;
+  flex-wrap: wrap;
+}
+
 #import-input {
   margin-left: 38%
+}
+
+#instructions-text{
+    margin-right: 20px;
+    max-width: 770px;
+}
+
+#zip-example{
+    height: 100%;
 }
 
 @media (max-width: 1000px) {
