@@ -60,6 +60,11 @@ textarea{
     background-color: var(--bio-background);
 }
 
+table {
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
 #nav table{
     width: 100%;
     text-align: center;

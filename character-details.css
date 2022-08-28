@@ -1,5 +1,10 @@
+#character-details{
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .character-section {
-    display: inline-block;
+    display: block;
     width: 500px;
 }
 
@@ -34,4 +39,45 @@
 
 .relationship-text p{
     margin-top: 0px;
+}
+
+#stat-bonuses {
+    display: inline-block;
+}
+
+#personality {
+    display: inline-block;
+    float: right;
+}
+
+#stats-section table{
+    width: 200px;
+}
+
+.company{
+    background-color: var(--card-background);
+    padding-left: 4px;
+    margin: 4px;
+}
+
+.company h4{
+    padding-top: 4px;
+}
+
+.company-friend-pic-wrapper{
+    display: inline-block;
+    overflow: hidden;
+    width: 40px;
+    height: 60px;
+}
+
+.company-friend-pic{
+    width: 60px;
+    margin-top: -10px;
+    margin-left: -10px;
+}
+
+#aspect-tables{
+    display: flex;
+    flex-wrap: nowrap;
 }
