@@ -108,10 +108,25 @@ fun Element.gearSection(character: Character, additionalInfo: AdditionalInfo) {
 }
 
 fun Element.statsSection(character: Character, additionalInfo: AdditionalInfo) {
+    val rawStats = character.aspects.filter { it.name.contains("Stat") }
+    println(JSON.stringify(character.personality.keys))
     innerHTML = ""
     append {
         div {
             h2 { +"Stats" }
+        }
+        div {
+            h2 { +"Personality" }
+            table {
+                tbody {
+                    character.personality.entries.sortedByDescending { it.value }.forEach { (type, amount) ->
+                        tr {
+                            td { +type.format()}
+                            td { +"$amount"}
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -174,7 +189,7 @@ private fun TagConsumer<HTMLElement>.companyCard(companyId: String) {
 
     div("company") {
         h4 { +company.name }
-        p{
+        p {
             +company.characters.mapNotNull { getCharacter(it) }.joinToString(", ") { it.snapshots.first().name }
         }
 
