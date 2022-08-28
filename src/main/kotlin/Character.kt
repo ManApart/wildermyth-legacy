@@ -64,7 +64,7 @@ data class Character(
     }
 
     private fun getPersonality(): Map<Personality, Int> {
-        val aspect = history.firstOrNull { it.id == "humanPersonalityStats" }?.associatedAspects?.firstOrNull { it.name == "roleStats" }
+        val aspect = aspects.firstOrNull { it.name == "roleStats" }
         return if (aspect != null) {
             val personality = mutableMapOf<Personality, Int>()
             Personality.values().forEachIndexed { i, p ->
@@ -82,5 +82,9 @@ data class Character(
         val lover = aspects.firstOrNull { it.name == "lockedRelationship" && it.values.first() == "lover" }?.values?.last()
         return Family(lover, parents, children)
     }
+
+//    private fun getHomeTown(): String {
+//        history.firstOrNull { it.id == "hometown" }?.relationships.first().name
+//    }
 
 }

@@ -1,12 +1,11 @@
 package pages
 
 import AdditionalInfo
+import Aspect
 import Character
 import HistoryEntry
 import LegacyCharacter
 import clearSections
-import doRouting
-import el
 import getAdditionalInfo
 import getCharacter
 import getCompany
@@ -16,9 +15,7 @@ import kotlinx.browser.window
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.*
-import kotlinx.html.js.button
 import kotlinx.html.js.div
-import kotlinx.html.js.textArea
 import org.w3c.dom.*
 import saveAdditionalInfo
 import kotlin.js.Date
@@ -44,17 +41,17 @@ fun characterDetail(character: LegacyCharacter) {
         div("character-section") { id = "history-entries" }
             .historySection(snapshot, additionalInfo)
         div("character-section") { id = "abilities-section" }
-            .abilitiesSection(snapshot, additionalInfo)
+            .abilitiesSection(snapshot)
         div("character-section") { id = "gear-section" }
-            .gearSection(snapshot, additionalInfo)
+            .gearSection(snapshot)
         div("character-section") { id = "stats-section" }
-            .statsSection(snapshot, additionalInfo)
+            .statsSection(snapshot)
         div("character-section") { id = "combat-section" }
-            .combatSection(snapshot, additionalInfo)
+            .combatSection(snapshot)
         div("character-section") { id = "relationships-section" }
-            .relationshipsSection(character, additionalInfo)
+            .relationshipsSection(character)
         div("character-section") { id = "aspects-section" }
-            .aspectsSection(snapshot, additionalInfo)
+            .aspectsSection(snapshot)
     }
 
 }
@@ -89,40 +86,42 @@ fun Element.historySection(character: Character, additionalInfo: AdditionalInfo)
     }
 }
 
-fun Element.abilitiesSection(character: Character, additionalInfo: AdditionalInfo) {
-    innerHTML = ""
-    append {
-        div {
-            h2 { +"Abilities" }
-        }
-    }
+fun Element.abilitiesSection(character: Character) {
 }
 
-fun Element.gearSection(character: Character, additionalInfo: AdditionalInfo) {
-    innerHTML = ""
-    append {
-        div {
-            h2 { +"Gear" }
-        }
-    }
+fun Element.gearSection(character: Character) {
 }
 
-fun Element.statsSection(character: Character, additionalInfo: AdditionalInfo) {
-    val rawStats = character.aspects.filter { it.name.contains("Stat") }
-    println(JSON.stringify(character.personality.keys))
+fun Element.statsSection(character: Character) {
+    val rawStats = character.aspects.filter { it.name == "historyStat2" }
+    println(JSON.stringify(rawStats))
     innerHTML = ""
     append {
         div {
-            h2 { +"Stats" }
+            id = "stat-bonuses"
+            h2 { +"Stat Bonuses" }
+            table {
+                tbody {
+                    rawStats.sortedBy { it.name }.forEach { stat ->
+                        val statName = stat.values.first().format()
+                        val statVal = stat.values[1]
+                        tr {
+                            td { +statName }
+                            td { +statVal }
+                        }
+                    }
+                }
+            }
         }
         div {
+            id = "personality"
             h2 { +"Personality" }
             table {
                 tbody {
                     character.personality.entries.sortedByDescending { it.value }.forEach { (type, amount) ->
                         tr {
-                            td { +type.format()}
-                            td { +"$amount"}
+                            td { +type.format() }
+                            td { +"$amount" }
                         }
                     }
                 }
@@ -131,16 +130,10 @@ fun Element.statsSection(character: Character, additionalInfo: AdditionalInfo) {
     }
 }
 
-fun Element.combatSection(character: Character, additionalInfo: AdditionalInfo) {
-    innerHTML = ""
-    append {
-        div {
-            h2 { +"Combat" }
-        }
-    }
+fun Element.combatSection(character: Character) {
 }
 
-fun Element.relationshipsSection(character: LegacyCharacter, additionalInfo: AdditionalInfo) {
+fun Element.relationshipsSection(character: LegacyCharacter) {
     innerHTML = ""
     append {
         div {
@@ -196,12 +189,28 @@ private fun TagConsumer<HTMLElement>.companyCard(companyId: String) {
     }
 }
 
-fun Element.aspectsSection(character: Character, additionalInfo: AdditionalInfo) {
+fun Element.aspectsSection(character: Character) {
     innerHTML = ""
     append {
         div {
             h2 { +"Aspects" }
+            table {
+                tbody {
+                    character.aspects.filterNot { it.hiddenAspect() }.sortedBy { it.name }.forEach { aspect ->
+                        tr {
+                            td { +aspect.name }
+                            td { +aspect.values.joinToString(", ") }
+                        }
+                    }
+                }
+            }
         }
     }
+}
+
+private fun Aspect.hiddenAspect(): Boolean {
+    return name in listOf("familyWith", "childOf", "parentOf", "historyStat2", "roleStats")
+            || name.startsWith("human")
+            || name.startsWith("relationship")
 }
 

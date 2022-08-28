@@ -35,3 +35,11 @@
 .relationship-text p{
     margin-top: 0px;
 }
+
+#stat-bonuses {
+    display: inline-block;
+}
+
+#personality {
+    display: inline-block;
+}

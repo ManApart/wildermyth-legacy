@@ -85,3 +85,7 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, clickable
 fun Enum<*>.format(): String {
     return if (this == undefined) "" else name.lowercase().capitalize()
 }
+
+fun String.format(): String {
+    return lowercase().capitalize()
+}
