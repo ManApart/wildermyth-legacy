@@ -1,4 +1,6 @@
+# Wildermyth Legacy
 
+[Site](https://manapart.github.io/wildermyth-legacy/) that allows you to view your Wildermyth Legacy without having to start up the game.
 
 ## Deploying
 ```
@@ -8,10 +10,6 @@ cp -r ../wildermyth-legacy/build/distributions/* . && rm characters.zip
 ## TODO
 
 Upload menu
-- update instructions
-  - Including legacy.json
-  - Including additional properties
-  - Include picture of ideal Zip?
 - option to upload story properties
   - instructions
   - mention in blank bios
