@@ -1,14 +1,12 @@
 package pages
 
-import Character
+import LegacyCharacter
 import buildNav
 import clearSections
 import getCharacter
 import getCharacterList
 import getPicture
-import jsonMapper
 import kotlinx.browser.document
-import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import kotlinx.html.TagConsumer
 import kotlinx.html.classes
@@ -19,9 +17,7 @@ import kotlinx.html.js.h1
 import kotlinx.html.js.img
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.style
-import kotlinx.serialization.decodeFromString
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.get
 
 
 fun displayCharacters() {
@@ -31,8 +27,8 @@ fun displayCharacters() {
     buildNav()
     section.append {
         getCharacterList().also { println("Building ${it.size} characters.") }
-            .mapNotNull { getCharacter(it)?.also { println(it.uuid) }?.snapshots?.last() }
-            .sortedWith(compareBy<Character> { it.name.split(" ").last() }.thenBy { it.name.split(" ").first() })
+            .mapNotNull { getCharacter(it) }
+            .sortedWith(compareBy<LegacyCharacter> { it.snapshots.last().name.split(" ").last() }.thenBy { it.snapshots.last().name.split(" ").first() })
             .forEach { character ->
                 characterCard(character, true)
             }
@@ -45,8 +41,8 @@ private fun scrollToCharacter() {
     document.getElementById(hashId)?.scrollIntoView()
 }
 
-fun TagConsumer<HTMLElement>.characterCard(character: Character, clickable: Boolean) {
-    with(character) {
+fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, clickable: Boolean) {
+    with(character.snapshots.last()) {
         val className = characterClass.name.lowercase()
         val topTrait = personality.entries.maxBy { it.value }.key
         val secondTrait = personality.entries.filterNot { it.key == topTrait }.maxBy { it.value }.key

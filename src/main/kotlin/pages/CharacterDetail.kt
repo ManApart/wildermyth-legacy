@@ -3,6 +3,7 @@ package pages
 import AdditionalInfo
 import Character
 import HistoryEntry
+import LegacyCharacter
 import clearSections
 import doRouting
 import el
@@ -21,11 +22,12 @@ import org.w3c.dom.*
 import saveAdditionalInfo
 import kotlin.js.Date
 
-fun characterDetail(character: Character) {
+fun characterDetail(character: LegacyCharacter) {
     val additionalInfo = getAdditionalInfo(character.uuid)
     val section = document.getElementById("character-cards-section")!!
+    val snapshot = character.snapshots.last()
     clearSections()
-    document.title = character.name
+    document.title = snapshot.name
     document.documentElement?.scrollTop = 0.0
     window.history.pushState(null, "null", "#detail/" + character.uuid)
     section.append {
@@ -39,19 +41,19 @@ fun characterDetail(character: Character) {
         }
         characterCard(character, false)
         div("character-section") { id = "history-entries" }
-            .historySection(character, additionalInfo)
+            .historySection(snapshot, additionalInfo)
         div("character-section") { id = "abilities-section" }
-            .abilitiesSection(character, additionalInfo)
+            .abilitiesSection(snapshot, additionalInfo)
         div("character-section") { id = "gear-section" }
-            .gearSection(character, additionalInfo)
+            .gearSection(snapshot, additionalInfo)
         div("character-section") { id = "stats-section" }
-            .statsSection(character, additionalInfo)
+            .statsSection(snapshot, additionalInfo)
         div("character-section") { id = "combat-section" }
-            .combatSection(character, additionalInfo)
+            .combatSection(snapshot, additionalInfo)
         div("character-section") { id = "relationships-section" }
-            .relationshipsSection(character, additionalInfo)
+            .relationshipsSection(snapshot, additionalInfo)
         div("character-section") { id = "aspects-section" }
-            .aspectsSection(character, additionalInfo)
+            .aspectsSection(snapshot, additionalInfo)
     }
 
 }
@@ -137,9 +139,10 @@ fun Element.relationshipsSection(character: Character, additionalInfo: Additiona
 }
 
 private fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relationship: String) {
-    val relative = getCharacter(relativeUuid)?.snapshots?.last()
+    val relative = getCharacter(relativeUuid)
+    val snapshot = relative?.snapshots?.last()
 
-    if (relative != null) {
+    if (relative != null && snapshot != null) {
         div("relationship") {
             onClickFunction = { characterDetail(relative) }
             getPicture("$relativeUuid/head")?.let { picture ->
@@ -149,7 +152,7 @@ private fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relation
             }
             div("relationship-text") {
                 h4 { +relationship }
-                p { +relative.name }
+                p { +snapshot.name }
             }
 
         }
