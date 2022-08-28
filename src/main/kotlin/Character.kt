@@ -25,6 +25,9 @@ data class Character(
     val bio = getBio()
 
     @Transient
+    val male = getSex()
+
+    @Transient
     val characterClass = getCharacterClass()
 
     @Transient
@@ -96,6 +99,10 @@ data class Character(
             if (level == null || kind == null) return@mapNotNull null
             Friendship(relativeId, kind, level)
         }
+    }
+
+    private fun getSex(): Boolean {
+        return aspects.firstOrNull { it.name == "male" } != null
     }
 
 //    private fun getHomeTown(): String {
