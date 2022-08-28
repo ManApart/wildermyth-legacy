@@ -5,11 +5,18 @@ import pages.toAspect
 /*
 Stats to display
 For Bio/history: Use text overrides + additional info overrides. If they upload a strings file, parse from that
-Personality stats
-Class Stats
-Relationships
 Hometown
  */
+
+@Serializable
+data class LegacyCharacter(val uuid: String, val snapshots: Array<Character>, val companyIds: List<String> = listOf()){
+    @Transient
+    val friendships = getFriendships()
+
+    private fun getFriendships(): List<Friendship>{
+        return snapshots.flatMap { it.friendships }.groupBy { it.relativeId }.map { (_, options) -> options.maxBy { it.level } }
+    }
+}
 
 @Serializable
 data class Character(
@@ -37,6 +44,9 @@ data class Character(
 
     @Transient
     val family = getFamily()
+
+    @Transient
+    val friendships = getFriendships()
 
     private fun getBio(): String {
         val historyOverrides = history.joinToString(" ") { it.textOverride }
@@ -81,6 +91,17 @@ data class Character(
         val children = aspects.filter { it.name == "parentOf" }.map { it.values.first() }
         val lover = aspects.firstOrNull { it.name == "lockedRelationship" && it.values.first() == "lover" }?.values?.last()
         return Family(lover, parents, children)
+    }
+
+    private fun getFriendships(): List<Friendship> {
+        val relationships = aspects.filter { it.name.startsWith("relationship") }
+        return relationships.mapNotNull { friendship ->
+            val level = friendship.name.last().digitToIntOrNull()
+            val kind = FriendshipKind.values().firstOrNull { friendship.name.contains(it.name.lowercase()) }
+            val relativeId = friendship.values.last()
+            if (level == null || kind == null) return@mapNotNull null
+            Friendship(relativeId, kind, level)
+        }
     }
 
 //    private fun getHomeTown(): String {

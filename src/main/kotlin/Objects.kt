@@ -42,7 +42,16 @@ data class AdditionalInfo(val uuid: String, val favorite: Boolean = false, val h
 data class Family(val soulMate: String? = null, val parents: List<String> = listOf(), val children: List<String> = listOf())
 
 @Serializable
-data class LegacyCharacter(val uuid: String, val snapshots: Array<Character>, val companyIds: List<String> = listOf())
-
-@Serializable
 data class Company(val id: String, val date: Double, val name: String, val characters: MutableSet<String> = mutableSetOf())
+
+data class Friendship(val relativeId: String, val kind: FriendshipKind, val level: Int)
+
+enum class FriendshipKind(val titles: List<String>) {
+    FRIEND(listOf("Crony ", "Confidant", "Comrade", "Companion", "Bloodbond")),
+    LOVER(listOf("Crush", "Flame", "Sweetheart", "Lover", "Soulmate")),
+    RIVAL(listOf("Peer", "Irritant", "Frenemy", "Antagonist", "Rival"));
+
+    fun getTitle(i: Int): String{
+        return titles[i-1]
+    }
+}

@@ -94,7 +94,6 @@ fun Element.gearSection(character: Character) {
 
 fun Element.statsSection(character: Character) {
     val rawStats = character.aspects.filter { it.name == "historyStat2" }
-    println(JSON.stringify(rawStats))
     innerHTML = ""
     append {
         div {
@@ -134,14 +133,24 @@ fun Element.combatSection(character: Character) {
 }
 
 fun Element.relationshipsSection(character: LegacyCharacter) {
+    val snapshot = character.snapshots.last()
     innerHTML = ""
     append {
         div {
-            h2 { +"Relationships" }
-            with(character.snapshots.last().family) {
+            h2 { +"Family" }
+            with(snapshot.family) {
                 parents.forEach { relativeCard(it, "Parent") }
                 soulMate?.let { relativeCard(it, "Soulmate") }
                 children.forEach { relativeCard(it, "Child") }
+            }
+        }
+
+        if (character.friendships.isNotEmpty()) {
+            div {
+                h2 { +"Relationships" }
+                character.friendships.forEach { friendShip ->
+                    relativeCard(friendShip.relativeId, friendShip.kind.getTitle(friendShip.level))
+                }
             }
         }
         div {
