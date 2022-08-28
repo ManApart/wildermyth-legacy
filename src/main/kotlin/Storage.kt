@@ -59,7 +59,8 @@ fun saveAdditionalInfo(info: AdditionalInfo) {
 }
 
 fun getCompany(uuid: String): Company {
-    return localStorage["companies"]?.let { jsonMapper.decodeFromString<Map<String, Company>>(it)[uuid] } ?: Company(uuid, 0, "Unknown")
+    val companies = inMemoryStorage["companies"]?.let { jsonMapper.decodeFromString<Map<String, Company>>(it) } ?: mapOf()
+    return companies[uuid] ?: Company(uuid, 0.0, "Unknown")
 }
 
 fun saveCompanies(companies: Map<String, Company>) {

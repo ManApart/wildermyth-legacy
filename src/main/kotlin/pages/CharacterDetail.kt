@@ -9,6 +9,7 @@ import doRouting
 import el
 import getAdditionalInfo
 import getCharacter
+import getCompany
 import getPicture
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -51,7 +52,7 @@ fun characterDetail(character: LegacyCharacter) {
         div("character-section") { id = "combat-section" }
             .combatSection(snapshot, additionalInfo)
         div("character-section") { id = "relationships-section" }
-            .relationshipsSection(snapshot, additionalInfo)
+            .relationshipsSection(character, additionalInfo)
         div("character-section") { id = "aspects-section" }
             .aspectsSection(snapshot, additionalInfo)
     }
@@ -124,16 +125,20 @@ fun Element.combatSection(character: Character, additionalInfo: AdditionalInfo) 
     }
 }
 
-fun Element.relationshipsSection(character: Character, additionalInfo: AdditionalInfo) {
+fun Element.relationshipsSection(character: LegacyCharacter, additionalInfo: AdditionalInfo) {
     innerHTML = ""
     append {
         div {
             h2 { +"Relationships" }
-            with(character.family) {
+            with(character.snapshots.last().family) {
                 parents.forEach { relativeCard(it, "Parent") }
                 soulMate?.let { relativeCard(it, "Soulmate") }
                 children.forEach { relativeCard(it, "Child") }
             }
+        }
+        div {
+            h2 { +"Companies" }
+            character.companyIds.forEach { companyCard(it) }
         }
     }
 }
@@ -161,6 +166,18 @@ private fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relation
             h4 { +relationship }
             p { +relativeUuid }
         }
+    }
+}
+
+private fun TagConsumer<HTMLElement>.companyCard(companyId: String) {
+    val company = getCompany(companyId)
+
+    div("company") {
+        h4 { +company.name }
+        p{
+            +company.characters.mapNotNull { getCharacter(it) }.joinToString(", ") { it.snapshots.first().name }
+        }
+
     }
 }
 

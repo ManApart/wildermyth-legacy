@@ -96,7 +96,7 @@ fun parseLegacyCharacter(json: Json): LegacyCharacter {
         ((companyJson["companyId"] as Json)["value"] as String).also { companyId ->
             if (!companies.containsKey(companyId)) {
                 val name = companyJson["companyName"] as String
-                val date = companyJson["date"] as Int
+                val date = companyJson["date"] as Double
                 companies[companyId] = Company(companyId, date, name)
             }
             companies[companyId]?.characters?.add(uuid)
