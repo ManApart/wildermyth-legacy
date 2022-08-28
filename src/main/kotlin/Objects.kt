@@ -45,4 +45,4 @@ data class Family(val soulMate: String? = null, val parents: List<String> = list
 data class LegacyCharacter(val uuid: String, val snapshots: Array<Character>, val companyIds: List<String> = listOf())
 
 @Serializable
-data class Company(val id: String, val date: Double, val name: String, val characters: MutableList<String> = mutableListOf())
+data class Company(val id: String, val date: Double, val name: String, val characters: MutableSet<String> = mutableSetOf())
