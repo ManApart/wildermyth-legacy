@@ -22,6 +22,7 @@ import kotlin.js.Json
 import saveCharacter
 import saveCharacterList
 import savePicture
+import saveStoryProps
 import kotlin.js.Promise
 
 private val companies = mutableMapOf<String, Company>()
@@ -30,6 +31,7 @@ fun importZip(data: ArrayBuffer, originalHash: String) {
     JSZip().loadAsync(data).then { zip ->
         val keys = JsonObject.keys(zip.files)
         handleAdditionalInfo(zip)
+        handleStoryProps(zip)
         handleZipCharacterData(zip, keys, originalHash)
     }
 }
@@ -37,6 +39,18 @@ fun importZip(data: ArrayBuffer, originalHash: String) {
 private fun handleAdditionalInfo(zip: JSZip.ZipObject) {
     zip.file("AdditionalInfo.json")?.async<String>("string")?.then { content ->
         saveAdditionalInfo(jsonMapper.decodeFromString<MutableMap<String, AdditionalInfo>>(content))
+    }
+}
+
+private fun handleStoryProps(zip: JSZip.ZipObject) {
+    zip.file("story.properties")?.async<String>("string")?.then { content ->
+        val props = content.split("\n").mapNotNull {
+            val parts = it.split("=")
+            val key = parts.firstOrNull()
+            val prop = parts.getOrNull(1)
+            if (key != null && prop != null) key to prop else null
+        }.toMap()
+        saveStoryProps(props)
     }
 }
 

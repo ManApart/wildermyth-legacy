@@ -13,6 +13,7 @@ data class InMemoryStorage(
     val pictures: MutableMap<String, String> = mutableMapOf(),
     val additionalInfo: MutableMap<String, AdditionalInfo> = mutableMapOf(),
     var companies: Map<String, Company> = mapOf(),
+    var storyProps: Map<String, String> = mapOf(),
 )
 
 private val inMemoryStorage = InMemoryStorage()
@@ -73,4 +74,13 @@ fun getCompany(uuid: String): Company {
 
 fun saveCompanies(companies: Map<String, Company>) {
     inMemoryStorage.companies = companies.toMap()
+}
+
+fun getStoryProp(id: String): String? {
+    return inMemoryStorage.storyProps[id]
+}
+
+fun saveStoryProps(props: Map<String, String>) {
+    inMemoryStorage.storyProps = props
+    print(props.keys)
 }
