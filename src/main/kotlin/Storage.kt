@@ -7,33 +7,42 @@ import org.w3c.files.Blob
 import org.w3c.files.FileReader
 import kotlin.js.Promise
 
-private val inMemoryStorage = mutableMapOf<String, String>()
+data class InMemoryStorage(
+    var characterList: Set<String> = setOf(),
+    val characters: MutableMap<String, LegacyCharacter> = mutableMapOf(),
+    val pictures: MutableMap<String, String> = mutableMapOf(),
+    val additionalInfo: MutableMap<String, AdditionalInfo> = mutableMapOf(),
+    var companies: Map<String, Company> = mapOf(),
+)
+
+private val inMemoryStorage = InMemoryStorage()
+
 
 fun getCharacterList(): MutableSet<String> {
-    return inMemoryStorage["character-list"]?.split(",")?.toMutableSet() ?: mutableSetOf()
+    return inMemoryStorage.characterList.toMutableSet()
 }
 
-fun saveCharacterList(list: Set<String>) {
-    inMemoryStorage["character-list"] = list.joinToString(",")
+fun saveCharacterList(characters: Set<String>) {
+    inMemoryStorage.characterList = characters.toSet()
 }
 
 fun getCharacter(uuid: String): LegacyCharacter? {
-    return inMemoryStorage[uuid]?.let { jsonMapper.decodeFromString(it) }
+    return inMemoryStorage.characters[uuid]
 }
 
 fun saveCharacter(character: LegacyCharacter) {
-    inMemoryStorage[character.uuid] = jsonMapper.encodeToString(character)
+    inMemoryStorage.characters[character.uuid] = character
 }
 
 fun getPicture(path: String): String? {
-    return inMemoryStorage[path]
+    return inMemoryStorage.pictures[path]
 }
 
 fun savePicture(path: String, blob: Blob): Promise<Unit> {
     return Promise { resolve, reject ->
         val fr = FileReader()
         fr.onload = { _ ->
-            inMemoryStorage[path] = fr.result as String
+            inMemoryStorage.pictures[path] = fr.result as String
             resolve(Unit)
         }
         fr.readAsDataURL(blob)
@@ -59,10 +68,9 @@ fun saveAdditionalInfo(info: AdditionalInfo) {
 }
 
 fun getCompany(uuid: String): Company {
-    val companies = inMemoryStorage["companies"]?.let { jsonMapper.decodeFromString<Map<String, Company>>(it) } ?: mapOf()
-    return companies[uuid] ?: Company(uuid, 0.0, "Unknown")
+    return inMemoryStorage.companies[uuid] ?: Company(uuid, 0.0, "Unknown")
 }
 
 fun saveCompanies(companies: Map<String, Company>) {
-    inMemoryStorage["companies"] = jsonMapper.encodeToString(companies)
+    inMemoryStorage.companies = companies.toMap()
 }
