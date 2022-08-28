@@ -6,6 +6,7 @@ import Character
 import HistoryEntry
 import LegacyCharacter
 import clearSections
+import favicon
 import getAdditionalInfo
 import getCharacter
 import getCompany
@@ -28,6 +29,7 @@ fun characterDetail(character: LegacyCharacter) {
     document.title = snapshot.name
     document.documentElement?.scrollTop = 0.0
     window.history.pushState(null, "null", "#detail/" + character.uuid)
+    setFavicon(character)
     section.append {
         div {
             button {
@@ -53,6 +55,24 @@ fun characterDetail(character: LegacyCharacter) {
         }
     }
 
+}
+
+private fun setFavicon(character: LegacyCharacter) {
+    getPicture("${character.uuid}/head")?.let { picture ->
+        val width = 100.0
+        val height = 115.0
+
+        val image = Image().apply { src = picture }
+
+        val canvas = (document.createElement("canvas") as HTMLCanvasElement)
+        canvas.width = width.toInt()
+        canvas.height = height.toInt()
+        val ctx = canvas.getContext("2d") as CanvasRenderingContext2D
+        ctx.drawImage(image, 45.0, 55.0, width, height, 0.0, 0.0, width, height)
+        val cropped = canvas.toDataURL("image/png", 0.9)
+
+        favicon.setAttribute("href", cropped)
+    }
 }
 
 fun TagConsumer<HTMLElement>.historySection(character: Character, additionalInfo: AdditionalInfo) {

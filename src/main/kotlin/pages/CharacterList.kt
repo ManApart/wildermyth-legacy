@@ -3,6 +3,7 @@ package pages
 import LegacyCharacter
 import buildNav
 import clearSections
+import favicon
 import getCharacter
 import getCharacterList
 import getPicture
@@ -24,6 +25,7 @@ fun displayCharacters() {
     val section = document.getElementById("character-cards-section")!!
     clearSections()
     document.title = "Wildermyth Legacy"
+    favicon.setAttribute("href", "favicon.png")
     buildNav()
     section.append {
         getCharacterList().also { println("Building ${it.size} characters.") }

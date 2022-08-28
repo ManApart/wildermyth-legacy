@@ -13,9 +13,11 @@ import pages.importMenu
 import pages.loadExample
 
 val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
+lateinit var favicon: HTMLElement
 
 fun main() {
     window.onload = {
+        favicon = document.getElementById("favicon") as HTMLElement
         loadExample()
     }
     window.addEventListener("popstate", { e ->
