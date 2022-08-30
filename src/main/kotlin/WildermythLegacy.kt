@@ -4,7 +4,6 @@ import kotlinx.browser.window
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.table
 import kotlinx.serialization.encodeToString
 import org.w3c.dom.HTMLElement
 import pages.characterDetail

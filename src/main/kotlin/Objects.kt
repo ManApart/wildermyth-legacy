@@ -8,6 +8,8 @@ fun classLevelFromInt(level: Int) = ClassLevel.values()[level]
 
 enum class Personality { BOOKISH, COWARD, GOOFBALL, GREEDY, HEALER, HOTHEAD, LEADER, LONER, POET, ROMANTIC, SNARK }
 
+val personalityNames =  Personality.values().map { it.name.lowercase() }
+
 @Serializable
 data class Aspect(val name: String, val values: List<String> = listOf())
 
@@ -51,7 +53,9 @@ enum class FriendshipKind(val titles: List<String>) {
     LOVER(listOf("Crush", "Flame", "Sweetheart", "Lover", "Soulmate")),
     RIVAL(listOf("Peer", "Irritant", "Frenemy", "Antagonist", "Rival"));
 
-    fun getTitle(i: Int): String{
-        return titles[i-1]
+    fun getTitle(i: Int): String {
+        return titles[i - 1]
     }
 }
+
+enum class Sex { MALE, FEMALE, UNKNOWN }

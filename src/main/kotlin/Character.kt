@@ -25,7 +25,7 @@ data class Character(
     val bio = getBio()
 
     @Transient
-    val male = getSex()
+    val sex = getSex()
 
     @Transient
     val characterClass = getCharacterClass()
@@ -101,8 +101,12 @@ data class Character(
         }
     }
 
-    private fun getSex(): Boolean {
-        return aspects.firstOrNull { it.name == "male" } != null
+    private fun getSex(): Sex {
+        return when {
+            aspects.firstOrNull { it.name == "male" } != null -> Sex.MALE
+            aspects.firstOrNull { it.name == "female" } != null -> Sex.FEMALE
+            else -> Sex.UNKNOWN
+        }
     }
 
 //    private fun getHomeTown(): String {
