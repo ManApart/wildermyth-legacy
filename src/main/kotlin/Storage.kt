@@ -82,5 +82,4 @@ fun getStoryProp(id: String): String? {
 
 fun saveStoryProps(props: Map<String, String>) {
     inMemoryStorage.storyProps = props
-    print(props.keys)
 }

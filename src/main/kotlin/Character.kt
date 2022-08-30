@@ -37,7 +37,7 @@ data class Character(
     val age = getAge()
 
     @Transient
-    val personality = getPersonality()
+    var personality = getPersonality()
 
     @Transient
     val family = getFamily()
@@ -49,11 +49,15 @@ data class Character(
         val historyOverrides = history.joinToString(" ") { it.textOverride }
         return historyOverrides.ifBlank {
             listOfNotNull(
-                history.firstOrNull { it.id.startsWith("origin") }?.id,
-                history.firstOrNull { it.id.startsWith("dote") }?.id,
-                history.firstOrNull { it.id.startsWith("mote") }?.id
+                getBioString("origin"),
+                getBioString("dote"),
+                getBioString("mote"),
             ).joinToString(", ")
         }
+    }
+
+    private fun getBioString(startsWith: String): String? {
+        return history.firstOrNull { it.id.startsWith(startsWith) }?.id?.let { propId -> getStoryProp(propId) }?.let { storyProp -> interpolate(storyProp) }
     }
 
     private fun getCharacterClass(): CharacterClass {
@@ -70,7 +74,7 @@ data class Character(
         return temporal["AGE"] ?: 20
     }
 
-    private fun getPersonality(): Map<Personality, Int> {
+    fun getPersonality(): Map<Personality, Int> {
         val aspect = aspects.firstOrNull { it.name == "roleStats" }
         return if (aspect != null) {
             val personality = mutableMapOf<Personality, Int>()
