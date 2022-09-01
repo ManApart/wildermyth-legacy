@@ -24,8 +24,9 @@ data class Character(
     @Transient
     val bio = getBio()
 
+    //For some reason these can be undefined unless the getter is called elsewhere. Make a var so they can be updated
     @Transient
-    val sex = getSex()
+    var sex = getSex()
 
     @Transient
     val attractedToWomen = getAttractedToWomen()
@@ -58,7 +59,7 @@ data class Character(
                 getBioString("origin"),
                 getBioString("dote"),
                 getBioString("mote"),
-            ).joinToString(", ")
+            ).joinToString(" ")
         }
     }
 
@@ -111,7 +112,7 @@ data class Character(
         }
     }
 
-    private fun getSex(): Sex {
+    fun getSex(): Sex {
         return when {
             aspects.firstOrNull { it.name == "male" } != null -> Sex.MALE
             aspects.firstOrNull { it.name == "female" } != null -> Sex.FEMALE

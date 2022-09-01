@@ -73,10 +73,13 @@ private fun Character.replaceTemplate(template: String): String {
 }
 
 private fun Character.replaceMF(resultOptions: List<String>): String {
+    if (sex == undefined) {
+        sex = getSex()
+    }
     return when {
-        sex == Sex.MALE -> resultOptions.first()
-        sex == Sex.FEMALE -> resultOptions[1]
-        resultOptions.size == 3 -> resultOptions.last()
+        getSex() == Sex.MALE -> resultOptions.first()
+        getSex() == Sex.FEMALE -> resultOptions[1]
+        resultOptions.size == 3 -> resultOptions.last().also { println(this.name + " is " + this.sex) }
         else -> resultOptions.first()
     }
 }
@@ -85,7 +88,6 @@ private fun Character.replaceAWM(resultOptions: List<String>): String {
 }
 
 private fun Character.replacePersonality(typeOptions: List<String>, resultOptions: List<String>): String {
-    //For some reason personality may be undefined here
     if (personality == undefined) {
         personality = getPersonality()
     }
