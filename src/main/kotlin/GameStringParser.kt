@@ -59,6 +59,10 @@ private fun Character.replaceTemplate(template: String): String {
     val resultOptions = parts.last().split("/")
     return when {
         template == "name" -> name
+        template == "firstName" -> name.split(" ").first()
+        template == "Site" -> "site"
+        template == "Hometown" -> hometown
+        type == "awm" -> replaceAWM(resultOptions)
         type == "mf" -> replaceMF(resultOptions)
         typeOptions.any { it in personalityNames } -> replacePersonality(typeOptions, resultOptions)
         else -> {
@@ -75,6 +79,9 @@ private fun Character.replaceMF(resultOptions: List<String>): String {
         resultOptions.size == 3 -> resultOptions.last()
         else -> resultOptions.first()
     }
+}
+private fun Character.replaceAWM(resultOptions: List<String>): String {
+    return if (attractedToWomen) resultOptions.first() else resultOptions.last()
 }
 
 private fun Character.replacePersonality(typeOptions: List<String>, resultOptions: List<String>): String {

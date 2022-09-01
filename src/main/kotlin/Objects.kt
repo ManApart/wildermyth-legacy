@@ -20,7 +20,8 @@ data class HistoryEntry(
     var textOverride: String,
     val associatedAspects: List<Aspect> = listOf(),
     val forbiddenAspects: List<Aspect> = listOf(),
-    val showInSummary: Boolean = true
+    val showInSummary: Boolean = true,
+    val relationships: List<HistoryRelationship> = listOf()
 )
 
 @Serializable
@@ -36,6 +37,9 @@ data class HistoryEntryRaw(
         return HistoryEntry(id, acquisitionTime, textOverride, associatedAspects.map { it.toAspect() }, forbiddenAspects.map { it.toAspect() }, showInSummary)
     }
 }
+
+@Serializable
+data class HistoryRelationship(val name: String)
 
 
 @Serializable

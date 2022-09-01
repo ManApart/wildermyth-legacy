@@ -1,6 +1,6 @@
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import pages.toAspect
+import wildermyth.interpolate
 
 @Serializable
 data class LegacyCharacter(val uuid: String, val snapshots: Array<Character>, val companyIds: List<String> = listOf()){
@@ -28,6 +28,9 @@ data class Character(
     val sex = getSex()
 
     @Transient
+    val attractedToWomen = getAttractedToWomen()
+
+    @Transient
     val characterClass = getCharacterClass()
 
     @Transient
@@ -44,6 +47,9 @@ data class Character(
 
     @Transient
     val friendships = getFriendships()
+
+    @Transient
+    val hometown = getHomeTown()
 
     private fun getBio(): String {
         val historyOverrides = history.joinToString(" ") { it.textOverride }
@@ -113,8 +119,12 @@ data class Character(
         }
     }
 
-//    private fun getHomeTown(): String {
-//        history.firstOrNull { it.id == "hometown" }?.relationships.first().name
-//    }
+    private fun getAttractedToWomen(): Boolean {
+        return aspects.firstOrNull { it.name == "attractedToWomen" } != null
+    }
+
+    private fun getHomeTown(): String {
+        return history.firstOrNull { it.id == "hometown" }?.relationships?.firstOrNull()?.name ?: "hometown"
+    }
 
 }
