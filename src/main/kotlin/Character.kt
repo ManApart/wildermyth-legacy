@@ -20,9 +20,14 @@ data class Character(
     val temporal: Map<String, Int> = mapOf(),
     val history: List<HistoryEntry> = listOf(),
 ) {
+    //Trigger anything that needs to happen again on load.
+    fun reload(){
+        //Since story props don't exist when parsing json from indexDB, reload them after the in-memory db is loaded
+       this.bio = getBio()
+    }
 
     @Transient
-    val bio = getBio()
+    var bio = getBio()
 
     val sex : Sex
         get() {

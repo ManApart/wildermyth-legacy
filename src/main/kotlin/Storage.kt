@@ -42,7 +42,7 @@ fun getPicture(path: String): String? {
 }
 
 fun savePicture(path: String, blob: Blob): Promise<Unit> {
-    return Promise { resolve, reject ->
+    return Promise { resolve, _ ->
         val fr = FileReader()
         fr.onload = { _ ->
             inMemoryStorage.pictures[path] = fr.result as String
@@ -90,7 +90,6 @@ fun createDB() {
 }
 
 fun persistMemory() {
-//    LocalForage.setItem("memory", inMemoryStorage)
     LocalForage.setItem("memory", jsonMapper.encodeToString(inMemoryStorage))
 }
 
@@ -98,10 +97,8 @@ fun persistMemory() {
 fun loadMemory(): Promise<*> {
     return LocalForage.getItem("memory").then { persisted ->
         if (persisted != null && persisted != undefined){
-            println("Loading memory")
-            println(persisted)
-//            inMemoryStorage = persisted as InMemoryStorage
             inMemoryStorage = jsonMapper.decodeFromString(persisted as String)
+            inMemoryStorage.characters.values.forEach { legacyCharacter -> legacyCharacter.snapshots.forEach { it.reload() } }
         }
     }
 }
