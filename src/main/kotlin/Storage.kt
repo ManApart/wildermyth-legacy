@@ -17,6 +17,7 @@ data class InMemoryStorage(
 )
 
 private val inMemoryStorage = InMemoryStorage()
+//private lateinit var db: IDB.IDBDatabase
 
 
 fun getCharacterList(): MutableSet<String> {
@@ -82,6 +83,18 @@ fun getStoryProp(id: String): String? {
 
 fun saveStoryProps(props: Map<String, String>) {
     inMemoryStorage.storyProps = props
+}
+
+fun createDB() {
+    IDB.openDB("wildermyth", 1, IDB.DBUpgrade()).then { db ->
+        val tx = db.transaction("data", "readwrite")
+        val store = tx.objectStore("store")
+        store.put("test", "test")
+    }
+//    val request = IndexedDBHelper.open("wildermyth", 1)
+//    request.onSuccess = {
+//        db = request.result
+//    }
 }
 
 fun persistMemory(){

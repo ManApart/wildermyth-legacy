@@ -17,6 +17,7 @@ lateinit var favicon: HTMLElement
 fun main() {
     window.onload = {
         favicon = document.getElementById("favicon") as HTMLElement
+        createDB()
         loadExample()
     }
     window.addEventListener("popstate", { e ->

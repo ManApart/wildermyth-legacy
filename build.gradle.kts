@@ -14,6 +14,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-html-js:0.8.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
     implementation(npm("jszip", "3.10.1"))
+    implementation(npm("idb", "7.0.2"))
     testImplementation(kotlin("test"))
 }
 
