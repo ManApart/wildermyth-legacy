@@ -24,9 +24,14 @@ data class Character(
     @Transient
     val bio = getBio()
 
-    //For some reason these can be undefined unless the getter is called elsewhere. Make a var so they can be updated
-    @Transient
-    var sex = getSex()
+    val sex : Sex
+        get() {
+            if (sexBacking == undefined) {
+                sexBacking = parseSex()
+            }
+            return sexBacking
+        }
+    private var sexBacking = parseSex()
 
     @Transient
     val attractedToWomen = getAttractedToWomen()
@@ -40,8 +45,14 @@ data class Character(
     @Transient
     val age = getAge()
 
-    @Transient
-    var personality = getPersonality()
+    val personality: Map<Personality, Int>
+        get() {
+            if (personalityBacking == undefined) {
+                personalityBacking = parsePersonality()
+            }
+            return personalityBacking
+        }
+    private var personalityBacking = parsePersonality()
 
     @Transient
     val family = getFamily()
@@ -49,8 +60,15 @@ data class Character(
     @Transient
     val friendships = getFriendships()
 
-    @Transient
-    var hometown = getHomeTown()
+    val hometown: String
+        get() {
+            if (hometownBacking == undefined) {
+                hometownBacking = parseHomeTown()
+            }
+            return hometownBacking
+        }
+    private var hometownBacking = parseHomeTown()
+
 
     private fun getBio(): String {
         val historyOverrides = history.joinToString(" ") { it.textOverride }
@@ -81,7 +99,7 @@ data class Character(
         return temporal["AGE"] ?: 20
     }
 
-    fun getPersonality(): Map<Personality, Int> {
+    fun parsePersonality(): Map<Personality, Int> {
         val aspect = aspects.firstOrNull { it.name == "roleStats" }
         return if (aspect != null) {
             val personality = mutableMapOf<Personality, Int>()
@@ -112,7 +130,7 @@ data class Character(
         }
     }
 
-    fun getSex(): Sex {
+    private fun parseSex(): Sex {
         return when {
             aspects.firstOrNull { it.name == "male" } != null -> Sex.MALE
             aspects.firstOrNull { it.name == "female" } != null -> Sex.FEMALE
@@ -124,7 +142,7 @@ data class Character(
         return aspects.firstOrNull { it.name == "attractedToWomen" } != null
     }
 
-    fun getHomeTown(): String {
+    private fun parseHomeTown(): String {
         val aspect = history.firstOrNull { it.id == "hometown" }
         val relationship = aspect?.relationships?.firstOrNull()
         return relationship?.name ?: "hometown"

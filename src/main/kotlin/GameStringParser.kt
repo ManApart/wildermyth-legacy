@@ -61,10 +61,7 @@ private fun Character.replaceTemplate(template: String): String {
         template == "name" -> name
         template == "firstName" -> name.split(" ").first()
         template == "Site" -> "site"
-        template == "Hometown" -> {
-            if (hometown == undefined) hometown = getHomeTown()
-            hometown
-        }
+        template == "Hometown" -> hometown
         type == "awm" -> replaceAWM(resultOptions)
         type == "mf" -> replaceMF(resultOptions)
         typeOptions.any { it in personalityNames } -> replacePersonality(typeOptions, resultOptions)
@@ -76,12 +73,9 @@ private fun Character.replaceTemplate(template: String): String {
 }
 
 private fun Character.replaceMF(resultOptions: List<String>): String {
-    if (sex == undefined) {
-        sex = getSex()
-    }
     return when {
-        getSex() == Sex.MALE -> resultOptions.first()
-        getSex() == Sex.FEMALE -> resultOptions[1]
+        sex == Sex.MALE -> resultOptions.first()
+        sex == Sex.FEMALE -> resultOptions[1]
         resultOptions.size == 3 -> resultOptions.last().also { println(this.name + " is " + this.sex) }
         else -> resultOptions.first()
     }
@@ -91,9 +85,6 @@ private fun Character.replaceAWM(resultOptions: List<String>): String {
 }
 
 private fun Character.replacePersonality(typeOptions: List<String>, resultOptions: List<String>): String {
-    if (personality == undefined) {
-        personality = getPersonality()
-    }
     val highest = typeOptions.maxByOrNull { personality[Personality.valueOf(it.uppercase())] ?: 0 }
         ?: typeOptions.first()
     val resultIndex = typeOptions.indexOf(highest)
