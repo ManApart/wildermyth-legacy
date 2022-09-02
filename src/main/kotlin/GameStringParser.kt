@@ -61,7 +61,10 @@ private fun Character.replaceTemplate(template: String): String {
         template == "name" -> name
         template == "firstName" -> name.split(" ").first()
         template == "Site" -> "site"
-        template == "Hometown" -> hometown
+        template == "Hometown" -> {
+            if (hometown == undefined) hometown = getHomeTown()
+            hometown
+        }
         type == "awm" -> replaceAWM(resultOptions)
         type == "mf" -> replaceMF(resultOptions)
         typeOptions.any { it in personalityNames } -> replacePersonality(typeOptions, resultOptions)

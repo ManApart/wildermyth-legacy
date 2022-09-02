@@ -3,11 +3,11 @@ import kotlinx.serialization.Transient
 import wildermyth.interpolate
 
 @Serializable
-data class LegacyCharacter(val uuid: String, val snapshots: Array<Character>, val companyIds: List<String> = listOf()){
+data class LegacyCharacter(val uuid: String, val snapshots: Array<Character>, val companyIds: List<String> = listOf()) {
     @Transient
     val friendships = getFriendships()
 
-    private fun getFriendships(): List<Friendship>{
+    private fun getFriendships(): List<Friendship> {
         return snapshots.flatMap { it.friendships }.groupBy { it.relativeId }.map { (_, options) -> options.maxBy { it.level } }
     }
 }
@@ -50,7 +50,7 @@ data class Character(
     val friendships = getFriendships()
 
     @Transient
-    val hometown = getHomeTown()
+    var hometown = getHomeTown()
 
     private fun getBio(): String {
         val historyOverrides = history.joinToString(" ") { it.textOverride }
@@ -124,8 +124,10 @@ data class Character(
         return aspects.firstOrNull { it.name == "attractedToWomen" } != null
     }
 
-    private fun getHomeTown(): String {
-        return history.firstOrNull { it.id == "hometown" }?.relationships?.firstOrNull()?.name ?: "hometown"
+    fun getHomeTown(): String {
+        val aspect = history.firstOrNull { it.id == "hometown" }
+        val relationship = aspect?.relationships?.firstOrNull()
+        return relationship?.name ?: "hometown"
     }
 
 }

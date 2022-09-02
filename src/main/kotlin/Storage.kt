@@ -83,3 +83,12 @@ fun getStoryProp(id: String): String? {
 fun saveStoryProps(props: Map<String, String>) {
     inMemoryStorage.storyProps = props
 }
+
+fun persistMemory(){
+
+}
+
+
+//fun loadMemory(): Promise<*>{
+//return Promise()
+//}
