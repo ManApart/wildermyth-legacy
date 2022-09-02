@@ -16,6 +16,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.JsonNull.content
 import org.khronos.webgl.ArrayBuffer
 import org.w3c.files.Blob
+import persistMemory
 import saveAdditionalInfo
 import saveCompanies
 import kotlin.js.Json
@@ -69,6 +70,7 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, ori
             Promise.all(characters.map { handleZipPictures(zip, it.snapshots.last()) }.toTypedArray())
         }.then {
             doRouting(originalHash)
+            persistMemory()
         }
 }
 

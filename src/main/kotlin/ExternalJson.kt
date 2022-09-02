@@ -25,36 +25,9 @@ object JsonObject {
     }
 }
 
-@JsModule("idb")
+@JsModule("localforage")
 @JsNonModule
-external object IDB {
-    fun openDB(name: String, version: Int, dbUpgrade: DBUpgrade): Promise<IDBDatabase>
-    class DBUpgrade{
-        val upgrade: (db: Any, oldVersion: Int, newVersion: Int, transaction: Any) -> Unit
-    }
-    class IDBDatabase() {
-        fun transaction(storeName: String, mode: String): Transaction
-    }
-    class Transaction {
-        fun objectStore(name: String): ObjectStore
-    }
-    class ObjectStore {
-        fun get(key: String): dynamic
-        fun put(key: String, value: Any)
-    }
+external object LocalForage {
+    fun setItem(key: String, value: Any): Promise<*>
+    fun getItem(key: String): Promise<Any?>
 }
-
-//object IndexedDBHelper {
-//    fun open(name: String, version: Int): IndexDBRequest {
-//        return js("indexedDB.open(name, version)") as IndexDBRequest
-//    }
-//}
-//
-//class IndexDBRequest {
-//    val result: IndexedDB
-//    var onSuccess: () -> Unit
-//}
-//
-//class IndexedDB {
-//
-//}

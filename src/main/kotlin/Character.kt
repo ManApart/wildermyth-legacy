@@ -31,6 +31,7 @@ data class Character(
             }
             return sexBacking
         }
+    @Transient
     private var sexBacking = parseSex()
 
     @Transient
@@ -52,6 +53,7 @@ data class Character(
             }
             return personalityBacking
         }
+    @Transient
     private var personalityBacking = parsePersonality()
 
     @Transient
@@ -67,8 +69,8 @@ data class Character(
             }
             return hometownBacking
         }
+    @Transient
     private var hometownBacking = parseHomeTown()
-
 
     private fun getBio(): String {
         val historyOverrides = history.joinToString(" ") { it.textOverride }

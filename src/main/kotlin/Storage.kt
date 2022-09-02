@@ -1,4 +1,5 @@
 import kotlinx.browser.localStorage
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import org.w3c.dom.get
@@ -7,6 +8,7 @@ import org.w3c.files.Blob
 import org.w3c.files.FileReader
 import kotlin.js.Promise
 
+@Serializable
 data class InMemoryStorage(
     var characterList: Set<String> = setOf(),
     val characters: MutableMap<String, LegacyCharacter> = mutableMapOf(),
@@ -16,8 +18,7 @@ data class InMemoryStorage(
     var storyProps: Map<String, String> = mapOf(),
 )
 
-private val inMemoryStorage = InMemoryStorage()
-//private lateinit var db: IDB.IDBDatabase
+private var inMemoryStorage = InMemoryStorage()
 
 
 fun getCharacterList(): MutableSet<String> {
@@ -86,22 +87,21 @@ fun saveStoryProps(props: Map<String, String>) {
 }
 
 fun createDB() {
-    IDB.openDB("wildermyth", 1, IDB.DBUpgrade()).then { db ->
-        val tx = db.transaction("data", "readwrite")
-        val store = tx.objectStore("store")
-        store.put("test", "test")
+}
+
+fun persistMemory() {
+//    LocalForage.setItem("memory", inMemoryStorage)
+    LocalForage.setItem("memory", jsonMapper.encodeToString(inMemoryStorage))
+}
+
+
+fun loadMemory(): Promise<*> {
+    return LocalForage.getItem("memory").then { persisted ->
+        if (persisted != null && persisted != undefined){
+            println("Loading memory")
+            println(persisted)
+//            inMemoryStorage = persisted as InMemoryStorage
+            inMemoryStorage = jsonMapper.decodeFromString(persisted as String)
+        }
     }
-//    val request = IndexedDBHelper.open("wildermyth", 1)
-//    request.onSuccess = {
-//        db = request.result
-//    }
 }
-
-fun persistMemory(){
-
-}
-
-
-//fun loadMemory(): Promise<*>{
-//return Promise()
-//}
