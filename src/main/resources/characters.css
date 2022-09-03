@@ -14,14 +14,10 @@
     overflow: hidden;
 }
 
-.character-portrait-wrapper {
+.character-portrait {
     width: 100%;
     height: 500px;
     overflow: hidden;
-}
-
-.character-portrait {
-    height: inherit;
     position: relative;
     margin: auto;
 }
@@ -47,13 +43,13 @@
 
 .warrior-head {
   left: 26%;
-  top: -20px;
+  top: 30px;
   animation-name: warrior-idle-head;
 }
 
 @keyframes warrior-idle-head {
-  0% {top: -30px;}
-  100% {top: -12px;}
+  0% {top: 20px;}
+  100% {top: 42px;}
 }
 
 .hunter-head {
@@ -87,7 +83,7 @@
   width: 100%;
   height: auto;
   margin: auto;
-  bottom: 50px;
+  bottom: 5px;
 }
 
 .warrior-body {
