@@ -1,0 +1,44 @@
+
+@media (max-width: 800px) {
+
+    .character-card {
+        display: block;
+        width: 90%;
+        margin: 2%;
+        margin-bottom: 50px;
+        padding: 2%;
+    }
+
+    .character-portrait {
+        height: 660px;
+    }
+
+    .character-head {
+        width: 40%;
+    }
+
+    .hunter-head {
+      left: 36%;
+    }
+
+    .hunter-body {
+      bottom: 65px;
+    }
+
+    .character-bio{
+      font-size: 1.4em;
+    }
+
+    .character-section {
+        width: 90%;
+        margin: 2%;
+    }
+
+    .details-subsection{
+        width: 100%;
+    }
+
+    #aspect-tables{
+        flex-wrap: wrap;
+    }
+}

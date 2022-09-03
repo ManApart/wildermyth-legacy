@@ -1,19 +1,31 @@
+:root{
+    --warrior-head-base: -31px;
+    --hunter-head-base: 30px;
+    --mystic-head-base: 0px;
+}
+
+#character-cards-section .character-card{
+    margin: 10px;
+    margin-right: 50px;
+    margin-left: 50px;
+}
+
 .character-card {
     background-color: var(--card-background);
     display: inline-block;
     width: 470px;
-    margin: 10px;
-    margin-right: 50px;
-    margin-left: 50px;
+    margin-bottom: auto;
     padding: 20px;
     padding-bottom: 40px;
     overflow: hidden;
 }
 
 .character-portrait {
-    position: relative;
-    height: 500px;
+    width: 100%;
+    height: 450px;
     overflow: hidden;
+    position: relative;
+    margin: auto;
 }
 
 .warrior-portrait {
@@ -37,61 +49,58 @@
 
 .warrior-head {
   left: 26%;
-  top: -30px;
+  top: var(--warrior-head-base);
   animation-name: warrior-idle-head;
 }
 
 @keyframes warrior-idle-head {
-  0% {top: -30px;}
-  100% {top: -12px;}
+  0% {top: var(--warrior-head-base);}
+  100% {top: calc(15px +var(--warrior-head-base));}
 }
 
 .hunter-head {
   left: 34%;
-  top: 45px;
+  top: var(--hunter-head-base);
   animation-name: hunter-idle-head;
 }
 
 @keyframes hunter-idle-head {
-  0% {top: 30px;}
-  100% {top: 45px;}
+  0% {top: var(--hunter-head-base);}
+  100% {top: calc(15px +var(--hunter-head-base));}
 }
 
 .mystic-head {
   left: 31%;
-  top: 8px;
+  top: var(--mystic-head-base);
   animation-name: mystic-idle-head;
 }
 
 @keyframes mystic-idle-head {
-  0% {top: -8px;}
-  100% {top: 10px;}
+  0% {top: var(--mystic-head-base);}
+  100% {top: calc(15px +var(--mystic-head-base));}
 }
 
 .character-body {
-  position: absolute;
+  position: relative;
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+  transform-origin: bottom;
   width: 100%;
-  height: 100%;
+  height: auto;
+  margin: auto;
+  bottom: 25px;
 }
 
 .warrior-body {
-  bottom: 50px;
-  left: 0;
-  right: 0;
   animation-name: character-idle-body;
 }
 
 .hunter-body {
-  bottom: 50px;
-  left: 0px;
   animation-name: character-idle-body;
 }
 
 .mystic-body {
-  bottom: 50px;
   left: 5px;
   animation-name: character-idle-body;
 }
@@ -101,8 +110,10 @@
 }
 
 @keyframes character-idle-body {
-  0% {width: 100%; height: 100%;}
-  100% {width: 100%; height: 95%;}
+  0% {
+    transform: scaleY(1.05)
+  }
+  100% {}
 }
 
 .character-bio{
@@ -112,4 +123,8 @@
     padding-bottom: 20px;
     height: 200px;
     overflow-y: scroll;
+}
+
+.character-bio::-webkit-scrollbar-track {
+    background: var(--bio-background);
 }

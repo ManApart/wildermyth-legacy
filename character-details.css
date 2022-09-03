@@ -1,15 +1,35 @@
 #character-details{
     display: flex;
     flex-wrap: wrap;
+    margin: 4px;
+}
+
+#character-details .character-card {
+    margin-top: 12px;
+    margin-right: 4px;
 }
 
 .character-section {
     display: block;
-    width: 500px;
+    width: 520px;
+    margin-top: 12px;
+    margin: 4px;
 }
 
 #history-entries{
     vertical-align: top;
+}
+
+.history-entry{
+    padding: 8px;
+    margin-bottom: 4px;
+    background-color: var(--card-background);
+}
+
+.history-entry textarea {
+    margin: auto;
+    width: 99%;
+    resize: none;
 }
 
 .relationship{
@@ -17,7 +37,6 @@
     height: 130px;
     overflow: hidden;
     background-color: var(--card-background);
-    margin: 4px;
 }
 
 .relationship-pic {
@@ -42,42 +61,70 @@
 }
 
 #stat-bonuses {
+    width: 46%;
     display: inline-block;
+    padding: 8px;
+    padding-bottom: 20px;
+    background-color: var(--card-background);
+    margin: auto;
 }
 
-#personality {
+#personality-section {
+    width: 46%;
     display: inline-block;
-    float: right;
+    padding: 8px;
+    margin-right: 4px;
+    padding-bottom: 20px;
+    background-color: var(--card-background);
 }
 
 #stats-section table{
-    width: 200px;
+    width: 90%;
+    background-color: var(--bio-background);
 }
 
-.company{
+.company {
     background-color: var(--card-background);
-    padding-left: 4px;
-    margin: 4px;
+    margin-bottom: 12px;
+    padding: 8px;
 }
 
-.company h4{
+.company h4 {
     padding-top: 4px;
+    margin: 0px;
 }
 
 .company-friend-pic-wrapper{
     display: inline-block;
     overflow: hidden;
-    width: 40px;
-    height: 60px;
+    width: 70px;
+    height: 75px;
 }
 
 .company-friend-pic{
-    width: 60px;
-    margin-top: -10px;
+    width: 100px;
+    margin-top: -20px;
     margin-left: -10px;
+}
+
+#aspects-section{
+    width: 100%;
 }
 
 #aspect-tables{
     display: flex;
     flex-wrap: nowrap;
+    padding: 12px;
+    background-color: var(--card-background);
+}
+
+.aspects-table{
+    width: 95%
+}
+
+#aspect-tables table {
+    background-color: var(--bio-background);
+    margin: 0px;
+    width: 100%;
+    height: 100%;
 }
