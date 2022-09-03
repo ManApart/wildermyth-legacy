@@ -37,6 +37,7 @@
     height: 130px;
     overflow: hidden;
     background-color: var(--card-background);
+    margin-bottom: 4px;
 }
 
 .relationship-pic {

@@ -1,6 +1,8 @@
 
-@media (max-width: 800px) {
-
+@media (max-aspect-ratio: 3/4) {
+body{
+    font-size: 1.4em;
+}
     .character-card {
         display: block;
         width: 90%;
