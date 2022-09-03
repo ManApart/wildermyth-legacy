@@ -1,10 +1,12 @@
+#character-cards-section .character-card{
+    margin: 10px;
+    margin-right: 50px;
+    margin-left: 50px;
+}
 .character-card {
     background-color: var(--card-background);
     display: inline-block;
     width: 470px;
-    margin: 10px;
-    margin-right: 50px;
-    margin-left: 50px;
     margin-bottom: auto;
     padding: 20px;
     padding-bottom: 40px;
