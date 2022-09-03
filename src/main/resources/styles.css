@@ -28,6 +28,10 @@ h1 {
     margin: 2px;
 }
 
+h4{
+    margin: 2px;
+}
+
 button {
   background-color: var(--card-background);
   border: none;
