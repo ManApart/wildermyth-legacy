@@ -1,8 +1,11 @@
 
 @media (max-aspect-ratio: 3/4) {
-body{
-    font-size: 1.4em;
-}
+    body{
+        font-size: 1.4em;
+    }
+    :root{
+        --head-bob-amount: 35px;
+    }
     .character-card {
         display: block;
         width: 90%;
