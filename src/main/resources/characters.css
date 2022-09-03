@@ -1,7 +1,7 @@
 :root{
-    --warrior-head-base: 22px;
-    --hunter-head-base: 80px;
-    --mystic-head-base: 36px;
+    --warrior-head-base: -31px;
+    --hunter-head-base: 30px;
+    --mystic-head-base: 0px;
 }
 
 #character-cards-section .character-card{
@@ -22,7 +22,7 @@
 
 .character-portrait {
     width: 100%;
-    height: 500px;
+    height: 450px;
     overflow: hidden;
     position: relative;
     margin: auto;
@@ -89,7 +89,7 @@
   width: 100%;
   height: auto;
   margin: auto;
-  bottom: -25px;
+  bottom: 25px;
 }
 
 .warrior-body {
