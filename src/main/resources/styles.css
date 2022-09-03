@@ -96,37 +96,3 @@ table {
 #zip-example{
     height: 100%;
 }
-
-@media (max-width: 1000px) {
-    ::-webkit-scrollbar-track {
-      background: var(--bio-background);
-    }
-    .character-card {
-        display: block;
-        width: 90%;
-        margin: 2%;
-        margin-bottom: 50px;
-        padding: 2%;
-    }
-
-    .character-portrait {
-        width: 100%;
-        height: 800px;
-    }
-
-    .character-head {
-        width: 40%;
-    }
-
-    .hunter-head {
-      left: 36%;
-    }
-
-    .hunter-body {
-      bottom: 65px;
-    }
-
-    .character-bio{
-      font-size: 1.8em;
-    }
-}

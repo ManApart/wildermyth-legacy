@@ -5,11 +5,25 @@
 
 .character-section {
     display: block;
-    width: 500px;
+    width: 520px;
+    margin-left: 50px;
+    margin-top: 12px;
 }
 
 #history-entries{
     vertical-align: top;
+}
+
+.history-entry{
+    padding: 8px;
+    margin-bottom: 4px;
+    background-color: var(--card-background);
+    width: inherit;
+}
+.history-entry textarea {
+    margin: auto;
+    width: 99%;
+    resize: none;
 }
 
 .relationship{
@@ -43,41 +57,64 @@
 
 #stat-bonuses {
     display: inline-block;
+    padding: 8px;
+    padding-bottom: 20px;
+    background-color: var(--card-background);
 }
 
-#personality {
+#personality-section {
     display: inline-block;
-    float: right;
+    padding: 8px;
+    margin-right: 4px;
+    padding-bottom: 20px;
+    background-color: var(--card-background);
 }
 
 #stats-section table{
     width: 200px;
+    background-color: var(--bio-background);
 }
 
-.company{
+.company {
     background-color: var(--card-background);
-    padding-left: 4px;
-    margin: 4px;
+    margin-bottom: 12px;
+    padding: 8px;
+    width: inherit;
 }
 
-.company h4{
+.company h4 {
     padding-top: 4px;
+    margin: 0px;
 }
 
 .company-friend-pic-wrapper{
     display: inline-block;
     overflow: hidden;
-    width: 40px;
-    height: 60px;
+    width: 70px;
+    height: 75px;
 }
 
 .company-friend-pic{
-    width: 60px;
-    margin-top: -10px;
+    width: 100px;
+    margin-top: -20px;
     margin-left: -10px;
+}
+
+#aspects-section{
+    width: 100%;
 }
 
 #aspect-tables{
     display: flex;
     flex-wrap: nowrap;
+    padding: 12px;
+    background-color: var(--card-background);
+}
+
+.aspects-table{
+    margin: auto;
+}
+
+#aspect-tables table {
+    background-color: var(--bio-background);
 }
