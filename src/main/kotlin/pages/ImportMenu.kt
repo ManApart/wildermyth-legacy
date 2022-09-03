@@ -82,7 +82,8 @@ fun importMenu() {
                         li { +"Open or extract 'legacy.json.zip' and grab the 'legacy.json' file." }
                         li { +"Add legacy.json file to the characters zip. If you extracted the json file you can drag it onto the zip file." }
                     }
-                    li { +"Upload the zip using the button below. Any time you refresh the site you'll need to re-upload the zip, as nothing is stored server side." }
+                    li { +"Upload the zip using the button below." }
+                    li { +"While nothing is stored server side, the zip contents are stored in the browsers local storage. This means reloading the page won't drop your data!" }
                 }
                 h4 { +"Additional Info File" }
                 ol {
@@ -90,6 +91,14 @@ fun importMenu() {
                     li { +"Clicking the 'Export' button lets you download this json file so you can back it up." }
                     li { +"You can include this json file at the top level of the zip you upload to the site and it will be loaded." }
                     li { +"This let's you use a single zip to load your data onto multiple devices." }
+                }
+                h4 { +"Story Properties" }
+                ol {
+                    li { +"In order to get the text for history entries, you need to provide the story.properties file." }
+                    li { +"Go to <GameFolder>/Wildermyth/assets/text/story" }
+                    li { +"Grab story.properties" }
+                    li { +"Add it to the zip you upload." }
+                    li { +"Now character bios (that you haven't overridden already) will no longer be blank!" }
                 }
             }
             img {
