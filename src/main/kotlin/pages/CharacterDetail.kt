@@ -42,12 +42,12 @@ fun characterDetail(character: LegacyCharacter) {
         div {
             id = "character-details"
             characterCard(character, false)
-            div {
+            div("details-subsection") {
                 statsSection(snapshot)
                 familySection(character)
             }
             friendshipSection(character)
-            div {
+            div("details-subsection") {
                 companiesSection(character)
                 historySection(additionalInfo)
             }

@@ -33,4 +33,12 @@
         width: 90%;
         margin: 2%;
     }
+
+    .details-subsection{
+        width: 100%;
+    }
+
+    #aspect-tables{
+        flex-wrap: wrap;
+    }
 }

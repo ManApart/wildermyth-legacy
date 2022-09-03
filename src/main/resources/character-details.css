@@ -13,6 +13,7 @@
     display: block;
     width: 520px;
     margin-top: 12px;
+    margin: 4px;
 }
 
 #history-entries{
@@ -23,8 +24,8 @@
     padding: 8px;
     margin-bottom: 4px;
     background-color: var(--card-background);
-    width: inherit;
 }
+
 .history-entry textarea {
     margin: auto;
     width: 99%;
@@ -60,13 +61,16 @@
 }
 
 #stat-bonuses {
+    width: 46%;
     display: inline-block;
     padding: 8px;
     padding-bottom: 20px;
     background-color: var(--card-background);
+    margin: auto;
 }
 
 #personality-section {
+    width: 46%;
     display: inline-block;
     padding: 8px;
     margin-right: 4px;
@@ -75,7 +79,7 @@
 }
 
 #stats-section table{
-    width: 200px;
+    width: 90%;
     background-color: var(--bio-background);
 }
 
@@ -83,7 +87,6 @@
     background-color: var(--card-background);
     margin-bottom: 12px;
     padding: 8px;
-    width: inherit;
 }
 
 .company h4 {
@@ -116,9 +119,12 @@
 }
 
 .aspects-table{
-    margin: auto;
+    width: 95%
 }
 
 #aspect-tables table {
     background-color: var(--bio-background);
+    margin: 0px;
+    width: 100%;
+    height: 100%;
 }
