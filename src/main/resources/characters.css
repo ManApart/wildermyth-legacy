@@ -3,6 +3,7 @@
     margin-right: 50px;
     margin-left: 50px;
 }
+
 .character-card {
     background-color: var(--card-background);
     display: inline-block;
@@ -13,10 +14,16 @@
     overflow: hidden;
 }
 
-.character-portrait {
-    position: relative;
+.character-portrait-wrapper {
+    width: 100%;
     height: 500px;
     overflow: hidden;
+}
+
+.character-portrait {
+    height: inherit;
+    position: relative;
+    margin: auto;
 }
 
 .warrior-portrait {
@@ -32,7 +39,7 @@
 }
 
 .character-head {
-   position: absolute;
+   position: relative;
    animation-duration: 1s;
    animation-iteration-count: infinite;
    animation-direction: alternate;
@@ -40,7 +47,7 @@
 
 .warrior-head {
   left: 26%;
-  top: -30px;
+  top: -20px;
   animation-name: warrior-idle-head;
 }
 
@@ -76,25 +83,22 @@
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+  transform-origin: bottom;
   width: 100%;
-  height: 100%;
+  height: auto;
+  margin: auto;
+  bottom: 50px;
 }
 
 .warrior-body {
-  bottom: 50px;
-  left: 0;
-  right: 0;
   animation-name: character-idle-body;
 }
 
 .hunter-body {
-  bottom: 50px;
-  left: 0px;
   animation-name: character-idle-body;
 }
 
 .mystic-body {
-  bottom: 50px;
   left: 5px;
   animation-name: character-idle-body;
 }
@@ -104,8 +108,10 @@
 }
 
 @keyframes character-idle-body {
-  0% {width: 100%; height: 100%;}
-  100% {width: 100%; height: 95%;}
+  0% {
+    transform: scaleY(1.05)
+  }
+  100% {}
 }
 
 .character-bio{

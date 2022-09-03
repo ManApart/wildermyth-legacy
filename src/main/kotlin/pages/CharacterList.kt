@@ -58,19 +58,21 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, clickable
             div("character-personality") {
                 +"${topTrait.format()} ${secondTrait.format()}"
             }
-            div("character-portrait ${className}-portrait") {
-                getPicture("$uuid/body")?.let { picture ->
-                    img {
-                        src = picture
-                        classes = setOf("character-body", "${className}-body")
-                        style = "animation-delay: ${animDelay}s"
+            div("character-portrait-wrapper ${className}-portrait") {
+                div("character-portrait") {
+                    getPicture("$uuid/body")?.let { picture ->
+                        img {
+                            src = picture
+                            classes = setOf("character-body", "${className}-body")
+                            style = "animation-delay: ${animDelay}s"
+                        }
                     }
-                }
-                getPicture("$uuid/head")?.let { picture ->
-                    img {
-                        src = picture
-                        classes = setOf("character-head", "${className}-head")
-                        style = "animation-delay: ${animDelay + .05}s"
+                    getPicture("$uuid/head")?.let { picture ->
+                        img {
+                            src = picture
+                            classes = setOf("character-head", "${className}-head")
+                            style = "animation-delay: ${animDelay + .05}s"
+                        }
                     }
                 }
             }
