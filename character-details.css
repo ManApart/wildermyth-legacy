@@ -5,6 +5,7 @@
 }
 
 #character-details .character-card {
+    display: block;
     margin-top: 12px;
     margin-right: 4px;
 }
@@ -16,20 +17,61 @@
     margin: 4px;
 }
 
-#history-entries{
+#custom-history-entries{
     vertical-align: top;
 }
 
-.history-entry{
+.custom-history-entry{
     padding: 8px;
     margin-bottom: 4px;
     background-color: var(--card-background);
 }
 
-.history-entry textarea {
+.custom-history-entry textarea {
     margin: auto;
     width: 99%;
     resize: none;
+}
+
+#game-history-wrapper {
+    background-color: var(--card-background);
+    padding: 8px;
+    margin-bottom: 4px;
+}
+
+#game-history-inner {
+    background-color: var(--bio-background);
+    padding: 4px;
+}
+
+#full-history-entries {
+    width: 100%;
+}
+
+#full-history-columns {
+    display: flex;
+}
+
+.full-history-column {
+    width: 50%;
+}
+
+#full-history-column-left {
+    margin-right: 10px;
+}
+
+#full-history-column-right {
+    margin-left: 10px;
+}
+
+.full-history-entry {
+    padding: 8px;
+    margin-bottom: 4px;
+    background-color: var(--card-background);
+}
+.full-history-entry-inner {
+    padding: 4px;
+    background-color: var(--bio-background);
 }
 
 .relationship{
