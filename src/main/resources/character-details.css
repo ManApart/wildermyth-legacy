@@ -16,20 +16,30 @@
     margin: 4px;
 }
 
-#history-entries{
+#custom-history-entries{
     vertical-align: top;
 }
 
-.history-entry{
+.custom-history-entry{
     padding: 8px;
     margin-bottom: 4px;
     background-color: var(--card-background);
 }
 
-.history-entry textarea {
+.custom-history-entry textarea {
     margin: auto;
     width: 99%;
     resize: none;
+}
+
+.game-history-entry {
+    padding: 8px;
+    margin-bottom: 4px;
+    background-color: var(--card-background);
+}
+.game-history-entry-inner {
+    padding: 4px;
+    background-color: var(--bio-background);
 }
 
 .relationship{

@@ -1,5 +1,6 @@
 import kotlinx.serialization.Serializable
 import pages.toAspect
+import wildermyth.interpolate
 
 enum class CharacterClass { WARRIOR, HUNTER, MYSTIC }
 enum class ClassLevel { GREENHORN, BLOODHORN, BLUEHORN, BRONZEHORN, SILVERHORN, GOLDHORN, BLACKHORN }
@@ -22,7 +23,13 @@ data class HistoryEntry(
     val forbiddenAspects: List<Aspect> = listOf(),
     val showInSummary: Boolean = true,
     val relationships: List<HistoryRelationship> = listOf()
-)
+) {
+    fun getText(character: Character): String {
+        return textOverride.ifBlank {
+            getStoryProp(id)?.let { character.interpolate(it) } ?: id
+        }
+    }
+}
 
 @Serializable
 data class HistoryEntryRaw(

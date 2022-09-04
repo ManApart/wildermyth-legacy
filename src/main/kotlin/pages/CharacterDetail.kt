@@ -49,9 +49,10 @@ fun characterDetail(character: LegacyCharacter) {
             friendshipSection(character)
             div("details-subsection") {
                 companiesSection(character)
-                historySection(additionalInfo)
+                customHistorySection(additionalInfo)
             }
             aspectsSection(snapshot)
+            gameHistorySection(snapshot)
         }
     }
 
@@ -75,15 +76,15 @@ private fun setFavicon(character: LegacyCharacter) {
     }
 }
 
-fun TagConsumer<HTMLElement>.historySection(additionalInfo: AdditionalInfo) {
+fun TagConsumer<HTMLElement>.customHistorySection(additionalInfo: AdditionalInfo) {
     div("character-section") {
-        id = "history-entries"
-        h2 { +"History" }
+        id = "custom-history-entries"
+        h2 { +"Journal" }
         additionalInfo.history.forEachIndexed { i, entry ->
-            div("history-entry") {
+            div("custom-history-entry") {
 
                 textArea {
-                    id = "history-$i"
+                    id = "custom-history-$i"
                     +" ${entry.textOverride}"
                     onChangeFunction = {
                         val area = document.getElementById(id) as HTMLTextAreaElement
@@ -98,9 +99,44 @@ fun TagConsumer<HTMLElement>.historySection(additionalInfo: AdditionalInfo) {
             onClickFunction = {
                 val entry = HistoryEntry("" + additionalInfo.history.size, Date().getTime().toLong(), "")
                 additionalInfo.history.add(entry)
-                val node = document.getElementById("history-entries")!!
+                val node = document.getElementById("custom-history-entries")!!
                 node.innerHTML = ""
-                node.append { historySection(additionalInfo) }
+                node.append { customHistorySection(additionalInfo) }
+            }
+        }
+    }
+}
+
+fun TagConsumer<HTMLElement>.gameHistorySection(character: Character) {
+    with(character) {
+        div("character-section") {
+            id = "game-history-entries"
+            h2 { +"Full History" }
+            history.forEachIndexed { i, entry ->
+                div("game-history-entry") {
+                    div("game-history-entry-inner") {
+                        p {
+                            id = "game-history-$i"
+                            +" ${entry.getText(this@with)}"
+                        }
+                        if (entry.associatedAspects.isNotEmpty()) {
+                            p {
+                                +"Aspects: ${entry.associatedAspects.joinToString { it.name }}"
+                            }
+                        }
+                        if (entry.forbiddenAspects.isNotEmpty()) {
+                            p {
+                                +"Forbids: ${entry.forbiddenAspects.joinToString { it.name }}"
+                            }
+                        }
+                        val relates = entry.relationships.filter { it.name != null }
+                        if (relates.isNotEmpty()) {
+                            p {
+                                +"Relates: ${relates.joinToString { it.name ?: "" }}"
+                            }
+                        }
+                    }
+                }
             }
         }
     }

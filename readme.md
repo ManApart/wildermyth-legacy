@@ -18,7 +18,8 @@ Character List
 - Display favorites first
 
 Details page
-- add tag
 - show hometown?
+- show kill count
+- add tag
 - add star
 - show all history events

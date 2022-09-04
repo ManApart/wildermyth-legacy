@@ -1,7 +1,7 @@
 :root{
     --warrior-head-base: -31px;
     --hunter-head-base: 30px;
-    --mystic-head-base: 0px;
+    --mystic-head-base: -5px;
     --head-bob-amount: 15px;
 }
 
