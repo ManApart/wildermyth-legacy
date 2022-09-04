@@ -1,11 +1,17 @@
 
 @media (max-aspect-ratio: 3/4) {
-    body{
-        font-size: 1.4em;
-    }
     :root{
         --head-bob-amount: 35px;
     }
+
+    body, textarea, table{
+        font-size: 1.4em;
+    }
+
+    textarea {
+        height: 250px;
+    }
+
     .character-card {
         display: block;
         width: 90%;
@@ -31,7 +37,7 @@
     }
 
     .character-bio{
-      font-size: 1.4em;
+
     }
 
     .character-section {

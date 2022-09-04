@@ -44,14 +44,12 @@ fun characterDetail(character: LegacyCharacter) {
             characterCard(character, false)
             div("details-subsection") {
                 statsSection(snapshot)
-                familySection(character)
-            }
-            friendshipSection(character)
-            div("details-subsection") {
                 companiesSection(character)
-                customHistorySection(additionalInfo)
-                gameHistorySection(snapshot)
             }
+            familySection(character)
+            friendshipSection(character)
+            customHistorySection(additionalInfo)
+            gameHistorySection(snapshot)
             aspectsSection(snapshot)
             fullHistorySection(snapshot)
         }
@@ -113,13 +111,16 @@ fun TagConsumer<HTMLElement>.gameHistorySection(character: Character) {
         id = "game-history-entries"
         h2 { +"Game History" }
         div {
-            id = "game-history-columns"
-            character.history.filter { it.showInSummary }.forEachIndexed { i, entry ->
-                div("game-history-entry") {
-                    div("game-history-entry-inner") {
-                        p {
-                            id = "game-history-$i"
-                            +" ${entry.getText(character)}"
+            id = "game-history-wrapper"
+            div {
+                id = "game-history-inner"
+                character.history.filter { it.showInSummary }.forEachIndexed { i, entry ->
+                    div("game-history-entry") {
+                        div("game-history-entry-inner") {
+                            p {
+                                id = "game-history-$i"
+                                +" ${entry.getText(character)}"
+                            }
                         }
                     }
                 }
@@ -144,7 +145,7 @@ fun TagConsumer<HTMLElement>.fullHistorySection(character: Character) {
 
 private fun DIV.buildHistorySection(character: Character, history: List<HistoryEntry>, side: String) {
     div("full-history-column") {
-        id ="full-history-column-$side"
+        id = "full-history-column-$side"
         history.forEachIndexed { i, entry ->
             div("full-history-entry") {
                 div("full-history-entry-inner") {
