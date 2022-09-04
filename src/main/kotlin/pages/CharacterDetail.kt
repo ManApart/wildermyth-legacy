@@ -108,32 +108,43 @@ fun TagConsumer<HTMLElement>.customHistorySection(additionalInfo: AdditionalInfo
 }
 
 fun TagConsumer<HTMLElement>.gameHistorySection(character: Character) {
-    with(character) {
-        div("character-section") {
-            id = "game-history-entries"
-            h2 { +"Full History" }
-            history.forEachIndexed { i, entry ->
-                div("game-history-entry") {
-                    div("game-history-entry-inner") {
+    val firstHalf = character.history.subList(0, character.history.size / 2)
+    val secondHalf = character.history.subList(character.history.size / 2, character.history.size)
+    div("character-section") {
+        id = "game-history-entries"
+        h2 { +"Full History" }
+        div {
+            id = "game-history-columns"
+            buildHistorySection(character, firstHalf, "left")
+            buildHistorySection(character, secondHalf, "right")
+        }
+    }
+}
+
+private fun DIV.buildHistorySection(character: Character, history: List<HistoryEntry>, side: String) {
+    div {
+        id ="game-history-column-$side"
+        history.forEachIndexed { i, entry ->
+            div("game-history-entry") {
+                div("game-history-entry-inner") {
+                    p {
+                        id = "game-history-$i"
+                        +" ${entry.getText(character)}"
+                    }
+                    if (entry.associatedAspects.isNotEmpty()) {
                         p {
-                            id = "game-history-$i"
-                            +" ${entry.getText(this@with)}"
+                            +"Aspects: ${entry.associatedAspects.joinToString { it.name }}"
                         }
-                        if (entry.associatedAspects.isNotEmpty()) {
-                            p {
-                                +"Aspects: ${entry.associatedAspects.joinToString { it.name }}"
-                            }
+                    }
+                    if (entry.forbiddenAspects.isNotEmpty()) {
+                        p {
+                            +"Forbids: ${entry.forbiddenAspects.joinToString { it.name }}"
                         }
-                        if (entry.forbiddenAspects.isNotEmpty()) {
-                            p {
-                                +"Forbids: ${entry.forbiddenAspects.joinToString { it.name }}"
-                            }
-                        }
-                        val relates = entry.relationships.filter { it.name != null }
-                        if (relates.isNotEmpty()) {
-                            p {
-                                +"Relates: ${relates.joinToString { it.name ?: "" }}"
-                            }
+                    }
+                    val relates = entry.relationships.filter { it.name != null }
+                    if (relates.isNotEmpty()) {
+                        p {
+                            +"Relates: ${relates.joinToString { it.name ?: "" }}"
                         }
                     }
                 }

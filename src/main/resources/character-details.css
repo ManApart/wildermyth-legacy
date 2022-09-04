@@ -32,6 +32,24 @@
     resize: none;
 }
 
+#game-history-entries {
+    width: 100%;
+}
+
+#game-history-columns {
+    display: flex;
+}
+
+#game-history-column-left {
+    width: 50%;
+    margin-right: 10px;
+}
+
+#game-history-column-right {
+    width: 50%;
+    margin-left: 10px;
+}
+
 .game-history-entry {
     padding: 8px;
     margin-bottom: 4px;
