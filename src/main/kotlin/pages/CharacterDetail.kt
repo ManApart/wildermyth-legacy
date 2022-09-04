@@ -50,9 +50,10 @@ fun characterDetail(character: LegacyCharacter) {
             div("details-subsection") {
                 companiesSection(character)
                 customHistorySection(additionalInfo)
+                gameHistorySection(snapshot)
             }
             aspectsSection(snapshot)
-            gameHistorySection(snapshot)
+            fullHistorySection(snapshot)
         }
     }
 
@@ -108,13 +109,33 @@ fun TagConsumer<HTMLElement>.customHistorySection(additionalInfo: AdditionalInfo
 }
 
 fun TagConsumer<HTMLElement>.gameHistorySection(character: Character) {
+    div("character-section") {
+        id = "game-history-entries"
+        h2 { +"Game History" }
+        div {
+            id = "game-history-columns"
+            character.history.filter { it.showInSummary }.forEachIndexed { i, entry ->
+                div("game-history-entry") {
+                    div("game-history-entry-inner") {
+                        p {
+                            id = "game-history-$i"
+                            +" ${entry.getText(character)}"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+fun TagConsumer<HTMLElement>.fullHistorySection(character: Character) {
     val firstHalf = character.history.subList(0, character.history.size / 2)
     val secondHalf = character.history.subList(character.history.size / 2, character.history.size)
     div("character-section") {
-        id = "game-history-entries"
+        id = "full-history-entries"
         h2 { +"Full History" }
         div {
-            id = "game-history-columns"
+            id = "full-history-columns"
             buildHistorySection(character, firstHalf, "left")
             buildHistorySection(character, secondHalf, "right")
         }
@@ -122,13 +143,13 @@ fun TagConsumer<HTMLElement>.gameHistorySection(character: Character) {
 }
 
 private fun DIV.buildHistorySection(character: Character, history: List<HistoryEntry>, side: String) {
-    div {
-        id ="game-history-column-$side"
+    div("full-history-column") {
+        id ="full-history-column-$side"
         history.forEachIndexed { i, entry ->
-            div("game-history-entry") {
-                div("game-history-entry-inner") {
+            div("full-history-entry") {
+                div("full-history-entry-inner") {
                     p {
-                        id = "game-history-$i"
+                        id = "full-history-$i"
                         +" ${entry.getText(character)}"
                     }
                     if (entry.associatedAspects.isNotEmpty()) {

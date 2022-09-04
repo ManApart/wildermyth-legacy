@@ -46,4 +46,12 @@
     #aspect-tables{
         flex-wrap: wrap;
     }
+
+    #full-history-columns{
+        flex-wrap: wrap;
+    }
+
+    .full-history-column {
+        width: 100%;
+    }
 }

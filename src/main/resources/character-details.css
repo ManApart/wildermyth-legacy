@@ -32,30 +32,32 @@
     resize: none;
 }
 
-#game-history-entries {
+#full-history-entries {
     width: 100%;
 }
 
-#game-history-columns {
+#full-history-columns {
     display: flex;
 }
 
-#game-history-column-left {
+.full-history-column {
     width: 50%;
+}
+
+#full-history-column-left {
     margin-right: 10px;
 }
 
-#game-history-column-right {
-    width: 50%;
+#full-history-column-right {
     margin-left: 10px;
 }
 
-.game-history-entry {
+.full-history-entry {
     padding: 8px;
     margin-bottom: 4px;
     background-color: var(--card-background);
 }
-.game-history-entry-inner {
+.full-history-entry-inner {
     padding: 4px;
     background-color: var(--bio-background);
 }
