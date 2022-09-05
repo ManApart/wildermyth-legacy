@@ -10,10 +10,8 @@ import JSZip
 import JsonObject
 import LegacyCharacter
 import doRouting
-import getCharacterList
 import jsonMapper
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.JsonNull.content
 import org.khronos.webgl.ArrayBuffer
 import org.w3c.files.Blob
 import persistMemory
@@ -21,7 +19,6 @@ import saveAdditionalInfo
 import saveCompanies
 import kotlin.js.Json
 import saveCharacter
-import saveCharacterList
 import savePicture
 import saveStoryProps
 import kotlin.js.Promise
@@ -64,9 +61,6 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, ori
             val json = JSON.parse<Json>(contents)
             val characters = parseLegacy(json)
             characters.forEach { saveCharacter(it) }
-            val characterList = getCharacterList()
-            characterList.addAll(characters.map { it.uuid })
-            saveCharacterList(characterList)
             Promise.all(characters.map { handleZipPictures(zip, it.snapshots.last()) }.toTypedArray())
         }.then {
             doRouting(originalHash)

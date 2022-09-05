@@ -10,7 +10,6 @@ import kotlin.js.Promise
 
 @Serializable
 data class InMemoryStorage(
-    var characterList: Set<String> = setOf(),
     val characters: MutableMap<String, LegacyCharacter> = mutableMapOf(),
     val pictures: MutableMap<String, String> = mutableMapOf(),
     val additionalInfo: MutableMap<String, AdditionalInfo> = mutableMapOf(),
@@ -20,13 +19,8 @@ data class InMemoryStorage(
 
 private var inMemoryStorage = InMemoryStorage()
 
-
-fun getCharacterList(): MutableSet<String> {
-    return inMemoryStorage.characterList.toMutableSet()
-}
-
-fun saveCharacterList(characters: Set<String>) {
-    inMemoryStorage.characterList = characters.toSet()
+fun getCharacters(): List<LegacyCharacter> {
+    return inMemoryStorage.characters.values.toList()
 }
 
 fun getCharacter(uuid: String): LegacyCharacter? {

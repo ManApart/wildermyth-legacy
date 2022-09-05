@@ -4,8 +4,7 @@ import LegacyCharacter
 import buildNav
 import clearSections
 import favicon
-import getCharacter
-import getCharacterList
+import getCharacters
 import getPicture
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -18,6 +17,7 @@ import kotlinx.html.js.h1
 import kotlinx.html.js.img
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.style
+import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 
 
@@ -27,15 +27,19 @@ fun displayCharacters() {
     document.title = "Wildermyth Legacy"
     favicon.setAttribute("href", "favicon.png")
     buildNav()
+    val characters = getCharacters()
+    buildCharacters(section, characters)
+    scrollToCharacter()
+}
+
+private fun buildCharacters(section: Element, characters: List<LegacyCharacter>) {
     section.append {
-        getCharacterList().also { println("Building ${it.size} characters.") }
-            .mapNotNull { getCharacter(it) }
+        characters.also { println("Building ${it.size} characters") }
             .sortedWith(compareBy<LegacyCharacter> { it.snapshots.last().name.split(" ").last() }.thenBy { it.snapshots.last().name.split(" ").first() })
             .forEach { character ->
                 characterCard(character, true)
             }
     }
-    scrollToCharacter()
 }
 
 private fun scrollToCharacter() {

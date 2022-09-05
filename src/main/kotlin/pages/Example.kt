@@ -1,7 +1,6 @@
 package pages
 
 import doRouting
-import getCharacterList
 import kotlinx.browser.window
 import loadMemory
 import org.w3c.files.Blob
@@ -10,7 +9,6 @@ import org.w3c.xhr.JSON
 import org.w3c.xhr.XMLHttpRequest
 import org.w3c.xhr.XMLHttpRequestResponseType
 import saveCharacter
-import saveCharacterList
 import savePicture
 import kotlin.js.Json
 import kotlin.js.Promise
@@ -22,9 +20,6 @@ fun loadExample() {
     loadJson("example/data.json").then { json ->
         val example = parseLegacyCharacter(json)
         saveCharacter(example)
-        val characters = getCharacterList()
-        characters.add(example.uuid)
-        saveCharacterList(characters)
 
         Promise.all(
             arrayOf(
