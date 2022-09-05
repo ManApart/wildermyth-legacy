@@ -70,17 +70,15 @@ table {
     margin-left: 20px;
 }
 
-#nav table{
+#nav {
     width: 100%;
     text-align: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 }
 
-#import-section {
-  margin-left: 1%
-}
-
-#export-button{
-    float: right;
+#nav button {
+    margin:auto;
 }
 
 #upload-instructions{
