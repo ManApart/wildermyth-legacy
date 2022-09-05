@@ -33,17 +33,19 @@ fun displayCharacters() {
 
 fun characterSearch(searchText: String) {
     val section = document.getElementById("character-cards-section")!!
+    val options = searchText.lowercase().split(",")
 
     val characters = if (searchText.isBlank()) {
         getCharacters()
     } else {
-        filterCharacters(searchText.lowercase())
+        options.fold(getCharacters()) { acc, s -> filterCharacters(acc, s) }
+//        options.flatMap { filterCharacters(getCharacters(), it) }.toSet().toList()
     }
     buildCharacters(section, characters)
 }
 
-private fun filterCharacters(searchText: String): List<LegacyCharacter> {
-    return getCharacters().filter { character ->
+private fun filterCharacters(initial: List<LegacyCharacter>, searchText: String): List<LegacyCharacter> {
+    return initial.filter { character ->
         val latest = character.snapshots.last()
         character.snapshots.any { it.name.lowercase().contains(searchText) } ||
                 character.snapshots.flatMap { it.aspects }.any { it.name.lowercase().contains(searchText) } ||

@@ -52,7 +52,7 @@ fun buildNav() {
 
         input {
             id = "search"
-            placeholder = "Filter: Name, Aspect etc"
+            placeholder = "Filter: Name, Aspect etc. Comma separated"
             onKeyUpFunction = {
                 val text = (document.getElementById("search") as HTMLInputElement).value
                 characterSearch(text)
