@@ -65,12 +65,12 @@ fun buildNav() {
                     characterSearch()
                 }
             }
-            label { +"Favorites Only" }
-        }
-        button {
-            id = "export-button"
-            +"Export"
-            onClickFunction = { downloadAdditionalInfo() }
+            label { +"Only Favorites" }
+            button {
+                id = "export-button"
+                +"Export"
+                onClickFunction = { downloadAdditionalInfo() }
+            }
         }
     }
 }
