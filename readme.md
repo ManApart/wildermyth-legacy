@@ -13,15 +13,10 @@ cp -r ../wildermyth-legacy/build/distributions/* .
 
 ## TODO
 
-Character List
-- Search (filter) by name, tag, aspect, favorite, class, legacyTier
-- Display favorites first
-
 Details page
 - show hometown?
 - show kill count
 - show inventory?
 - add tag
-- add star (favorite)
 - snapshot select
   - default to latest as is doing now, but display a select, and allow any snapshot
