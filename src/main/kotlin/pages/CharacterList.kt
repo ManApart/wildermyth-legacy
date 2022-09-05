@@ -1,7 +1,6 @@
 package pages
 
 import LegacyCharacter
-import buildNav
 import clearSections
 import favicon
 import getAdditionalInfo
@@ -22,6 +21,7 @@ import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
 import saveAdditionalInfo
+import saveSearch
 import searchOptions
 
 
@@ -42,6 +42,7 @@ fun characterSearch() {
         .hideNPC(searchOptions.hideNPC)
         .filterSearch(searchOptions.searchText)
     buildCharacters(section, characters)
+    saveSearch(searchOptions)
 }
 
 private fun List<LegacyCharacter>.filterFavorites(doFilter: Boolean): List<LegacyCharacter> {

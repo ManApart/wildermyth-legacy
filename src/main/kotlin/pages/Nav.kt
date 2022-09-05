@@ -24,7 +24,7 @@ fun buildNav() {
 
         input {
             id = "search"
-            placeholder = "Filter: Name, Aspect etc. Comma separated"
+            placeholder = "Filter: Name, Aspect etc. Comma separated" 
             onKeyUpFunction = {
                 searchOptions.searchText = (document.getElementById("search") as HTMLInputElement).value
                 characterSearch()
@@ -36,6 +36,7 @@ fun buildNav() {
                 div {
                     input(InputType.checkBox) {
                         id = "favorites-only"
+                        checked = searchOptions.favoritesOnly
                     }
                     label {
                         +"Only Favorites"
@@ -52,7 +53,7 @@ fun buildNav() {
                 div {
                     input(InputType.checkBox) {
                         id = "hide-npc"
-
+                        checked = searchOptions.hideNPC
                     }
                     label {
                         +"Hide NPCs"

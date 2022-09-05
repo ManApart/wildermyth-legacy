@@ -1,18 +1,11 @@
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.html.*
-import kotlinx.html.dom.append
-import kotlinx.html.js.input
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.onKeyUpFunction
-import kotlinx.serialization.encodeToString
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLInputElement
 import pages.*
 
 val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
 lateinit var favicon: HTMLElement
-var searchOptions = CharacterSearch()
+var searchOptions = getSearch()
 
 fun main() {
     window.onload = {
@@ -37,6 +30,7 @@ fun doRouting(windowHash: String) {
         } ?: displayCharacters()
     } else {
         displayCharacters()
+        characterSearch()
     }
 }
 
