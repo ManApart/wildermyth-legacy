@@ -1,19 +1,18 @@
 import kotlinx.browser.document
-import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import kotlinx.html.*
 import kotlinx.html.dom.append
-import kotlinx.html.js.onChangeFunction
+import kotlinx.html.js.input
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
 import kotlinx.serialization.encodeToString
-import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import pages.*
 
 val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
 lateinit var favicon: HTMLElement
+var searchOptions = CharacterSearch()
 
 fun main() {
     window.onload = {
@@ -54,9 +53,19 @@ fun buildNav() {
             id = "search"
             placeholder = "Filter: Name, Aspect etc. Comma separated"
             onKeyUpFunction = {
-                val text = (document.getElementById("search") as HTMLInputElement).value
-                characterSearch(text)
+                searchOptions.searchText = (document.getElementById("search") as HTMLInputElement).value
+                characterSearch()
             }
+        }
+        div {
+            input(InputType.checkBox) {
+                id = "favorites-only"
+                onClickFunction = {
+                    searchOptions.favoritesOnly = (document.getElementById("only-favorites") as HTMLInputElement).checked
+                    characterSearch()
+                }
+            }
+            label { +"Favorites Only" }
         }
         button {
             id = "export-button"

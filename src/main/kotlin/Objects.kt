@@ -71,3 +71,5 @@ enum class FriendshipKind(val titles: List<String>) {
 }
 
 enum class Sex { MALE, FEMALE, UNKNOWN }
+
+data class CharacterSearch(var searchText: String = "", var favoritesOnly: Boolean = false)

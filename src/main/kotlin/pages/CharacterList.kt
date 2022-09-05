@@ -22,6 +22,7 @@ import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
 import saveAdditionalInfo
+import searchOptions
 
 
 fun displayCharacters() {
@@ -34,14 +35,16 @@ fun displayCharacters() {
     scrollToCharacter()
 }
 
-fun characterSearch(searchText: String) {
+fun characterSearch() {
     val section = document.getElementById("character-cards-section")!!
-    val options = searchText.lowercase().split(",")
+    val options = searchOptions.searchText.lowercase().split(",")
 
-    val characters = if (searchText.isBlank()) {
-        getCharacters()
+    val favorites = if(searchOptions.favoritesOnly) getCharacters().filter { getAdditionalInfo(it.uuid).favorite } else getCharacters()
+
+    val characters = if (searchOptions.searchText.isBlank()) {
+        favorites
     } else {
-        options.fold(getCharacters()) { acc, s -> filterCharacters(acc, s) }
+        options.fold(favorites) { acc, s -> filterCharacters(acc, s) }
     }
     buildCharacters(section, characters)
 }
