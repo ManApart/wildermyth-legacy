@@ -27,12 +27,35 @@ fun displayCharacters() {
     document.title = "Wildermyth Legacy"
     favicon.setAttribute("href", "favicon.png")
     buildNav()
-    val characters = getCharacters()
-    buildCharacters(section, characters)
+    buildCharacters(section, getCharacters())
     scrollToCharacter()
 }
 
+fun characterSearch(searchText: String) {
+    val section = document.getElementById("character-cards-section")!!
+
+    val characters = if (searchText.isBlank()) {
+        getCharacters()
+    } else {
+        filterCharacters(searchText.lowercase())
+    }
+    buildCharacters(section, characters)
+}
+
+private fun filterCharacters(searchText: String): List<LegacyCharacter> {
+    return getCharacters().filter { character ->
+        val latest = character.snapshots.last()
+        character.snapshots.any { it.name.lowercase().contains(searchText) } ||
+                character.snapshots.flatMap { it.aspects }.any { it.name.lowercase().contains(searchText) } ||
+                latest.classLevel.name.lowercase().contains(searchText) ||
+                latest.personalityFirst.name.lowercase().contains(searchText) ||
+                latest.personalitySecond.name.lowercase().contains(searchText)
+
+    }
+}
+
 private fun buildCharacters(section: Element, characters: List<LegacyCharacter>) {
+    section.innerHTML = ""
     section.append {
         characters.also { println("Building ${it.size} characters") }
             .sortedWith(compareBy<LegacyCharacter> { it.snapshots.last().name.split(" ").last() }.thenBy { it.snapshots.last().name.split(" ").first() })
@@ -50,8 +73,6 @@ private fun scrollToCharacter() {
 fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, clickable: Boolean) {
     with(character.snapshots.last()) {
         val className = characterClass.name.lowercase()
-        val topTrait = personality.entries.maxBy { it.value }.key
-        val secondTrait = personality.entries.filterNot { it.key == topTrait }.maxBy { it.value }.key
         val animDelay = (0..10).random() / 10.0
         div("character-card") {
             id = character.uuid
@@ -60,7 +81,7 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, clickable
                 +name
             }
             div("character-personality") {
-                +"${topTrait.format()} ${secondTrait.format()}"
+                +"${personalityFirst.format()} ${personalitySecond.format()}"
             }
             div("character-portrait ${className}-portrait") {
                 getPicture("$uuid/body")?.let { picture ->

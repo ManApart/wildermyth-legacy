@@ -3,13 +3,14 @@ import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import kotlinx.html.*
 import kotlinx.html.dom.append
+import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
+import kotlinx.html.js.onKeyUpFunction
 import kotlinx.serialization.encodeToString
+import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
-import pages.characterDetail
-import pages.displayCharacters
-import pages.importMenu
-import pages.loadExample
+import org.w3c.dom.HTMLInputElement
+import pages.*
 
 val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
 lateinit var favicon: HTMLElement
@@ -46,16 +47,21 @@ fun buildNav() {
         button {
             id = "upload-button"
             +"Upload"
-            onClickFunction = {
-                importMenu()
+            onClickFunction = { importMenu() }
+        }
+
+        input {
+            id = "search"
+            placeholder = "Filter: Name, Aspect etc"
+            onKeyUpFunction = {
+                val text = (document.getElementById("search") as HTMLInputElement).value
+                characterSearch(text)
             }
         }
         button {
             id = "export-button"
             +"Export"
-            onClickFunction = {
-                downloadAdditionalInfo()
-            }
+            onClickFunction = { downloadAdditionalInfo() }
         }
     }
 }

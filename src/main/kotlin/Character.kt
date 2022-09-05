@@ -21,21 +21,22 @@ data class Character(
     val history: List<HistoryEntry> = listOf(),
 ) {
     //Trigger anything that needs to happen again on load.
-    fun reload(){
+    fun reload() {
         //Since story props don't exist when parsing json from indexDB, reload them after the in-memory db is loaded
-       this.bio = getBio()
+        this.bio = getBio()
     }
 
     @Transient
     var bio = getBio()
 
-    val sex : Sex
+    val sex: Sex
         get() {
             if (sexBacking == undefined) {
                 sexBacking = parseSex()
             }
             return sexBacking
         }
+
     @Transient
     private var sexBacking = parseSex()
 
@@ -58,8 +59,31 @@ data class Character(
             }
             return personalityBacking
         }
+
     @Transient
     private var personalityBacking = parsePersonality()
+
+    val personalityFirst: Personality
+        get() {
+            if (personalityFirstBacking == undefined) {
+                personalityFirstBacking = parsePersonalityFirst()
+            }
+            return personalityFirstBacking
+        }
+
+    @Transient
+    private var personalityFirstBacking = parsePersonalityFirst()
+
+    val personalitySecond: Personality
+        get() {
+            if (personalitySecondBacking == undefined) {
+                personalitySecondBacking = parsePersonalitySecond()
+            }
+            return personalitySecondBacking
+        }
+
+    @Transient
+    private var personalitySecondBacking = parsePersonalitySecond()
 
     @Transient
     val family = getFamily()
@@ -74,6 +98,7 @@ data class Character(
             }
             return hometownBacking
         }
+
     @Transient
     private var hometownBacking = parseHomeTown()
 
@@ -118,6 +143,9 @@ data class Character(
             Personality.values().associateWith { 0 }
         }
     }
+
+    private fun parsePersonalityFirst() = personality.entries.maxBy { it.value }.key
+    private fun parsePersonalitySecond() = personality.entries.filterNot { it.key == personalityFirst }.maxBy { it.value }.key
 
     private fun getFamily(): Family {
         val parents = aspects.filter { it.name == "childOf" }.map { it.values.first() }
