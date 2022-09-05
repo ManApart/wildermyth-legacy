@@ -3,7 +3,12 @@ import kotlinx.serialization.Transient
 import wildermyth.interpolate
 
 @Serializable
-data class LegacyCharacter(val uuid: String, val snapshots: Array<Character>, val companyIds: List<String> = listOf()) {
+data class LegacyCharacter(
+    val uuid: String,
+    val snapshots: Array<Character>,
+    val companyIds: List<String> = listOf(),
+    val npc: Boolean = false
+) {
     @Transient
     val friendships = getFriendships()
 

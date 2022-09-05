@@ -85,6 +85,11 @@ table {
     margin-left: 20px;
 }
 
+#search-checks {
+    display: inline-block;
+    text-align: left;
+}
+
 #upload-instructions{
   display: flex;
   flex-wrap: wrap;

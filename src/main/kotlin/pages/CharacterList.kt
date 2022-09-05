@@ -37,16 +37,25 @@ fun displayCharacters() {
 
 fun characterSearch() {
     val section = document.getElementById("character-cards-section")!!
-    val options = searchOptions.searchText.lowercase().split(",")
-
-    val favorites = if(searchOptions.favoritesOnly) getCharacters().filter { getAdditionalInfo(it.uuid).favorite } else getCharacters()
-
-    val characters = if (searchOptions.searchText.isBlank()) {
-        favorites
-    } else {
-        options.fold(favorites) { acc, s -> filterCharacters(acc, s) }
-    }
+    val characters = getCharacters()
+        .filterFavorites(searchOptions.favoritesOnly)
+        .hideNPC(searchOptions.hideNPC)
+        .filterSearch(searchOptions.searchText)
     buildCharacters(section, characters)
+}
+
+private fun List<LegacyCharacter>.filterFavorites(doFilter: Boolean): List<LegacyCharacter> {
+    return if (doFilter) filter { getAdditionalInfo(it.uuid).favorite } else this
+}
+
+private fun List<LegacyCharacter>.hideNPC(doFilter: Boolean): List<LegacyCharacter> {
+    return if (doFilter) filter { !it.npc } else this
+}
+
+private fun List<LegacyCharacter>.filterSearch(searchText: String): List<LegacyCharacter> {
+    return if (searchText.isBlank()) this else {
+        searchText.lowercase().split(",").fold(this) { acc, s -> filterCharacters(acc, s) }
+    }
 }
 
 private fun filterCharacters(initial: List<LegacyCharacter>, searchText: String): List<LegacyCharacter> {
@@ -125,7 +134,8 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, clickable
                 }
             }
             div("character-summary") {
-                +"$age year old ${classLevel.format()} ${className.capitalize()}"
+                val npc = if (character.npc) " (npc)" else ""
+                +"$age year old ${classLevel.format()} ${className.capitalize()}$npc"
             }
             div("character-bio") {
                 +bio

@@ -112,7 +112,8 @@ fun parseLegacyCharacter(json: Json): LegacyCharacter {
             companies[companyId]?.characters?.add(uuid)
         }
     }
-    return LegacyCharacter(uuid, snapshots, companyIds)
+    val isNPC = (json["usage"] as String? == "background")
+    return LegacyCharacter(uuid, snapshots, companyIds, isNPC)
 }
 
 fun parseCharacter(uuid: String, json: Json): Character {
