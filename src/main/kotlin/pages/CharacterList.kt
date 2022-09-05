@@ -4,6 +4,7 @@ import LegacyCharacter
 import buildNav
 import clearSections
 import favicon
+import getAdditionalInfo
 import getCharacters
 import getPicture
 import kotlinx.browser.document
@@ -19,6 +20,8 @@ import kotlinx.html.js.onClickFunction
 import kotlinx.html.style
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLImageElement
+import saveAdditionalInfo
 
 
 fun displayCharacters() {
@@ -39,7 +42,6 @@ fun characterSearch(searchText: String) {
         getCharacters()
     } else {
         options.fold(getCharacters()) { acc, s -> filterCharacters(acc, s) }
-//        options.flatMap { filterCharacters(getCharacters(), it) }.toSet().toList()
     }
     buildCharacters(section, characters)
 }
@@ -60,11 +62,17 @@ private fun buildCharacters(section: Element, characters: List<LegacyCharacter>)
     section.innerHTML = ""
     section.append {
         characters.also { println("Building ${it.size} characters") }
-            .sortedWith(compareBy<LegacyCharacter> { it.snapshots.last().name.split(" ").last() }.thenBy { it.snapshots.last().name.split(" ").first() })
+            .sorted()
             .forEach { character ->
                 characterCard(character, true)
             }
     }
+}
+
+private fun List<LegacyCharacter>.sorted(): List<LegacyCharacter> {
+    return sortedWith(compareBy<LegacyCharacter> { !getAdditionalInfo(it.uuid).favorite }
+        .thenBy { it.snapshots.last().name.split(" ").last() }
+        .thenBy { it.snapshots.last().name.split(" ").first() })
 }
 
 private fun scrollToCharacter() {
@@ -79,6 +87,18 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, clickable
         div("character-card") {
             id = character.uuid
             if (clickable) onClickFunction = { characterDetail(character) }
+            val info = getAdditionalInfo(character.uuid)
+            img {
+                classes = setOf("favorite-image")
+                id = character.uuid + "-star"
+                src = if (info.favorite) "./star-active.png" else "./star.png"
+                onClickFunction = { e ->
+                    e.stopPropagation()
+                    info.favorite = !info.favorite
+                    saveAdditionalInfo(info)
+                    (document.getElementById(character.uuid + "-star") as HTMLImageElement).src = if (info.favorite) "./star-active.png" else "./star.png"
+                }
+            }
             h1 {
                 +name
             }

@@ -129,3 +129,8 @@
 .character-bio::-webkit-scrollbar-track {
     background: var(--bio-background);
 }
+
+.favorite-image {
+    float: right;
+    width: 20px;
+}
