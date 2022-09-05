@@ -81,6 +81,10 @@ table {
     margin:auto;
 }
 
+#nav #export-button {
+    margin-left: 20px;
+}
+
 #upload-instructions{
   display: flex;
   flex-wrap: wrap;
