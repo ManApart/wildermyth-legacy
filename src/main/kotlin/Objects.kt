@@ -1,6 +1,5 @@
 import kotlinx.serialization.Serializable
 import pages.toAspect
-import wildermyth.interpolate
 
 enum class CharacterClass { WARRIOR, HUNTER, MYSTIC }
 enum class ClassLevel { GREENHORN, BLOODHORN, BLUEHORN, BRONZEHORN, SILVERHORN, GOLDHORN, BLACKHORN }
@@ -26,7 +25,7 @@ data class HistoryEntry(
 ) {
     fun getText(character: Character): String {
         return textOverride.ifBlank {
-            getStoryProp(id)?.let { character.interpolate(it) } ?: id
+            getStoryProp(id)?.let { character.interpolate(it, this) } ?: id
         }
     }
 }
@@ -47,7 +46,7 @@ data class HistoryEntryRaw(
 }
 
 @Serializable
-data class HistoryRelationship(val name: String? = null)
+data class HistoryRelationship(val name: String? = null, val role: String? = null)
 
 
 @Serializable

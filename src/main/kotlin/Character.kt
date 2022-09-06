@@ -1,6 +1,5 @@
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import wildermyth.interpolate
 
 @Serializable
 data class LegacyCharacter(
@@ -120,7 +119,10 @@ data class Character(
     }
 
     private fun getBioString(startsWith: String): String? {
-        return history.firstOrNull { it.id.startsWith(startsWith) }?.id?.let { propId -> getStoryProp(propId) }?.let { storyProp -> interpolate(storyProp) }
+        val entry = history.firstOrNull { it.id.startsWith(startsWith) }
+        return if (entry != null) {
+            getStoryProp(entry.id)?.let { storyProp -> interpolate(storyProp, entry) }
+        } else null
     }
 
     private fun getCharacterClass(): CharacterClass {

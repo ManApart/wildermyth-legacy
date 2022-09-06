@@ -1,25 +1,20 @@
-package wildermyth
-
-import Character
-import personalityNames
-
 interface Chunk {
-    fun interpolate(character: Character): String
+    fun interpolate(character: Character, entry: HistoryEntry): String
 }
 
 data class StringChunk(private val input: String) : Chunk {
-    override fun interpolate(character: Character) = input
+    override fun interpolate(character: Character, entry: HistoryEntry) = input
 }
 
 data class Template(private val input: String, private val children: List<Chunk>) : Chunk {
-    override fun interpolate(character: Character): String {
-        val rebuilt = if (children.isEmpty()) input else children.joinToString("") { it.interpolate(character) }
-        return character.replaceTemplate(rebuilt)
+    override fun interpolate(character: Character, entry: HistoryEntry): String {
+        val rebuilt = if (children.isEmpty()) input else children.joinToString("") { it.interpolate(character, entry) }
+        return character.replaceTemplate(rebuilt, entry)
     }
 }
 
-fun Character.interpolate(line: String): String {
-    return buildChunks(line).joinToString("") { it.interpolate(this) }
+fun Character.interpolate(line: String, entry: HistoryEntry): String {
+    return buildChunks(line).joinToString("") { it.interpolate(this, entry) }
 }
 
 private fun buildChunks(line: String): List<Chunk> {
@@ -52,7 +47,7 @@ fun getTemplate(from: Int, line: String): String? {
     return if (depth == 0) line.substring(start + 1, i) else null
 }
 
-private fun Character.replaceTemplate(template: String): String {
+private fun Character.replaceTemplate(template: String, entry: HistoryEntry): String {
     val parts = template.split(":")
     val type = parts.first()
     val typeOptions = type.split("/")
@@ -60,7 +55,9 @@ private fun Character.replaceTemplate(template: String): String {
     return when {
         template == "name" -> name
         template == "firstName" -> name.split(" ").first()
-        template == "Site" -> "site"
+        template == "Site" -> entry.roleMatch("site")
+        template == "overlandTile" -> entry.roleMatch("overlandTile")
+        template == "hero" -> entry.roleMatch("hero")
         template == "Hometown" -> hometown
         type == "awm" -> replaceAWM(resultOptions)
         type == "mf" -> replaceMF(resultOptions)
@@ -89,4 +86,8 @@ private fun Character.replacePersonality(typeOptions: List<String>, resultOption
         ?: typeOptions.first()
     val resultIndex = typeOptions.indexOf(highest)
     return resultOptions[resultIndex]
+}
+
+private fun HistoryEntry.roleMatch(role: String): String {
+    return relationships.firstOrNull { it.role == role }?.name ?: role
 }
