@@ -1,3 +1,5 @@
+import kotlinx.serialization.encodeToString
+
 interface Chunk {
     fun interpolate(character: Character, entry: HistoryEntry): String
 }
@@ -58,12 +60,14 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
         template == "Site" -> entry.roleMatch("site")
         template == "overlandTile" -> entry.roleMatch("overlandTile")
         template == "hero" -> entry.roleMatch("hero")
+        template == "company" -> entry.roleMatch("company")
         template == "Hometown" -> hometown
         type == "awm" -> replaceAWM(resultOptions)
         type == "mf" -> replaceMF(resultOptions)
         typeOptions.any { it in personalityNames } -> replacePersonality(typeOptions, resultOptions)
         else -> {
-            println("Unknown type: $type")
+            println("$name encountered unknown type: $type")
+            println(JSON.stringify(entry))
             resultOptions.last()
         }
     }
