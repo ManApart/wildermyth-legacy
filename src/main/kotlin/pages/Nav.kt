@@ -25,6 +25,7 @@ fun buildNav() {
         input {
             id = "search"
             placeholder = "Filter: Name, Aspect etc. Comma separated"
+            value = searchOptions.searchText
             onKeyUpFunction = {
                 searchOptions.searchText = (document.getElementById("search") as HTMLInputElement).value
                 characterSearch()
