@@ -147,6 +147,13 @@
 .company h4 {
     padding-top: 4px;
     margin: 0px;
+    display: inline-block;
+}
+
+.company-foe {
+    float: right;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 .company-friend-pic-wrapper{

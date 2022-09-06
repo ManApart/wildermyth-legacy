@@ -298,8 +298,11 @@ private fun TagConsumer<HTMLElement>.companyCard(companyId: String) {
     val company = getCompany(companyId)
 
     div("company") {
-        h4 { +company.name }
-        p {+"Foe: ${company.mainThreat.capitalize()}"}
+//            h4 { +company.name }
+        div {
+            h4 { +company.name }
+            p("company-foe") { +"Foe: ${company.mainThreat.capitalize()}" }
+        }
         company.characters.mapNotNull { getCharacter(it) }.forEach { relative ->
             getPicture("${relative.uuid}/head")?.let { picture ->
                 div("company-friend-pic-wrapper") {
