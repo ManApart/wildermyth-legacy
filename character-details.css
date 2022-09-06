@@ -103,6 +103,11 @@
     margin-top: 0px;
 }
 
+#stats-section {
+    margin: 0px;
+    margin-top: 4px;
+}
+
 #stat-bonuses {
     width: 46%;
     display: inline-block;
@@ -126,6 +131,13 @@
     background-color: var(--bio-background);
 }
 
+#misc-stats {
+    padding: 8px;
+    margin-top: 4px;
+    padding-bottom: 20px;
+    background-color: var(--card-background);
+}
+
 .company {
     background-color: var(--card-background);
     margin-bottom: 12px;
@@ -135,6 +147,13 @@
 .company h4 {
     padding-top: 4px;
     margin: 0px;
+    display: inline-block;
+}
+
+.company-foe {
+    float: right;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 .company-friend-pic-wrapper{
