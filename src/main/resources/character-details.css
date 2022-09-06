@@ -103,6 +103,11 @@
     margin-top: 0px;
 }
 
+#stats-section {
+    margin: 0px;
+    margin-top: 4px;
+}
+
 #stat-bonuses {
     width: 46%;
     display: inline-block;
@@ -124,6 +129,13 @@
 #stats-section table{
     width: 90%;
     background-color: var(--bio-background);
+}
+
+#misc-stats {
+    padding: 8px;
+    margin-top: 4px;
+    padding-bottom: 20px;
+    background-color: var(--card-background);
 }
 
 .company {

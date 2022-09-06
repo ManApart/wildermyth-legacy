@@ -7,7 +7,8 @@ data class LegacyCharacter(
     val uuid: String,
     val snapshots: Array<Character>,
     val companyIds: List<String> = listOf(),
-    val npc: Boolean = false
+    val npc: Boolean = false,
+    val killCount: Int = 0,
 ) {
     @Transient
     val friendships = getFriendships()

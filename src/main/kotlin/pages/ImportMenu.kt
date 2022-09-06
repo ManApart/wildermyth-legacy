@@ -1,6 +1,5 @@
 package pages
 
-import buildNav
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.*

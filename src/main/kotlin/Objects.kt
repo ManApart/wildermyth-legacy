@@ -56,7 +56,13 @@ data class AdditionalInfo(val uuid: String, var favorite: Boolean = false, val h
 data class Family(val soulMate: String? = null, val parents: List<String> = listOf(), val children: List<String> = listOf())
 
 @Serializable
-data class Company(val id: String, val date: Double, val name: String, val characters: MutableSet<String> = mutableSetOf())
+data class Company(
+    val id: String,
+    val date: Double,
+    val name: String,
+    val mainThread: String = "Unknown",
+    val characters: MutableSet<String> = mutableSetOf()
+)
 
 data class Friendship(val relativeId: String, val kind: FriendshipKind, val level: Int)
 

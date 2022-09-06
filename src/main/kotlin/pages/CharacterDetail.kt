@@ -43,7 +43,7 @@ fun characterDetail(character: LegacyCharacter) {
             id = "character-details"
             characterCard(character, false)
             div("details-subsection") {
-                statsSection(snapshot)
+                statsSection(character)
                 companiesSection(character)
             }
             familySection(character)
@@ -175,7 +175,8 @@ private fun DIV.buildHistorySection(character: Character, history: List<HistoryE
     }
 }
 
-fun TagConsumer<HTMLElement>.statsSection(character: Character) {
+fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter) {
+    val character = legacyCharacter.snapshots.last()
     val rawStats = character.aspects.filter { it.name == "historyStat2" }
     div("character-section") {
         id = "stats-section"
@@ -209,7 +210,22 @@ fun TagConsumer<HTMLElement>.statsSection(character: Character) {
                 }
             }
         }
-
+        div {
+            id = "misc-stats"
+            h2 { +"Misc" }
+            table {
+                tbody {
+                    tr {
+                        td { +"Hometown" }
+                        td { +character.hometown }
+                    }
+                    tr {
+                        td { +"Kills" }
+                        td { +"${legacyCharacter.killCount}" }
+                    }
+                }
+            }
+        }
     }
 }
 

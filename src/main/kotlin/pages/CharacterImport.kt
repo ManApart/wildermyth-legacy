@@ -107,13 +107,16 @@ fun parseLegacyCharacter(json: Json): LegacyCharacter {
             if (!companies.containsKey(companyId)) {
                 val name = companyJson["companyName"] as String
                 val date = companyJson["date"] as Double
-                companies[companyId] = Company(companyId, date, name)
+                val mainThreat = companyJson["mainThreat"] as String
+                companies[companyId] = Company(companyId, date, name, mainThreat)
             }
             companies[companyId]?.characters?.add(uuid)
         }
     }
     val isNPC = (json["usage"] as String? == "background")
-    return LegacyCharacter(uuid, snapshots, companyIds, isNPC)
+
+    val killCount = ((json["legacyAchievementInfo"] as Json)["entries"] as Array<Array<Json>>).flatten().firstOrNull { it["entryId"] == "killCounter" }?.let { (it["value"] as Double?)?.toInt() } ?: 0
+    return LegacyCharacter(uuid, snapshots, companyIds, isNPC, killCount)
 }
 
 fun parseCharacter(uuid: String, json: Json): Character {

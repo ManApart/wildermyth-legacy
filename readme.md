@@ -14,8 +14,6 @@ cp -r ../wildermyth-legacy/build/distributions/* .
 ## TODO
 
 Details page
-- show hometown?
-- show kill count
 - show inventory?
 - add tag
 - snapshot select
