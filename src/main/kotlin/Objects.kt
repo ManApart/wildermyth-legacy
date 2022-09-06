@@ -60,7 +60,7 @@ data class Company(
     val id: String,
     val date: Double,
     val name: String,
-    val mainThread: String = "Unknown",
+    val mainThreat: String = "Unknown",
     val characters: MutableSet<String> = mutableSetOf()
 )
 

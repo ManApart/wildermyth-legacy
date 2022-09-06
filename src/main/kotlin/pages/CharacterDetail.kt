@@ -299,6 +299,7 @@ private fun TagConsumer<HTMLElement>.companyCard(companyId: String) {
 
     div("company") {
         h4 { +company.name }
+        p {+"Foe: ${company.mainThreat.capitalize()}"}
         company.characters.mapNotNull { getCharacter(it) }.forEach { relative ->
             getPicture("${relative.uuid}/head")?.let { picture ->
                 div("company-friend-pic-wrapper") {

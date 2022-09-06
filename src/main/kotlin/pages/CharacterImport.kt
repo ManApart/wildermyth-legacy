@@ -108,6 +108,7 @@ fun parseLegacyCharacter(json: Json): LegacyCharacter {
                 val name = companyJson["companyName"] as String
                 val date = companyJson["date"] as Double
                 val mainThreat = companyJson["mainThreat"] as String
+                println(mainThreat)
                 companies[companyId] = Company(companyId, date, name, mainThreat)
             }
             companies[companyId]?.characters?.add(uuid)
