@@ -68,6 +68,23 @@ fun buildNav() {
                         characterSearch()
                     }
                 }
+                div {
+                    input(InputType.checkBox) {
+                        id = "list-view"
+                        checked = searchOptions.listView
+                    }
+                    label {
+                        +"View as List"
+                        onClickFunction = {
+                            val box = (document.getElementById("list-view") as HTMLInputElement)
+                            box.checked = !box.checked
+                        }
+                    }
+                    onClickFunction = {
+                        searchOptions.listView = (document.getElementById("list-view") as HTMLInputElement).checked
+                        characterSearch()
+                    }
+                }
             }
             button {
                 id = "export-button"

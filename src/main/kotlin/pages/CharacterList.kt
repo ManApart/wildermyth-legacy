@@ -4,6 +4,7 @@ import LegacyCharacter
 import clearSections
 import favicon
 import getAdditionalInfo
+import getCharacter
 import getCharacters
 import getPicture
 import kotlinx.browser.document
@@ -72,12 +73,31 @@ private fun filterCharacters(initial: List<LegacyCharacter>, searchText: String)
 }
 
 private fun buildCharacters(section: Element, characters: List<LegacyCharacter>) {
+    if (searchOptions.listView) {
+        buildCharacterListView(section, characters)
+    } else {
+        buildCharacterCards(section, characters)
+    }
+}
+
+private fun buildCharacterCards(section: Element, characters: List<LegacyCharacter>) {
     section.innerHTML = ""
     section.append {
-        characters.also { println("Building ${it.size} characters") }
+        characters.also { println("Building cards for ${it.size} characters") }
             .sorted()
             .forEach { character ->
                 characterCard(character, true)
+            }
+    }
+}
+
+private fun buildCharacterListView(section: Element, characters: List<LegacyCharacter>) {
+    section.innerHTML = ""
+    section.append {
+        characters.also { println("Building List of ${it.size} characters") }
+            .sorted()
+            .forEach { character ->
+                characterListItem(character, true)
             }
     }
 }
@@ -140,6 +160,38 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, clickable
             }
             div("character-bio") {
                 +bio
+            }
+        }
+    }
+}
+
+fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, clickable: Boolean) {
+    with(character.snapshots.last()) {
+        div("character-list-item") {
+            id = character.uuid
+            if (clickable) onClickFunction = { characterDetail(character) }
+            val info = getAdditionalInfo(character.uuid)
+            div("character-list-item-head-wrapper") {
+                getPicture("$uuid/head")?.let { picture ->
+                    img {
+                        src = picture
+                        classes = setOf("character-list-item-head")
+                    }
+                }
+            }
+            img {
+                classes = setOf("favorite-image")
+                id = character.uuid + "-star"
+                src = if (info.favorite) "./star-active.png" else "./star.png"
+                onClickFunction = { e ->
+                    e.stopPropagation()
+                    info.favorite = !info.favorite
+                    saveAdditionalInfo(info)
+                    (document.getElementById(character.uuid + "-star") as HTMLImageElement).src = if (info.favorite) "./star-active.png" else "./star.png"
+                }
+            }
+            h1 {
+                +name
             }
         }
     }

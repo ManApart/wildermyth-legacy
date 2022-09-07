@@ -134,3 +134,30 @@
     float: right;
     width: 5%;
 }
+
+.character-list-item {
+    background: var(--card-background);
+    width: 470px;
+    margin: 4px;
+    padding: 4px;
+}
+
+.character-list-item-head-wrapper {
+    display: inline-block;
+    overflow: hidden;
+    width: 70px;
+    height: 75px;
+}
+
+.character-list-item-head {
+    width: 100px;
+    margin-top: -20px;
+    margin-left: -10px;
+}
+
+.character-list-item h1 {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 20px;
+    margin-left: 10px;
+}

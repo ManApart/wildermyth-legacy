@@ -13,6 +13,9 @@ cp -r ../wildermyth-legacy/build/distributions/* .
 
 ## TODO
 
+List View
+- Just name and face
+
 Details page
 - show inventory?
 - add tag
