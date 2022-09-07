@@ -60,4 +60,8 @@
     .full-history-column {
         width: 100%;
     }
+
+    .character-list-item {
+        width: 95%;
+    }
 }

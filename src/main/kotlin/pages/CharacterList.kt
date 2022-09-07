@@ -4,7 +4,6 @@ import LegacyCharacter
 import clearSections
 import favicon
 import getAdditionalInfo
-import getCharacter
 import getCharacters
 import getPicture
 import kotlinx.browser.document
@@ -94,7 +93,8 @@ private fun buildCharacterCards(section: Element, characters: List<LegacyCharact
 private fun buildCharacterListView(section: Element, characters: List<LegacyCharacter>) {
     section.innerHTML = ""
     section.append {
-        characters.also { println("Building List of ${it.size} characters") }
+        characters
+            .also { println("Building List of ${it.size} characters") }
             .sorted()
             .forEach { character ->
                 characterListItem(character, true)
