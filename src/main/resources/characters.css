@@ -135,6 +135,11 @@
     width: 5%;
 }
 
+.character-list-item .favorite-image{
+    margin-top: 2%;
+    margin-right: 2%;
+}
+
 .character-list-item {
     display: inline-block;
     background: var(--card-background);
@@ -160,5 +165,12 @@
     display: inline-block;
     vertical-align: top;
     margin-top: 20px;
+    margin-left: 10px;
+}
+
+.character-list-item-npc {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 35px;
     margin-left: 10px;
 }

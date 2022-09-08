@@ -8,15 +8,12 @@ import getCharacters
 import getPicture
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.html.TagConsumer
-import kotlinx.html.classes
+import kotlinx.html.*
 import kotlinx.html.dom.append
-import kotlinx.html.id
 import kotlinx.html.js.div
 import kotlinx.html.js.h1
 import kotlinx.html.js.img
 import kotlinx.html.js.onClickFunction
-import kotlinx.html.style
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
@@ -72,34 +69,19 @@ private fun filterCharacters(initial: List<LegacyCharacter>, searchText: String)
 }
 
 private fun buildCharacters(section: Element, characters: List<LegacyCharacter>) {
-    if (searchOptions.listView) {
-        buildCharacterListView(section, characters)
-    } else {
-        buildCharacterCards(section, characters)
-    }
-}
-
-private fun buildCharacterCards(section: Element, characters: List<LegacyCharacter>) {
     section.innerHTML = ""
     section.append {
-        characters.also { println("Building cards for ${it.size} characters") }
+        characters.also { println("Building ${it.size} characters") }
             .sorted()
             .forEach { character ->
-                characterCard(character, true)
+                if (searchOptions.listView) {
+                    characterListItem(character, true)
+                } else {
+                    characterCard(character, true)
+                }
             }
     }
-}
 
-private fun buildCharacterListView(section: Element, characters: List<LegacyCharacter>) {
-    section.innerHTML = ""
-    section.append {
-        characters
-            .also { println("Building List of ${it.size} characters") }
-            .sorted()
-            .forEach { character ->
-                characterListItem(character, true)
-            }
-    }
 }
 
 private fun List<LegacyCharacter>.sorted(): List<LegacyCharacter> {
@@ -192,6 +174,9 @@ fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, click
             }
             h1 {
                 +name
+            }
+            if (character.npc){
+                p("character-list-item-npc") {+"(npc)"}
             }
         }
     }
