@@ -1,5 +1,12 @@
-#log-button {
-    float: right;
+#character-nav {
+    width: 100%;
+    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}
+
+#character-nav button {
+    margin:auto;
 }
 
 #character-details{

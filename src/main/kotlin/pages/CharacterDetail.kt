@@ -23,10 +23,9 @@ import saveAdditionalInfo
 import kotlin.js.Date
 import kotlinx.serialization.encodeToString
 
-fun characterDetail(character: LegacyCharacter) {
+fun characterDetail(character: LegacyCharacter, snapshot: Character = character.snapshots.last()) {
     val additionalInfo = getAdditionalInfo(character.uuid)
     val section = document.getElementById("character-detail-section")!!
-    val snapshot = character.snapshots.last()
     clearSections()
     document.title = snapshot.name
     document.documentElement?.scrollTop = 0.0
@@ -35,14 +34,32 @@ fun characterDetail(character: LegacyCharacter) {
 
     section.append {
         div {
+            id = "character-nav"
             button {
                 +"Back"
                 onClickFunction = {
                     window.location.hash = "#${character.uuid}"
                 }
             }
+            span {
+                label { +"Snapshot:" }
+                select {
+                    id = "snapshot-select"
+                    character.snapshots.forEach {
+                        option {
+                            +"${it.name}: ${it.age}yrs"
+                            selected = snapshot == it
+                        }
+                    }
+
+                    onChangeFunction = {
+                        val snapshotI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
+                        characterDetail(character, character.snapshots[snapshotI])
+                    }
+                }
+            }
             button {
-                id="log-button"
+                id = "log-button"
                 +"Log Detail"
                 onClickFunction = {
                     println(jsonMapper.encodeToString(character))
@@ -51,12 +68,12 @@ fun characterDetail(character: LegacyCharacter) {
         }
         div {
             id = "character-details"
-            characterCard(character, false)
+            characterCard(character, snapshot, false)
             div("details-subsection") {
-                statsSection(character)
+                statsSection(character, snapshot)
                 companiesSection(character)
             }
-            familySection(character)
+            familySection(character, snapshot)
             friendshipSection(character)
             customHistorySection(additionalInfo)
             gameHistorySection(snapshot)
@@ -185,9 +202,8 @@ private fun DIV.buildHistorySection(character: Character, history: List<HistoryE
     }
 }
 
-fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter) {
-    val character = legacyCharacter.snapshots.last()
-    val rawStats = character.aspects.filter { it.name == "historyStat2" }
+fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snapshot: Character) {
+    val rawStats = snapshot.aspects.filter { it.name == "historyStat2" }
     div("character-section") {
         id = "stats-section"
         div {
@@ -195,7 +211,7 @@ fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter) {
             h2 { +"Personality" }
             table {
                 tbody {
-                    character.personality.entries.sortedByDescending { it.value }.forEach { (type, amount) ->
+                    snapshot.personality.entries.sortedByDescending { it.value }.forEach { (type, amount) ->
                         tr {
                             td { +type.format() }
                             td { +"$amount" }
@@ -227,7 +243,7 @@ fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter) {
                 tbody {
                     tr {
                         td { +"Hometown" }
-                        td { +character.hometown }
+                        td { +snapshot.hometown }
                     }
                     tr {
                         td { +"Kills" }
@@ -239,8 +255,7 @@ fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter) {
     }
 }
 
-fun TagConsumer<HTMLElement>.familySection(character: LegacyCharacter) {
-    val snapshot = character.snapshots.last()
+fun TagConsumer<HTMLElement>.familySection(character: LegacyCharacter, snapshot: Character) {
     with(snapshot.family) {
         if (soulMate != null || parents.isNotEmpty() || children.isNotEmpty()) {
             div("character-section") {

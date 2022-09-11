@@ -1,5 +1,6 @@
 package pages
 
+import Character
 import LegacyCharacter
 import clearSections
 import favicon
@@ -75,9 +76,9 @@ private fun buildCharacters(section: Element, characters: List<LegacyCharacter>)
             .sorted()
             .forEach { character ->
                 if (searchOptions.listView) {
-                    characterListItem(character, true)
+                    characterListItem(character, character.snapshots.last(), true)
                 } else {
-                    characterCard(character, true)
+                    characterCard(character, character.snapshots.last(), true)
                 }
             }
     }
@@ -95,8 +96,8 @@ private fun scrollToCharacter() {
     document.getElementById(hashId)?.scrollIntoView()
 }
 
-fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, clickable: Boolean) {
-    with(character.snapshots.last()) {
+fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot: Character, clickable: Boolean) {
+    with(snapshot) {
         val className = characterClass.name.lowercase()
         val animDelay = (0..10).random() / 10.0
         div("character-card") {
@@ -147,8 +148,8 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, clickable
     }
 }
 
-fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, clickable: Boolean) {
-    with(character.snapshots.last()) {
+fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snapshot: Character, clickable: Boolean) {
+    with(snapshot) {
         div("character-list-item") {
             id = character.uuid
             if (clickable) onClickFunction = { characterDetail(character) }
@@ -175,8 +176,8 @@ fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, click
             h1 {
                 +name
             }
-            if (character.npc){
-                p("character-list-item-npc") {+"(npc)"}
+            if (character.npc) {
+                p("character-list-item-npc") { +"(npc)" }
             }
         }
     }
