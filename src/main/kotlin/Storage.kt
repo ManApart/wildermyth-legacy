@@ -31,6 +31,10 @@ fun saveCharacter(character: LegacyCharacter) {
     inMemoryStorage.characters[character.uuid] = character
 }
 
+fun getSnapshot(uuid: String): Character? {
+    return inMemoryStorage.characters.values.firstNotNullOfOrNull { it.snapshots.firstOrNull { snapshot -> snapshot.uuid == uuid } }
+}
+
 fun getPicture(path: String): String? {
     return inMemoryStorage.pictures[path]
 }

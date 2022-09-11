@@ -8,7 +8,7 @@ fun classLevelFromInt(level: Int) = ClassLevel.values()[level]
 
 enum class Personality { BOOKISH, COWARD, GOOFBALL, GREEDY, HEALER, HOTHEAD, LEADER, LONER, POET, ROMANTIC, SNARK }
 
-val personalityNames =  Personality.values().map { it.name.lowercase() }
+val personalityNames = Personality.values().map { it.name.lowercase() }
 
 @Serializable
 data class Aspect(val name: String, val values: List<String> = listOf())
@@ -38,15 +38,24 @@ data class HistoryEntryRaw(
     val associatedAspects: List<String> = listOf(),
     val forbiddenAspects: List<String> = listOf(),
     val showInSummary: Boolean = true,
-    val relationships: List<HistoryRelationship> = listOf()
+    val relationships: List<HistoryRelationshipRaw> = listOf()
 ) {
     fun toHistoryEntry(): HistoryEntry {
-        return HistoryEntry(id, acquisitionTime, textOverride, associatedAspects.map { it.toAspect() }, forbiddenAspects.map { it.toAspect() }, showInSummary, relationships)
+        return HistoryEntry(id, acquisitionTime, textOverride, associatedAspects.map { it.toAspect() }, forbiddenAspects.map { it.toAspect() }, showInSummary, relationships.map { it.parse() })
     }
 }
 
 @Serializable
-data class HistoryRelationship(val name: String? = null, val role: String? = null)
+data class HistoryRelationship(val name: String? = null, val uuid: String? = null, val role: String? = null)
+
+
+@Serializable
+data class HistoryRelationshipRawInner(val value: String? = null)
+
+@Serializable
+data class HistoryRelationshipRaw(val name: String? = null, val other: HistoryRelationshipRawInner? = null, val role: String? = null) {
+    fun parse() = HistoryRelationship(name, other?.value, role)
+}
 
 
 @Serializable

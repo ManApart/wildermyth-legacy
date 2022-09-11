@@ -56,6 +56,7 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
     val resultOptions = parts.last().split("/")
     return when {
         template == "name" -> name
+        template == "fullname" -> name
         template == "firstName" -> name.split(" ").first()
         template == "Site" -> entry.roleMatch("site")
         template == "overlandTile" -> entry.roleMatch("overlandTile")
@@ -64,12 +65,34 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
         template == "Hometown" -> hometown
         type == "awm" -> replaceAWM(resultOptions)
         type == "mf" -> replaceMF(resultOptions)
+        type.contains(".") -> replaceRelationshipTemplate(type, resultOptions, entry)
+        type.startsWith("npc") -> entry.roleMatch(type)
+        type.startsWith("hook") -> entry.roleMatch(type)
+        type == "personality" -> replacePersonality(typeOptions, resultOptions)
         typeOptions.any { it in personalityNames } -> replacePersonality(typeOptions, resultOptions)
         else -> {
             println("$name encountered unknown type: $type")
-            println(JSON.stringify(entry))
+            println(jsonMapper.encodeToString(entry))
             resultOptions.last()
         }
+    }
+}
+
+fun Character.replaceRelationshipTemplate(fullType: String, resultOptions: List<String>, entry: HistoryEntry): String {
+    val parts = fullType.split(".")
+    val roleName = parts.first()
+    val type = parts.last()
+    return entry.relationships.firstOrNull { it.role == roleName }
+        ?.uuid
+        ?.let { getCharacter(it) }
+        ?.let { relative ->
+            val secondHalf = if (resultOptions.joinToString("/").contains(type)) "" else ":" + resultOptions.joinToString("/")
+            val template = "$type$secondHalf"
+            relative.snapshots.last().replaceTemplate(template, entry)
+        } ?: let {
+        println("Relationship Attributes not supported: $name ${entry.id} $fullType")
+        println(jsonMapper.encodeToString(entry))
+        resultOptions.last()
     }
 }
 
@@ -81,6 +104,7 @@ private fun Character.replaceMF(resultOptions: List<String>): String {
         else -> resultOptions.first()
     }
 }
+
 private fun Character.replaceAWM(resultOptions: List<String>): String {
     return if (attractedToWomen) resultOptions.first() else resultOptions.last()
 }
