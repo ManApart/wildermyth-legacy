@@ -82,7 +82,8 @@ fun Character.replaceRelationshipTemplate(fullType: String, resultOptions: List<
     val parts = fullType.split(".")
     val roleName = parts.first()
     val type = parts.last()
-    return entry.relationships.firstOrNull { it.role == roleName }
+    val relationship = entry.relationships.firstOrNull { it.role == roleName }
+    return relationship
         ?.uuid
         ?.let { getCharacter(it) }
         ?.let { relative ->
@@ -90,9 +91,14 @@ fun Character.replaceRelationshipTemplate(fullType: String, resultOptions: List<
             val template = "$type$secondHalf"
             relative.snapshots.last().replaceTemplate(template, entry)
         } ?: let {
-        println("Relationship Attributes not supported: $name ${entry.id} $fullType")
-        println(jsonMapper.encodeToString(entry))
-        resultOptions.last()
+        when {
+            relationship != null && type == "mf" -> relationship.replaceMF(resultOptions)
+            else -> {
+                println("Relationship Attributes not supported: $name ${entry.id} $fullType")
+                println(jsonMapper.encodeToString(entry))
+                resultOptions.last()
+            }
+        }
     }
 }
 
@@ -100,7 +106,16 @@ private fun Character.replaceMF(resultOptions: List<String>): String {
     return when {
         sex == Sex.MALE -> resultOptions.first()
         sex == Sex.FEMALE -> resultOptions[1]
-        resultOptions.size == 3 -> resultOptions.last().also { println(this.name + " is " + this.sex) }
+        resultOptions.size == 3 -> resultOptions.last()
+        else -> resultOptions.first()
+    }
+}
+
+private fun HistoryRelationship.replaceMF(resultOptions: List<String>): String {
+    return when {
+        gender == "male" -> resultOptions.first()
+        gender == "female" -> resultOptions[1]
+        resultOptions.size == 3 -> resultOptions.last()
         else -> resultOptions.first()
     }
 }

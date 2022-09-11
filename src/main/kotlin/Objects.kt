@@ -46,15 +46,25 @@ data class HistoryEntryRaw(
 }
 
 @Serializable
-data class HistoryRelationship(val name: String? = null, val uuid: String? = null, val role: String? = null)
+data class HistoryRelationship(
+    val name: String? = null,
+    val uuid: String? = null,
+    val role: String? = null,
+    val gender: String? = null,
+)
 
 
 @Serializable
 data class HistoryRelationshipRawInner(val value: String? = null)
 
 @Serializable
-data class HistoryRelationshipRaw(val name: String? = null, val other: HistoryRelationshipRawInner? = null, val role: String? = null) {
-    fun parse() = HistoryRelationship(name, other?.value, role)
+data class HistoryRelationshipRaw(
+    val name: String? = null,
+    val other: HistoryRelationshipRawInner? = null,
+    val role: String? = null,
+    val gender: String? = null,
+) {
+    fun parse() = HistoryRelationship(name, other?.value, role, gender)
 }
 
 
