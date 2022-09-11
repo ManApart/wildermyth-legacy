@@ -8,6 +8,7 @@ import kotlinx.html.dom.append
 import kotlinx.html.js.input
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
+import kotlinx.html.org.w3c.dom.events.Event
 import kotlinx.serialization.encodeToString
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
@@ -16,83 +17,59 @@ import searchOptions
 fun buildNav() {
     val nav = document.getElementById("nav")!!
     nav.append {
-        button {
-            id = "upload-button"
-            +"Upload"
-            onClickFunction = { importMenu() }
+        div("row") {
+            id="top-nav"
+            button {
+                id = "upload-button"
+                +"Upload"
+                onClickFunction = { importMenu() }
+            }
+            input {
+                id = "search"
+                placeholder = "Filter: Name, Aspect etc. Comma separated"
+                value = searchOptions.searchText
+                onKeyUpFunction = {
+                    searchOptions.searchText = (document.getElementById("search") as HTMLInputElement).value
+                    characterSearch()
+                }
+            }
+            button {
+                id = "export-button"
+                +"Export"
+                onClickFunction = { downloadAdditionalInfo() }
+            }
         }
-
-        input {
-            id = "search"
-            placeholder = "Filter: Name, Aspect etc. Comma separated"
-            value = searchOptions.searchText
-            onKeyUpFunction = {
-                searchOptions.searchText = (document.getElementById("search") as HTMLInputElement).value
+        div("row") {
+            checkBox("favorites-only", "Only Favorites", searchOptions.favoritesOnly) {
+                searchOptions.favoritesOnly = it
+                characterSearch()
+            }
+            checkBox("hide-npc", "Hide NPCs", searchOptions.hideNPC){
+                searchOptions.hideNPC = it
+                characterSearch()
+            }
+            checkBox("list-view", "View as List", searchOptions.listView) {
+                searchOptions.listView = it
                 characterSearch()
             }
         }
-        div {
-            id = "search-checks"
-            div {
-                input(InputType.checkBox) {
-                    id = "favorites-only"
-                    checked = searchOptions.favoritesOnly
-                }
-                label {
-                    +"Only Favorites"
-                    onClickFunction = {
-                        val box = (document.getElementById("favorites-only") as HTMLInputElement)
-                        box.checked = !box.checked
-                    }
-                }
-                onClickFunction = {
-                    searchOptions.favoritesOnly = (document.getElementById("favorites-only") as HTMLInputElement).checked
-                    characterSearch()
-                }
-            }
-            div {
-                input(InputType.checkBox) {
-                    id = "hide-npc"
-                    checked = searchOptions.hideNPC
-                }
-                label {
-                    +"Hide NPCs"
-                    onClickFunction = {
-                        val box = (document.getElementById("hide-npc") as HTMLInputElement)
-                        box.checked = !box.checked
-                    }
-                }
-                onClickFunction = {
-                    searchOptions.hideNPC = (document.getElementById("hide-npc") as HTMLInputElement).checked
-                    characterSearch()
-                }
-            }
-            div {
-                input(InputType.checkBox) {
-                    id = "list-view"
-                    checked = searchOptions.listView
-                }
-                label {
-                    +"View as List"
-                    onClickFunction = {
-                        val box = (document.getElementById("list-view") as HTMLInputElement)
-                        box.checked = !box.checked
-                    }
-                }
-                onClickFunction = {
-                    searchOptions.listView = (document.getElementById("list-view") as HTMLInputElement).checked
-                    characterSearch()
-                }
-            }
-        }
-        button {
-            id = "export-button"
-            +"Export"
-            onClickFunction = { downloadAdditionalInfo() }
+    }
+
+}
+
+private fun TagConsumer<HTMLElement>.checkBox(id: String, text: String, startChecked: Boolean, onClick: (Boolean) -> Unit) {
+    var checked = startChecked
+    button {
+        this.id = id
+        classes = setOf("button")
+        +(if (checked) "☑ $text" else "☐ $text")
+        onClickFunction = {
+            checked = !checked
+            document.getElementById(id)!!.textContent = if (checked) "☑ $text" else "☐ $text"
+            onClick(checked)
         }
     }
 }
-
 
 private fun downloadAdditionalInfo() {
     val download = document.createElement("a") as HTMLElement
