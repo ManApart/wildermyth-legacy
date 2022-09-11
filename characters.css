@@ -135,12 +135,28 @@
     width: 5%;
 }
 
+.character-list-item .favorite-image{
+    margin-top: 2%;
+    margin-right: 2%;
+}
+
 .character-list-item {
     display: inline-block;
     background: var(--card-background);
     width: 470px;
     margin: 4px;
     padding: 4px;
+}
+
+.character-list-item-inner {
+    display: inline-block;
+    width: 90%;
+    height: 100%;
+}
+
+.character-list-item-inner:hover {
+    transform: scale(1.05);
+    transform-origin: left;
 }
 
 .character-list-item-head-wrapper {
@@ -160,5 +176,12 @@
     display: inline-block;
     vertical-align: top;
     margin-top: 20px;
+    margin-left: 10px;
+}
+
+.character-list-item-npc {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 35px;
     margin-left: 10px;
 }

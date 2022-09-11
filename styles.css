@@ -40,12 +40,17 @@ button {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 1.3em;
   margin: 4px;
 }
 
 button:hover{
   background-color: var(--bio-background);
+}
+
+input {
+  background-color: var(--bio-background);
+  border: 0px;
 }
 
 input::file-selector-button {
@@ -63,6 +68,7 @@ textarea{
     width: 500px;
     height: 100px;
     background-color: var(--bio-background);
+    border: 0px;
 }
 
 table {
@@ -70,24 +76,37 @@ table {
     margin-left: 20px;
 }
 
-#nav {
+.row {
     width: 100%;
     text-align: center;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 }
 
-#nav button {
-    margin:auto;
+.row span {
+    margin: auto;
 }
 
-#nav #export-button {
-    margin-left: 20px;
+#nav {
+    margin-bottom: 2%;
+}
+
+#top-nav {
+    grid-template-columns: minmax(100px, .2fr) auto minmax(100px, .2fr);
+}
+
+#upload-button {
+    margin-right: 5%;
+}
+
+#export-button {
+    margin-left: 5%;
 }
 
 #search-checks {
     display: inline-block;
     text-align: left;
+    margin-left: 20%;
 }
 
 #upload-instructions{

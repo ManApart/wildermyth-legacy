@@ -1,3 +1,7 @@
+#log-button {
+    float: right;
+}
+
 #character-details{
     display: flex;
     flex-wrap: wrap;
@@ -82,6 +86,15 @@
     margin-bottom: 4px;
 }
 
+.relationship-inner{
+    height: 100%;
+}
+
+.relationship-inner:hover{
+    transform: scale(1.05);
+    transform-origin: left;
+}
+
 .relationship-pic {
     position: absolute;
     top: -45px;
@@ -97,10 +110,17 @@
 }
 .relationship-text h4{
     margin-bottom: 0px;
+    display: inline-block;
+}
+.relationship-rank {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: .5em;
 }
 
 .relationship-text p{
     margin-top: 0px;
+    margin-bottom: 10px;
 }
 
 #stats-section {
@@ -167,6 +187,10 @@
     width: 100px;
     margin-top: -20px;
     margin-left: -10px;
+}
+
+.company-friend-pic:hover{
+    scale: 1.1;
 }
 
 #aspects-section{
