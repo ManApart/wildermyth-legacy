@@ -60,6 +60,7 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
         template == "firstName" -> name.split(" ").first()
         template == "Site" -> entry.roleMatch("site")
         template == "overlandTile" -> entry.roleMatch("overlandTile")
+        template == "site" -> entry.roleMatch("site")
         template == "hero" -> entry.roleMatch("hero")
         template == "company" -> entry.roleMatch("company")
         template == "Hometown" -> hometown
