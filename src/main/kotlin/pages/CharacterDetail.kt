@@ -11,6 +11,7 @@ import getAdditionalInfo
 import getCharacter
 import getCompany
 import getPicture
+import jsonMapper
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.*
@@ -20,6 +21,7 @@ import kotlinx.html.js.div
 import org.w3c.dom.*
 import saveAdditionalInfo
 import kotlin.js.Date
+import kotlinx.serialization.encodeToString
 
 fun characterDetail(character: LegacyCharacter) {
     val additionalInfo = getAdditionalInfo(character.uuid)
@@ -30,12 +32,20 @@ fun characterDetail(character: LegacyCharacter) {
     document.documentElement?.scrollTop = 0.0
     window.history.pushState(null, "null", "#detail/" + character.uuid)
     setFavicon(character)
+
     section.append {
         div {
             button {
                 +"Back"
                 onClickFunction = {
                     window.location.hash = "#${character.uuid}"
+                }
+            }
+            button {
+                id="log-button"
+                +"Log Detail"
+                onClickFunction = {
+                    println(jsonMapper.encodeToString(character))
                 }
             }
         }

@@ -1,3 +1,7 @@
+#log-button {
+    float: right;
+}
+
 #character-details{
     display: flex;
     flex-wrap: wrap;
