@@ -253,7 +253,7 @@ fun TagConsumer<HTMLElement>.friendshipSection(character: LegacyCharacter) {
             div {
                 h2 { +"Relationships" }
                 character.friendships.forEach { friendShip ->
-                    relativeCard(friendShip.relativeId, friendShip.kind.getTitle(friendShip.level))
+                    relativeCard(friendShip.relativeId, friendShip.kind.getTitle(friendShip.level), friendShip.level)
                 }
             }
         }
@@ -268,7 +268,7 @@ fun TagConsumer<HTMLElement>.companiesSection(character: LegacyCharacter) {
     }
 }
 
-private fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relationship: String) {
+private fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relationship: String, rank: Int? = null) {
     val relative = getCharacter(relativeUuid)
     val snapshot = relative?.snapshots?.last()
 
@@ -281,7 +281,10 @@ private fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relation
                 }
             }
             div("relationship-text") {
-                h4 { +relationship }
+                div {
+                    h4 { +relationship }
+                    if (rank != null) p("relationship-rank") { +"($rank)" }
+                }
                 p { +snapshot.name }
             }
 

@@ -97,10 +97,17 @@
 }
 .relationship-text h4{
     margin-bottom: 0px;
+    display: inline-block;
+}
+.relationship-rank {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: .5em;
 }
 
 .relationship-text p{
     margin-top: 0px;
+    margin-bottom: 10px;
 }
 
 #stats-section {
