@@ -118,7 +118,7 @@ fun parseCharacter(uuid: String, json: Json): Character? {
     val name = base["name"] as String
     val aspects = parseAspects(base)
     val temporal = parseTemporal(base)
-    val historyNode = characterEntities.firstOrNull { it["legacyAchievementInfo"] != null }
+    val historyNode = characterEntities.firstOrNull { it["legacyAchievementInfo"] != null || it["legacyCompanyInfo"] != null }
     val rawHistory = historyNode?.let { it["entries"] as Array<Json> }
         ?: arrayOf<Json>().also { println("No history for $name: $uuid") }
     val history = rawHistory.map { parseHistoryEntry(it) }
