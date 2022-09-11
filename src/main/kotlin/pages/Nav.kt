@@ -8,7 +8,6 @@ import kotlinx.html.dom.append
 import kotlinx.html.js.input
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
-import kotlinx.html.org.w3c.dom.events.Event
 import kotlinx.serialization.encodeToString
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement

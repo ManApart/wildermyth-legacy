@@ -101,7 +101,32 @@ fun parseLegacy(json: Json): List<LegacyCharacter> {
 
 fun parseLegacyCharacter(json: Json): LegacyCharacter {
     val uuid = (json["id"] as Json)["value"] as String
-    val snapshots = (json["snapshots"] as Array<Json>).map { parseCharacter(uuid, it) }.toTypedArray()
+    val snapshots = (json["snapshots"] as Array<Json>).mapNotNull { parseCharacter(uuid, it) }.toTypedArray()
+    val companyIds = parseCompanies(json, uuid)
+    val isNPC = (json["usage"] as String? == "background")
+
+    val killCount = parseKillCount(json)
+    return LegacyCharacter(uuid, snapshots, companyIds, isNPC, killCount)
+}
+
+fun parseCharacter(uuid: String, json: Json): Character? {
+    val allEntities = (json["entities"] as Array<Array<Json>>)
+    val characterEntities = allEntities.firstOrNull { it[0]["value"] == uuid }
+        ?: return null.also { println("No character entities found for $uuid") }
+    val base = characterEntities.firstOrNull { it["name"] != null }
+        ?: return null.also { println("No character base found for $uuid") }
+    val name = base["name"] as String
+    val aspects = parseAspects(base)
+    val temporal = parseTemporal(base)
+    val historyNode = characterEntities.firstOrNull { it["legacyAchievementInfo"] != null }
+    val rawHistory = historyNode?.let { it["entries"] as Array<Json> }
+        ?: arrayOf<Json>().also { println("No history for $name: $uuid") }
+    val history = rawHistory.map { parseHistoryEntry(it) }
+
+    return Character(uuid, name, aspects, temporal, history)
+}
+
+private fun parseCompanies(json: Json, uuid: String): List<String> {
     val companyIds = (json["legacyCompanyInfo"] as Array<Json>).map { companyJson ->
         ((companyJson["companyId"] as Json)["value"] as String).also { companyId ->
             if (!companies.containsKey(companyId)) {
@@ -113,26 +138,14 @@ fun parseLegacyCharacter(json: Json): LegacyCharacter {
             companies[companyId]?.characters?.add(uuid)
         }
     }
-    val isNPC = (json["usage"] as String? == "background")
-
-    val killCount = ((json["legacyAchievementInfo"] as Json)["entries"] as Array<Array<Json>>).flatten().firstOrNull { it["entryId"] == "killCounter" }?.let { (it["value"] as Double?)?.toInt() } ?: 0
-    return LegacyCharacter(uuid, snapshots, companyIds, isNPC, killCount)
+    return companyIds
 }
 
-fun parseCharacter(uuid: String, json: Json): Character {
-    val allEntities = (json["entities"] as Array<Array<Json>>)
-    val characterEntities = allEntities.first { option ->
-        option[0]["value"] == uuid
-    }
-    val base = characterEntities[2]
-    val name = base["name"] as String
-    val aspects = parseAspects(base)
-    val temporal = parseTemporal(base)
-    val historyNode = (characterEntities.first { it["legacyAchievementInfo"] != null })
-    val rawHistory = historyNode["entries"] as Array<Json>
-    val history = rawHistory.map { parseHistoryEntry(it) }
-
-    return Character(uuid, name, aspects, temporal, history)
+private fun parseKillCount(json: Json): Int {
+    val achievementInfo = json["legacyAchievementInfo"] as Json?
+    val achievementEntries = achievementInfo?.let { (it["entries"] as Array<Array<Json>>).flatten() }
+    val killCounter = achievementEntries?.firstOrNull { it["entryId"] == "killCounter" }
+    return killCounter?.let { (it["value"] as Double?)?.toInt() } ?: 0
 }
 
 private fun parseAspects(base: Json): List<Aspect> {
