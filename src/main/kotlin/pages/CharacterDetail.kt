@@ -282,20 +282,21 @@ private fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relation
 
     if (relative != null && snapshot != null) {
         div("relationship") {
-            onClickFunction = { characterDetail(relative) }
-            getPicture("$relativeUuid/head")?.let { picture ->
-                img(classes = "relationship-pic") {
-                    src = picture
+            div("relationship-inner") {
+                onClickFunction = { characterDetail(relative) }
+                getPicture("$relativeUuid/head")?.let { picture ->
+                    img(classes = "relationship-pic") {
+                        src = picture
+                    }
+                }
+                div("relationship-text") {
+                    div {
+                        h4 { +relationship }
+                        if (rank != null) p("relationship-rank") { +"($rank)" }
+                    }
+                    p { +snapshot.name }
                 }
             }
-            div("relationship-text") {
-                div {
-                    h4 { +relationship }
-                    if (rank != null) p("relationship-rank") { +"($rank)" }
-                }
-                p { +snapshot.name }
-            }
-
         }
     } else {
         div {

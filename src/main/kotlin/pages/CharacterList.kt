@@ -151,17 +151,26 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot:
 fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snapshot: Character, clickable: Boolean) {
     with(snapshot) {
         div("character-list-item") {
-            id = character.uuid
-            if (clickable) onClickFunction = { characterDetail(character) }
-            val info = getAdditionalInfo(character.uuid)
-            div("character-list-item-head-wrapper") {
-                getPicture("$uuid/head")?.let { picture ->
-                    img {
-                        src = picture
-                        classes = setOf("character-list-item-head")
+            div("character-list-item-inner") {
+                id = character.uuid
+                if (clickable) onClickFunction = { characterDetail(character) }
+                div("character-list-item-head-wrapper") {
+                    getPicture("$uuid/head")?.let { picture ->
+                        img {
+                            src = picture
+                            classes = setOf("character-list-item-head")
+                        }
                     }
                 }
+
+                h1 {
+                    +name
+                }
+                if (character.npc) {
+                    p("character-list-item-npc") { +"(npc)" }
+                }
             }
+            val info = getAdditionalInfo(character.uuid)
             img {
                 classes = setOf("favorite-image")
                 id = character.uuid + "-star"
@@ -172,12 +181,6 @@ fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snaps
                     saveAdditionalInfo(info)
                     (document.getElementById(character.uuid + "-star") as HTMLImageElement).src = if (info.favorite) "./star-active.png" else "./star.png"
                 }
-            }
-            h1 {
-                +name
-            }
-            if (character.npc) {
-                p("character-list-item-npc") { +"(npc)" }
             }
         }
     }

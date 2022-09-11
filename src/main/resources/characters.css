@@ -148,6 +148,17 @@
     padding: 4px;
 }
 
+.character-list-item-inner {
+    display: inline-block;
+    width: 90%;
+    height: 100%;
+}
+
+.character-list-item-inner:hover {
+    transform: scale(1.05);
+    transform-origin: left;
+}
+
 .character-list-item-head-wrapper {
     display: inline-block;
     overflow: hidden;
