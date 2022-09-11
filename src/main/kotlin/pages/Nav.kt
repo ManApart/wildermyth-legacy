@@ -32,65 +32,63 @@ fun buildNav() {
             }
         }
         div {
+            id = "search-checks"
             div {
-                id = "search-checks"
-                div {
-                    input(InputType.checkBox) {
-                        id = "favorites-only"
-                        checked = searchOptions.favoritesOnly
-                    }
-                    label {
-                        +"Only Favorites"
-                        onClickFunction = {
-                            val box = (document.getElementById("favorites-only") as HTMLInputElement)
-                            box.checked = !box.checked
-                        }
-                    }
+                input(InputType.checkBox) {
+                    id = "favorites-only"
+                    checked = searchOptions.favoritesOnly
+                }
+                label {
+                    +"Only Favorites"
                     onClickFunction = {
-                        searchOptions.favoritesOnly = (document.getElementById("favorites-only") as HTMLInputElement).checked
-                        characterSearch()
+                        val box = (document.getElementById("favorites-only") as HTMLInputElement)
+                        box.checked = !box.checked
                     }
                 }
-                div {
-                    input(InputType.checkBox) {
-                        id = "hide-npc"
-                        checked = searchOptions.hideNPC
-                    }
-                    label {
-                        +"Hide NPCs"
-                        onClickFunction = {
-                            val box = (document.getElementById("hide-npc") as HTMLInputElement)
-                            box.checked = !box.checked
-                        }
-                    }
-                    onClickFunction = {
-                        searchOptions.hideNPC = (document.getElementById("hide-npc") as HTMLInputElement).checked
-                        characterSearch()
-                    }
-                }
-                div {
-                    input(InputType.checkBox) {
-                        id = "list-view"
-                        checked = searchOptions.listView
-                    }
-                    label {
-                        +"View as List"
-                        onClickFunction = {
-                            val box = (document.getElementById("list-view") as HTMLInputElement)
-                            box.checked = !box.checked
-                        }
-                    }
-                    onClickFunction = {
-                        searchOptions.listView = (document.getElementById("list-view") as HTMLInputElement).checked
-                        characterSearch()
-                    }
+                onClickFunction = {
+                    searchOptions.favoritesOnly = (document.getElementById("favorites-only") as HTMLInputElement).checked
+                    characterSearch()
                 }
             }
-            button {
-                id = "export-button"
-                +"Export"
-                onClickFunction = { downloadAdditionalInfo() }
+            div {
+                input(InputType.checkBox) {
+                    id = "hide-npc"
+                    checked = searchOptions.hideNPC
+                }
+                label {
+                    +"Hide NPCs"
+                    onClickFunction = {
+                        val box = (document.getElementById("hide-npc") as HTMLInputElement)
+                        box.checked = !box.checked
+                    }
+                }
+                onClickFunction = {
+                    searchOptions.hideNPC = (document.getElementById("hide-npc") as HTMLInputElement).checked
+                    characterSearch()
+                }
             }
+            div {
+                input(InputType.checkBox) {
+                    id = "list-view"
+                    checked = searchOptions.listView
+                }
+                label {
+                    +"View as List"
+                    onClickFunction = {
+                        val box = (document.getElementById("list-view") as HTMLInputElement)
+                        box.checked = !box.checked
+                    }
+                }
+                onClickFunction = {
+                    searchOptions.listView = (document.getElementById("list-view") as HTMLInputElement).checked
+                    characterSearch()
+                }
+            }
+        }
+        button {
+            id = "export-button"
+            +"Export"
+            onClickFunction = { downloadAdditionalInfo() }
         }
     }
 }

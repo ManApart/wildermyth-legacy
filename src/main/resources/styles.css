@@ -48,6 +48,11 @@ button:hover{
   background-color: var(--bio-background);
 }
 
+input {
+  background-color: var(--bio-background);
+  border: 0px;
+}
+
 input::file-selector-button {
   background-color: var(--card-background);
   border: none;
@@ -63,6 +68,7 @@ textarea{
     width: 500px;
     height: 100px;
     background-color: var(--bio-background);
+    border: 0px;
 }
 
 table {
@@ -78,16 +84,20 @@ table {
 }
 
 #nav button {
-    margin:auto;
 }
 
-#nav #export-button {
-    margin-left: 20px;
+#upload-button {
+    margin-right: 50%;
+}
+
+#export-button {
+    margin-left: 50%;
 }
 
 #search-checks {
     display: inline-block;
     text-align: left;
+    margin-left: 20%;
 }
 
 #upload-instructions{
