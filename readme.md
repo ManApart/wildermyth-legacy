@@ -13,11 +13,6 @@ cp -r ../wildermyth-legacy/build/distributions/* .
 
 ## TODO
 
-List View
-- Just name and face
-
 Details page
 - show inventory?
 - add tag
-- snapshot select
-  - default to latest as is doing now, but display a select, and allow any snapshot

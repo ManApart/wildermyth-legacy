@@ -41,23 +41,6 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
                     window.location.hash = "#${character.uuid}"
                 }
             }
-            span {
-                label { +"Snapshot:" }
-                select {
-                    id = "snapshot-select"
-                    character.snapshots.forEach {
-                        option {
-                            +"${it.name}: ${it.age}yrs"
-                            selected = snapshot == it
-                        }
-                    }
-
-                    onChangeFunction = {
-                        val snapshotI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
-                        characterDetail(character, character.snapshots[snapshotI])
-                    }
-                }
-            }
             button {
                 id = "log-button"
                 +"Log Detail"
@@ -73,7 +56,7 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
                 statsSection(character, snapshot)
                 companiesSection(character)
             }
-            familySection(character, snapshot)
+            familySection(snapshot)
             friendshipSection(character)
             customHistorySection(additionalInfo)
             gameHistorySection(snapshot)
@@ -255,7 +238,7 @@ fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snap
     }
 }
 
-fun TagConsumer<HTMLElement>.familySection(character: LegacyCharacter, snapshot: Character) {
+fun TagConsumer<HTMLElement>.familySection(snapshot: Character) {
     with(snapshot.family) {
         if (soulMate != null || parents.isNotEmpty() || children.isNotEmpty()) {
             div("character-section") {
