@@ -214,3 +214,19 @@
     width: 100%;
     height: 100%;
 }
+
+.gear {
+    background-color: var(--card-background);
+    padding: 8px;
+    margin: 4px;
+}
+
+.gear-details {
+    background-color: var(--bio-background);
+    padding: 4px;
+}
+
+.item-id {
+    font-size: .8em;
+    margin-top: 4px;
+}

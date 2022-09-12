@@ -130,5 +130,5 @@ data class GearRaw(
     val slots: List<String> = listOf(),
     val ownerAspects: List<String> = listOf()
 ) {
-    fun toGear(uuid: String, name: String) = Gear(uuid, name, itemId, category, tier, subCategory, artifact, isEquipped, slots, ownerAspects.map { it.toAspect() })
+    fun toGear(uuid: String, name: String) = Gear(uuid, name, itemId, category, tier, uniqueCategory ?: subCategory, artifact, isEquipped, slots, ownerAspects.map { it.toAspect() })
 }
