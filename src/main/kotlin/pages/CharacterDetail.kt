@@ -3,6 +3,7 @@ package pages
 import AdditionalInfo
 import Aspect
 import Character
+import Gear
 import HistoryEntry
 import LegacyCharacter
 import clearSections
@@ -58,6 +59,7 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
             }
             familySection(snapshot)
             friendshipSection(character)
+            gearSection(snapshot)
             customHistorySection(additionalInfo)
             gameHistorySection(snapshot)
             aspectsSection(snapshot)
@@ -310,7 +312,6 @@ private fun TagConsumer<HTMLElement>.companyCard(companyId: String) {
     val company = getCompany(companyId)
 
     div("company") {
-//            h4 { +company.name }
         div {
             h4 { +company.name }
             p("company-foe") { +"Foe: ${company.mainThreat.capitalize()}" }
@@ -366,3 +367,17 @@ private fun Aspect.hiddenAspect(): Boolean {
             || name.startsWith("relationship")
 }
 
+private fun TagConsumer<HTMLElement>.gearSection(snapshot: Character) {
+    div("character-section") {
+        id = "gear-section"
+        h2 { +"Gear" }
+        snapshot.gear.forEach { gearCard(it) }
+    }
+}
+
+private fun TagConsumer<HTMLElement>.gearCard(gear: Gear) {
+    div("gear") {
+        +gear.name
+
+    }
+}

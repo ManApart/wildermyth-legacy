@@ -4,6 +4,8 @@ import AdditionalInfo
 import Aspect
 import Character
 import Company
+import Gear
+import GearRaw
 import HistoryEntry
 import HistoryEntryRaw
 import JSZip
@@ -122,8 +124,9 @@ fun parseCharacter(uuid: String, json: Json): Character? {
     val rawHistory = historyNode?.let { it["entries"] as Array<Json> }
         ?: arrayOf<Json>().also { println("No history for $name: $uuid") }
     val history = rawHistory.map { parseHistoryEntry(it) }
+    val gear = parseGear(allEntities)
 
-    return Character(uuid, name, aspects, temporal, history)
+    return Character(uuid, name, aspects, temporal, history, gear)
 }
 
 private fun parseCompanies(json: Json, uuid: String): List<String> {
@@ -169,4 +172,15 @@ fun String.toAspect(): Aspect {
 private fun parseHistoryEntry(base: Json): HistoryEntry {
     val raw: HistoryEntryRaw = jsonMapper.decodeFromString(JSON.stringify(base))
     return raw.toHistoryEntry()
+}
+
+private fun parseGear(entities: Array<Array<Json>>): List<Gear> {
+    return entities.filter { outerArray -> outerArray.any { it["itemId"] != null } }.map { parseGearItem(it) }
+}
+
+fun parseGearItem(entity: Array<Json>): Gear {
+    val uuid = entity[0]["value"] as String
+    val name = entity.firstNotNullOfOrNull { it["name"] as String? } ?: "Unknown"
+    val rawJson = entity.first { it["itemId"] != null }
+    return jsonMapper.decodeFromString<GearRaw>(JSON.stringify(rawJson)).toGear(uuid, name)
 }

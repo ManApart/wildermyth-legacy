@@ -103,3 +103,32 @@ data class CharacterSearchOptions(
     var hideNPC: Boolean = false,
     var listView: Boolean = false,
 )
+
+@Serializable
+data class Gear(
+    val uuid: String,
+    val name: String,
+    val itemId: String,
+    val category: String,
+    val tier: Int,
+    val subCategory: String? = null,
+    val artifact: Boolean = false,
+    val isEquipped: Boolean = false,
+    val slots: List<String> = listOf(),
+    val ownerAspects: List<Aspect> = listOf()
+)
+
+@Serializable
+data class GearRaw(
+    val itemId: String,
+    val category: String,
+    val tier: Int,
+    val subCategory: String? = null,
+    val uniqueCategory: String? = null,
+    val artifact: Boolean = false,
+    val isEquipped: Boolean = false,
+    val slots: List<String> = listOf(),
+    val ownerAspects: List<String> = listOf()
+) {
+    fun toGear(uuid: String, name: String) = Gear(uuid, name, itemId, category, tier, subCategory, artifact, isEquipped, slots, ownerAspects.map { it.toAspect() })
+}

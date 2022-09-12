@@ -24,6 +24,7 @@ data class Character(
     val aspects: List<Aspect> = listOf(),
     val temporal: Map<String, Int> = mapOf(),
     val history: List<HistoryEntry> = listOf(),
+    val gear: List<Gear> = listOf(),
 ) {
     //Trigger anything that needs to happen again on load.
     fun reload() {

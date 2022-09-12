@@ -16,7 +16,7 @@ import savePicture
 import kotlin.js.Json
 import kotlin.js.Promise
 
-private const val loadZip = true
+private const val loadZip = false
 
 fun loadExample() {
     val windowHash = window.location.hash
