@@ -2,8 +2,11 @@ package pages
 
 import doRouting
 import kotlinx.browser.window
+import kotlinx.html.InputType
 import loadMemory
+import org.khronos.webgl.ArrayBuffer
 import org.w3c.files.Blob
+import org.w3c.files.FileReader
 import org.w3c.xhr.BLOB
 import org.w3c.xhr.JSON
 import org.w3c.xhr.XMLHttpRequest
@@ -32,6 +35,7 @@ fun loadExample() {
             )
         ).then {
             doRouting(windowHash)
+            loadMemoryIfPresent(windowHash)
             if (loadZip) loadZipIfPresent(windowHash)
         }
     }
@@ -65,8 +69,21 @@ private fun loadJson(url: String): Promise<Json> {
     }
 }
 
-private fun loadZipIfPresent(originalHash: String) {
+private fun loadMemoryIfPresent(originalHash: String) {
     loadMemory().then {
         doRouting(originalHash)
+    }
+}
+
+private fun loadZipIfPresent(originalHash: String) {
+    loadBlob("characters.zip").then { file ->
+        val reader = FileReader()
+        reader.onload = {
+            importZip(reader.result as ArrayBuffer, originalHash)
+        }
+        reader.onerror = { error ->
+            console.error("Failed to read File $error")
+        }
+        reader.readAsArrayBuffer(file)
     }
 }
