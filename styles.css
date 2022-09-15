@@ -64,6 +64,15 @@ input::file-selector-button {
   font-size: 16px;
 }
 
+select {
+  background-color: var(--bio-background);
+  border: 0px;
+  padding: 15px 32px;
+  font-size: 1.3em;
+  margin: 4px;
+}
+
+
 textarea{
     width: 500px;
     height: 100px;

@@ -2,6 +2,14 @@
     float: right;
 }
 
+#snapshot-span {
+    margin-left: 20px;
+}
+
+#snapshot-select {
+    margin-left: 20px;
+}
+
 #character-details{
     display: flex;
     flex-wrap: wrap;
