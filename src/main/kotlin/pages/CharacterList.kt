@@ -85,7 +85,7 @@ private fun buildCharacters(section: Element, characters: List<LegacyCharacter>)
 
 }
 
-private fun List<LegacyCharacter>.sorted(): List<LegacyCharacter> {
+fun List<LegacyCharacter>.sorted(): List<LegacyCharacter> {
     return sortedWith(compareBy<LegacyCharacter> { !getAdditionalInfo(it.uuid).favorite }
         .thenBy { it.snapshots.last().name.split(" ").last() }
         .thenBy { it.snapshots.last().name.split(" ").first() })

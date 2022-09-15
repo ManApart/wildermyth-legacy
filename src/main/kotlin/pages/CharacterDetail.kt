@@ -27,7 +27,7 @@ import kotlinx.serialization.encodeToString
 import org.w3c.dom.events.KeyboardEvent
 
 private lateinit var currentCharacter: LegacyCharacter
-fun characterDetail(character: LegacyCharacter, snapshot: Character = character.snapshots.last()) {
+fun characterDetail(character: LegacyCharacter, snapshot: Character = character.snapshots.last(), showAggregates: Boolean = true) {
     currentCharacter = character
     val additionalInfo = getAdditionalInfo(character.uuid)
     val section = document.getElementById("character-detail-section")!!
@@ -58,6 +58,27 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
                     characterDetail(nextCharacter(character))
                 }
             }
+            span {
+                label { +"Snapshot:" }
+                select {
+                    id = "snapshot-select"
+                    character.snapshots.forEach {
+                        option {
+                            +"${it.name}: ${it.age}yrs"
+                            selected = showAggregates == false && snapshot == it
+                        }
+                    }
+                    option {
+                        +"All"
+                        selected = showAggregates
+                    }
+
+                    onChangeFunction = {
+                        val snapshotI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
+                        changeSnapshot(snapshotI, character)
+                    }
+                }
+            }
             button {
                 id = "log-button"
                 +"Log Detail"
@@ -74,7 +95,11 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
                 companiesSection(character)
             }
             familySection(snapshot)
-            friendshipSection(character)
+            if (showAggregates) {
+                friendshipSection(character)
+            } else {
+                friendshipSection(snapshot)
+            }
             gearSection(snapshot)
             customHistorySection(additionalInfo)
             gameHistorySection(snapshot)
@@ -84,11 +109,19 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
     }
 }
 
-fun onKeyUp(key: String) {
-    if (window.location.hash.contains("detail")){
-        when (key) {
+fun onKeyDown(key: KeyboardEvent) {
+    if (window.location.hash.contains("detail")) {
+        key.preventDefault()
+    }
+}
+
+fun onKeyUp(key: KeyboardEvent) {
+    if (window.location.hash.contains("detail")) {
+        when (key.key) {
             "ArrowLeft" -> characterDetail(previousCharacter(currentCharacter))
-            "ArrowRight" -> characterDetail(previousCharacter(currentCharacter))
+            "ArrowRight" -> characterDetail(nextCharacter(currentCharacter))
+            "ArrowUp" -> previousSnapshot(currentCharacter)
+            "ArrowDown" -> nextSnapshot(currentCharacter)
         }
     }
 }
@@ -112,17 +145,38 @@ private fun setFavicon(character: LegacyCharacter) {
 }
 
 private fun nextCharacter(character: LegacyCharacter): LegacyCharacter {
-    val characters = getCharacters()
+    val characters = getCharacters().sorted()
     val next = characters.indexOf(character) + 1
     val i = if (next >= characters.size) 0 else next
     return characters[i]
 }
 
 private fun previousCharacter(character: LegacyCharacter): LegacyCharacter {
-    val characters = getCharacters()
+    val characters = getCharacters().sorted()
     val previous = characters.indexOf(character) - 1
     val i = if (previous < 0) characters.size - 1 else previous
     return characters[i]
+}
+
+private fun previousSnapshot(character: LegacyCharacter) {
+    val snapshotI = (document.getElementById("snapshot-select") as HTMLSelectElement).selectedIndex - 1
+    val i = if (snapshotI < 0) character.snapshots.size else snapshotI
+    changeSnapshot(i, character)
+}
+
+private fun nextSnapshot(character: LegacyCharacter) {
+    val snapshotI = (document.getElementById("snapshot-select") as HTMLSelectElement).selectedIndex + 1
+    val i = if (snapshotI > character.snapshots.size) 0 else snapshotI
+    changeSnapshot(i, character)
+}
+
+private fun changeSnapshot(snapshotI: Int, character: LegacyCharacter) {
+    val nowShowAggregates = snapshotI >= character.snapshots.size
+    if (nowShowAggregates) {
+        characterDetail(character, character.snapshots.last(), true)
+    } else {
+        characterDetail(character, character.snapshots[snapshotI], false)
+    }
 }
 
 fun TagConsumer<HTMLElement>.customHistorySection(additionalInfo: AdditionalInfo) {
@@ -301,6 +355,20 @@ fun TagConsumer<HTMLElement>.friendshipSection(character: LegacyCharacter) {
             div {
                 h2 { +"Relationships" }
                 character.friendships.forEach { friendShip ->
+                    relativeCard(friendShip.relativeId, friendShip.kind.getTitle(friendShip.level), friendShip.level)
+                }
+            }
+        }
+    }
+}
+
+fun TagConsumer<HTMLElement>.friendshipSection(snapshot: Character) {
+    if (snapshot.friendships.isNotEmpty()) {
+        div("character-section") {
+            id = "friendships-section"
+            div {
+                h2 { +"Relationships" }
+                snapshot.friendships.forEach { friendShip ->
                     relativeCard(friendShip.relativeId, friendShip.kind.getTitle(friendShip.level), friendShip.level)
                 }
             }
