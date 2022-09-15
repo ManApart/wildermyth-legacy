@@ -10,6 +10,7 @@ import clearSections
 import favicon
 import getAdditionalInfo
 import getCharacter
+import getCharacters
 import getCompany
 import getPicture
 import jsonMapper
@@ -39,7 +40,19 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
             button {
                 +"Back"
                 onClickFunction = {
+                    characterDetail(previousCharacter(character))
+                }
+            }
+            button {
+                +"List"
+                onClickFunction = {
                     window.location.hash = "#${character.uuid}"
+                }
+            }
+            button {
+                +"Next"
+                onClickFunction = {
+                    characterDetail(nextCharacter(character))
                 }
             }
             button {
@@ -85,6 +98,20 @@ private fun setFavicon(character: LegacyCharacter) {
 
         favicon.setAttribute("href", cropped)
     }
+}
+
+private fun nextCharacter(character: LegacyCharacter): LegacyCharacter {
+    val characters = getCharacters()
+    val next = characters.indexOf(character) + 1
+    val i = if (next >= characters.size) 0 else next
+    return characters[i]
+}
+
+private fun previousCharacter(character: LegacyCharacter): LegacyCharacter {
+    val characters = getCharacters()
+    val previous = characters.indexOf(character) - 1
+    val i = if (previous < 0) characters.size - 1 else previous
+    return characters[i]
 }
 
 fun TagConsumer<HTMLElement>.customHistorySection(additionalInfo: AdditionalInfo) {
@@ -387,9 +414,9 @@ private fun TagConsumer<HTMLElement>.gearCard(gear: Gear) {
                 val aspectText = ownerAspects
                     .filter { !it.name.startsWith("slotFilled") }
                     .joinToString(", ") {
-                    val values = if (it.values.isEmpty()) "" else "(${it.values.joinToString(",")})"
-                    it.name + values
-                }
+                        val values = if (it.values.isEmpty()) "" else "(${it.values.joinToString(",")})"
+                        it.name + values
+                    }
 
                 p { +"Level $tier$artifactText ${category.capitalize()} $subCatText" }
                 p { +"$equipVerb to ${slots.joinToString(", ") { it.lowercase().replace("augment_", "") }.capitalize()}" }
