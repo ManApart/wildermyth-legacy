@@ -12,6 +12,10 @@
         height: 250px;
     }
 
+    select {
+      font-size: .5em;
+    }
+
     .character-card {
         display: block;
         width: 90%;

@@ -38,55 +38,7 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
     setFavicon(character)
 
     section.append {
-        div {
-            id = "character-nav"
-            button {
-                +"Back"
-                onClickFunction = {
-                    characterDetail(previousCharacter(character))
-                }
-            }
-            button {
-                +"List"
-                onClickFunction = {
-                    window.location.hash = "#${character.uuid}"
-                }
-            }
-            button {
-                +"Next"
-                onClickFunction = {
-                    characterDetail(nextCharacter(character))
-                }
-            }
-            span {
-                label { +"Snapshot:" }
-                select {
-                    id = "snapshot-select"
-                    character.snapshots.forEach {
-                        option {
-                            +"${it.name}: ${it.age}yrs"
-                            selected = showAggregates == false && snapshot == it
-                        }
-                    }
-                    option {
-                        +"All"
-                        selected = showAggregates
-                    }
-
-                    onChangeFunction = {
-                        val snapshotI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
-                        changeSnapshot(snapshotI, character)
-                    }
-                }
-            }
-            button {
-                id = "log-button"
-                +"Log Detail"
-                onClickFunction = {
-                    println(jsonMapper.encodeToString(character))
-                }
-            }
-        }
+        buildNav(character, showAggregates, snapshot)
         div {
             id = "character-details"
             characterCard(character, snapshot, false)
@@ -105,6 +57,59 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
             gameHistorySection(snapshot)
             aspectsSection(snapshot)
             fullHistorySection(snapshot)
+        }
+    }
+}
+
+private fun TagConsumer<HTMLElement>.buildNav(character: LegacyCharacter, showAggregates: Boolean, snapshot: Character) {
+    div {
+        id = "character-nav"
+        button {
+            +"Back"
+            onClickFunction = {
+                characterDetail(previousCharacter(character))
+            }
+        }
+        button {
+            +"List"
+            onClickFunction = {
+                window.location.hash = "#${character.uuid}"
+            }
+        }
+        button {
+            +"Next"
+            onClickFunction = {
+                characterDetail(nextCharacter(character))
+            }
+        }
+        span {
+            id = "snapshot-span"
+            label { +"Snapshot:" }
+            select {
+                id = "snapshot-select"
+                character.snapshots.forEach {
+                    option {
+                        +"${it.name}: ${it.age}yrs"
+                        selected = showAggregates == false && snapshot == it
+                    }
+                }
+                option {
+                    +"All"
+                    selected = showAggregates
+                }
+
+                onChangeFunction = {
+                    val snapshotI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
+                    changeSnapshot(snapshotI, character)
+                }
+            }
+        }
+        button {
+            id = "log-button"
+            +"Log Detail"
+            onClickFunction = {
+                println(jsonMapper.encodeToString(character))
+            }
         }
     }
 }
