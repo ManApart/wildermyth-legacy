@@ -55,6 +55,7 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
     val typeOptions = type.split("/")
     val resultOptions = parts.last().split("/")
     return when {
+        template == "Name" -> name
         template == "name" -> name
         template == "fullname" -> name
         template == "firstName" -> name.split(" ").first()

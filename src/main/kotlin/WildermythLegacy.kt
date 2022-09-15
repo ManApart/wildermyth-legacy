@@ -1,6 +1,7 @@
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.events.KeyboardEvent
 import pages.*
 
 val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
@@ -15,6 +16,11 @@ fun main() {
     }
     window.addEventListener("popstate", { e ->
         doRouting()
+    })
+
+    window.addEventListener("keyup", { event ->
+        val key = (event as KeyboardEvent).key
+        onKeyUp(key)
     })
 }
 

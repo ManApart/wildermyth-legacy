@@ -24,8 +24,11 @@ import org.w3c.dom.*
 import saveAdditionalInfo
 import kotlin.js.Date
 import kotlinx.serialization.encodeToString
+import org.w3c.dom.events.KeyboardEvent
 
+private lateinit var currentCharacter: LegacyCharacter
 fun characterDetail(character: LegacyCharacter, snapshot: Character = character.snapshots.last()) {
+    currentCharacter = character
     val additionalInfo = getAdditionalInfo(character.uuid)
     val section = document.getElementById("character-detail-section")!!
     clearSections()
@@ -79,7 +82,15 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
             fullHistorySection(snapshot)
         }
     }
+}
 
+fun onKeyUp(key: String) {
+    if (window.location.hash.contains("detail")){
+        when (key) {
+            "ArrowLeft" -> characterDetail(previousCharacter(currentCharacter))
+            "ArrowRight" -> characterDetail(previousCharacter(currentCharacter))
+        }
+    }
 }
 
 private fun setFavicon(character: LegacyCharacter) {
