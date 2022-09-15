@@ -383,13 +383,16 @@ private fun TagConsumer<HTMLElement>.gearCard(gear: Gear) {
             div("gear-details") {
                 val artifactText = if (artifact) " Artifact" else ""
                 val subCatText = if (subCategory != null) " ($subCategory)" else ""
-                p { +"Level $tier$artifactText ${category.capitalize()} $subCatText" }
                 val equipVerb = if (isEquipped) "Equipped" else "Equips"
-                p { +"$equipVerb to ${slots.joinToString(", ") { it.lowercase() }}" }
-                val aspectText = ownerAspects.filter { !it.name.startsWith("slotFilled") }.joinToString(", ") {
+                val aspectText = ownerAspects
+                    .filter { !it.name.startsWith("slotFilled") }
+                    .joinToString(", ") {
                     val values = if (it.values.isEmpty()) "" else "(${it.values.joinToString(",")})"
                     it.name + values
                 }
+
+                p { +"Level $tier$artifactText ${category.capitalize()} $subCatText" }
+                p { +"$equipVerb to ${slots.joinToString(", ") { it.lowercase().replace("augment_", "") }.capitalize()}" }
                 p { +"Grants $aspectText" }
             }
         }
