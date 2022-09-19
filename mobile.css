@@ -64,4 +64,8 @@
     .character-list-item {
         width: 95%;
     }
+
+    #log-button{
+        display: none;
+    }
 }
