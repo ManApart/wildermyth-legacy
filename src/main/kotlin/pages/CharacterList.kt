@@ -2,6 +2,7 @@ package pages
 
 import Character
 import LegacyCharacter
+import characterCards
 import clearSections
 import favicon
 import getAdditionalInfo
@@ -9,6 +10,8 @@ import getCharacters
 import getPicture
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.dom.addClass
+import kotlinx.dom.removeClass
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
@@ -21,6 +24,7 @@ import org.w3c.dom.HTMLImageElement
 import saveAdditionalInfo
 import saveSearch
 import searchOptions
+import kotlin.js.Promise
 
 
 fun displayCharacters() {
@@ -39,7 +43,8 @@ fun characterSearch() {
         .filterFavorites(searchOptions.favoritesOnly)
         .hideNPC(searchOptions.hideNPC)
         .filterSearch(searchOptions.searchText)
-    buildCharacters(section, characters)
+//    buildCharacters(section, characters)
+    filterCharacterDoms(characters)
     saveSearch(searchOptions)
 }
 
@@ -62,12 +67,28 @@ private fun filterCharacters(initial: List<LegacyCharacter>, searchText: String)
         val latest = character.snapshots.last()
         character.snapshots.any {
             it.classLevel
-            it.name.lowercase().contains(searchText) } ||
+            it.name.lowercase().contains(searchText)
+        } ||
                 character.snapshots.flatMap { it.aspects }.any { it.name.lowercase().contains(searchText) } ||
                 latest.classLevel.takeIf { it != undefined }?.name?.lowercase()?.contains(searchText) ?: false ||
                 latest.personalityFirst.name.lowercase().contains(searchText) ||
                 latest.personalitySecond.name.lowercase().contains(searchText)
 
+    }
+}
+
+fun filterCharacterDoms(characters: List<LegacyCharacter>) {
+    characterCards.values.forEach {
+        println("resetting ${it.id}")
+        it.addClass("hidden")
+        it.removeClass("visible-inline-block")
+    }
+    characters.forEach {
+        characterCards[it.uuid]?.apply {
+            println("filtering ${it.uuid}")
+            addClass("visible-inline-block")
+            removeClass("hidden")
+        }
     }
 }
 
@@ -84,6 +105,7 @@ private fun buildCharacters(section: Element, characters: List<LegacyCharacter>)
                 }
             }
     }
+    characterCards = characters.associate { it.uuid to document.getElementById(it.uuid) as HTMLElement }
 
 }
 
@@ -153,8 +175,8 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot:
 fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snapshot: Character, clickable: Boolean) {
     with(snapshot) {
         div("character-list-item") {
+            id = character.uuid
             div("character-list-item-inner") {
-                id = character.uuid
                 if (clickable) onClickFunction = { characterDetail(character) }
                 div("character-list-item-head-wrapper") {
                     getPicture("$uuid/head")?.let { picture ->

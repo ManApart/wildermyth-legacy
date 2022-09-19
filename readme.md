@@ -13,6 +13,8 @@ cp -r ../wildermyth-legacy/build/distributions/* .
 
 ## TODO
 
+Relationship Graph
+- network graph, anyJS
+
 Details page
-- show inventory?
 - add tag

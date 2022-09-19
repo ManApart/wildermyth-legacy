@@ -1,7 +1,10 @@
 import kotlinx.browser.localStorage
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
+import org.w3c.dom.Element
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.get
 import org.w3c.dom.set
 import org.w3c.files.Blob
@@ -18,6 +21,7 @@ data class InMemoryStorage(
 )
 
 private var inMemoryStorage = InMemoryStorage()
+var characterCards: Map<String, HTMLElement> = mapOf()
 
 fun getCharacters(): List<LegacyCharacter> {
     return inMemoryStorage.characters.values.toList()
