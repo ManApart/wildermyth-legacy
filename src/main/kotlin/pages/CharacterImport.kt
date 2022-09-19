@@ -82,7 +82,6 @@ private fun handleZipPictures(zip: JSZip.ZipObject, character: Character): Promi
 
 private fun handleSinglePicture(zip: JSZip.ZipObject, character: Character, zipName: String, saveName: String): Promise<*>? {
     val filePath = "${character.name}/$zipName.png"
-    println(filePath)
     val file = zip.file(filePath)
     return if (file != null && file != undefined) {
         file.async<Blob>("Blob").then { contents ->
