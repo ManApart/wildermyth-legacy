@@ -50,21 +50,22 @@ fun getTemplate(from: Int, line: String): String? {
 }
 
 private fun Character.replaceTemplate(template: String, entry: HistoryEntry): String {
-    val parts = template.split(":")
+    val templateClean = template.lowercase()
+    val parts = templateClean.split(":")
     val type = parts.first()
     val typeOptions = type.split("/")
-    val resultOptions = parts.last().split("/")
+    val resultOptionsInitial = parts.last().split("/")
+    val resultOptions = if (typeOptions.size == resultOptionsInitial.size) resultOptionsInitial else resultOptionsInitial.flatMap { it.split(",") }
     return when {
-        template == "Name" -> name
-        template == "name" -> name
-        template == "fullname" -> name
-        template == "firstName" -> name.split(" ").first()
-        template == "Site" -> entry.roleMatch("site")
-        template == "overlandTile" -> entry.roleMatch("overlandTile")
-        template == "site" -> entry.roleMatch("site")
-        template == "hero" -> entry.roleMatch("hero")
-        template == "company" -> entry.roleMatch("company")
-        template == "Hometown" -> hometown
+        templateClean == "name" -> name
+        templateClean == "fullname" -> name
+        templateClean == "firstname" -> name.split(" ").first()
+        templateClean == "site" -> entry.roleMatch("site")
+        templateClean == "overlandtile" -> entry.roleMatch("overlandtile")
+        templateClean == "site" -> entry.roleMatch("site")
+        templateClean == "hero" -> entry.roleMatch("hero")
+        templateClean == "company" -> entry.roleMatch("company")
+        templateClean == "hometown" -> hometown
         type == "awm" -> replaceAWM(resultOptions)
         type == "mf" -> replaceMF(resultOptions)
         type.contains(".") -> replaceRelationshipTemplate(type, resultOptions, entry)
@@ -95,6 +96,7 @@ fun Character.replaceRelationshipTemplate(fullType: String, resultOptions: List<
         } ?: let {
         when {
             relationship != null && type == "mf" -> relationship.replaceMF(resultOptions)
+            relationship != null && type == "fullname" -> (relationship.name?: "someone")
             else -> {
                 println("Relationship Attributes not supported: $name ${entry.id} $fullType")
                 println(jsonMapper.encodeToString(entry))
@@ -128,7 +130,11 @@ private fun Character.replaceAWM(resultOptions: List<String>): String {
 
 private fun Character.replacePersonality(typeOptions: List<String>, resultOptions: List<String>): String {
     val highest = typeOptions.maxByOrNull { personality[Personality.valueOf(it.uppercase())] ?: 0 }
-        ?: typeOptions.first()
+        ?: typeOptions.firstOrNull()
+    if (highest == null){
+        println("Null Personality for $name")
+        return "personality"
+    }
     val resultIndex = typeOptions.indexOf(highest)
     return resultOptions[resultIndex]
 }
