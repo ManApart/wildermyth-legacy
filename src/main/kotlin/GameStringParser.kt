@@ -51,7 +51,7 @@ fun getTemplate(from: Int, line: String): String? {
 
 private fun Character.replaceTemplate(template: String, entry: HistoryEntry): String {
     val templateClean = template.lowercase()
-    val parts = templateClean.split(":")
+    val parts = template.split(":")
     val type = parts.first()
     val typeOptions = type.split("/")
     val resultOptionsInitial = parts.last().split("/")

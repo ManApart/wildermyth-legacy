@@ -52,8 +52,16 @@ data class Character(
     @Transient
     val characterClass = getCharacterClass()
 
+    val classLevel: ClassLevel
+        get() {
+            if (classLevelBacking == undefined) {
+                classLevelBacking = parseClassLevel()
+            }
+            return classLevelBacking
+        }
+
     @Transient
-    val classLevel = getClassLevel()
+    private var classLevelBacking = parseClassLevel()
 
     @Transient
     val age = getAge()
@@ -131,7 +139,7 @@ data class Character(
         return CharacterClass.valueOf(className)
     }
 
-    private fun getClassLevel(): ClassLevel {
+    private fun parseClassLevel(): ClassLevel {
         val level = aspects.firstOrNull { it.name == "classLevel" }?.values?.get(1)?.toIntOrNull() ?: 0
         return classLevelFromInt(level)
     }
@@ -140,7 +148,7 @@ data class Character(
         return temporal["AGE"] ?: 20
     }
 
-    fun parsePersonality(): Map<Personality, Int> {
+    private fun parsePersonality(): Map<Personality, Int> {
         val aspect = aspects.firstOrNull { it.name == "roleStats" }
         return if (aspect != null) {
             val personality = mutableMapOf<Personality, Int>()

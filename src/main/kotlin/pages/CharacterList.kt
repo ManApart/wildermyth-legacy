@@ -60,9 +60,11 @@ private fun List<LegacyCharacter>.filterSearch(searchText: String): List<LegacyC
 private fun filterCharacters(initial: List<LegacyCharacter>, searchText: String): List<LegacyCharacter> {
     return initial.filter { character ->
         val latest = character.snapshots.last()
-        character.snapshots.any { it.name.lowercase().contains(searchText) } ||
+        character.snapshots.any {
+            it.classLevel
+            it.name.lowercase().contains(searchText) } ||
                 character.snapshots.flatMap { it.aspects }.any { it.name.lowercase().contains(searchText) } ||
-                latest.classLevel.name.lowercase().contains(searchText) ||
+                latest.classLevel.takeIf { it != undefined }?.name?.lowercase()?.contains(searchText) ?: false ||
                 latest.personalityFirst.name.lowercase().contains(searchText) ||
                 latest.personalitySecond.name.lowercase().contains(searchText)
 
