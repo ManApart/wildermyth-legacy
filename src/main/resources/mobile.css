@@ -14,14 +14,18 @@
 
     .character-card {
         display: block;
-        width: 90%;
+        width: 100%;
         margin: 2%;
         margin-bottom: 50px;
         padding: 2%;
     }
 
     .character-portrait {
-        height: 850px;
+        height: 950px;
+    }
+
+    .character-bio{
+        height: 350px;
     }
 
     .character-head {
@@ -36,16 +40,15 @@
       bottom: 65px;
     }
 
-    .character-bio{
-
-    }
-
     .character-section {
-        width: 90%;
-        margin: 2%;
+        width: 100%;
     }
 
     .details-subsection{
+        width: 100%;
+    }
+
+    .aspects-table{
         width: 100%;
     }
 
@@ -68,4 +71,9 @@
     #log-button{
         display: none;
     }
+
+    #full-history-column-right {
+        margin-left: 0px;
+    }
+
 }
