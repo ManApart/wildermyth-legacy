@@ -185,3 +185,11 @@
     margin-top: 35px;
     margin-left: 10px;
 }
+
+.hidden {
+    display: none;
+}
+
+.visible-inline-block {
+    display: inline-block;
+}
