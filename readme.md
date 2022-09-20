@@ -14,7 +14,7 @@ cp -r ../wildermyth-legacy/build/distributions/* .
 ## TODO
 
 Relationship Graph
-- network graph, anyJS
+- network graph, visJs
 
 Details page
 - add tag

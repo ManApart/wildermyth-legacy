@@ -1,11 +1,11 @@
 package pages
 
 import getAdditionalInfo
+import getCharacters
 import jsonMapper
 import kotlinx.browser.document
 import kotlinx.html.*
 import kotlinx.html.dom.append
-import kotlinx.html.js.input
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
 import kotlinx.serialization.encodeToString
@@ -49,7 +49,8 @@ fun buildNav() {
             }
             checkBox("list-view", "View as List", searchOptions.listView) {
                 searchOptions.listView = it
-                characterSearch()
+                val section = document.getElementById("character-cards-section")!!
+                buildCharacters(section, getCharacters())
             }
         }
     }

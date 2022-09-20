@@ -79,20 +79,18 @@ private fun filterCharacters(initial: List<LegacyCharacter>, searchText: String)
 
 fun filterCharacterDoms(characters: List<LegacyCharacter>) {
     characterCards.values.forEach {
-        println("resetting ${it.id}")
         it.addClass("hidden")
         it.removeClass("visible-inline-block")
     }
     characters.forEach {
         characterCards[it.uuid]?.apply {
-            println("filtering ${it.uuid}")
             addClass("visible-inline-block")
             removeClass("hidden")
         }
     }
 }
 
-private fun buildCharacters(section: Element, characters: List<LegacyCharacter>) {
+fun buildCharacters(section: Element, characters: List<LegacyCharacter>) {
     section.innerHTML = ""
     section.append {
         characters.also { println("Building ${it.size} characters") }
