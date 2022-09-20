@@ -35,15 +35,14 @@ fun displayCharacters() {
     buildNav()
     buildCharacters(section, getCharacters())
     scrollToCharacter()
+    buildRelationshipNetwork()
 }
 
 fun characterSearch() {
-    val section = document.getElementById("character-cards-section")!!
     val characters = getCharacters()
         .filterFavorites(searchOptions.favoritesOnly)
         .hideNPC(searchOptions.hideNPC)
         .filterSearch(searchOptions.searchText)
-//    buildCharacters(section, characters)
     filterCharacterDoms(characters)
     saveSearch(searchOptions)
 }
