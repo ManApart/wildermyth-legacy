@@ -48,12 +48,19 @@
         width: 100%;
     }
 
-    .aspects-table{
-        width: 100%;
+    #aspect-tables table {
+        font-size: 1.5em;
+        table-layout: fixed;
+    }
+
+    #aspect-tables table {
+        word-break: break-all;
     }
 
     #aspect-tables{
         flex-wrap: wrap;
+        width: 100%;
+        overflow: scroll;
     }
 
     #full-history-columns{
