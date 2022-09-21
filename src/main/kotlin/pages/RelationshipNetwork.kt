@@ -6,6 +6,7 @@ import Edge
 import Node
 import Options
 import Vis
+import VisData
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 
@@ -33,6 +34,8 @@ fun buildRelationshipNetwork() {
         Edge(2, 5),
         Edge(3, 3),
     )
+    val vis = VisData
+    val visNet = Vis
     val data2 = Data2(js("new vis.DataSet([\n" +
             "        { id: 1, label: \"Node 1\" },\n" +
             "        { id: 2, label: \"Node 2\" },\n" +
@@ -49,5 +52,5 @@ fun buildRelationshipNetwork() {
     println(JSON.stringify(data2))
 //    Vis.Network(container, data2, null)
     val options = Options()
-    js("new vis.Network(container, data2, options);")
+    js("new visNet.Network(container, data2, options);")
 }
