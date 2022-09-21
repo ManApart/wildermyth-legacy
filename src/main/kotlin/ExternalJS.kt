@@ -39,11 +39,6 @@ external object LocalForage {
 @JsName("vis")
 external object Vis
 
-class Node(val id: Int, val label: String)
-class Edge(val from: Int, val to: Int)
-class Data(val nodes: dynamic, val edges: dynamic)
-class Options
-
 @JsModule("vis-data")
 @JsNonModule
 @JsName("vis")

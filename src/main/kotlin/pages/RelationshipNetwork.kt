@@ -1,31 +1,33 @@
 package pages
 
-import Data
-import Edge
-import Node
-import Options
 import Vis
 import VisData
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 
+interface DataItem
+class Node(val id: Int, val label: String)
+class Edge(val from: Int, val to: Int)
+class Data(val nodes: dynamic, val edges: dynamic)
+class Options
+
 fun buildRelationshipNetwork() {
     val container = document.getElementById("relationship-network-section") as HTMLElement
+    val nodes = (1..5).map { Node(it, "Node $it") }.toTypedArray()
+    val edges = arrayOf(
+        Edge(1, 3),
+        Edge(1, 2),
+        Edge(2, 4),
+        Edge(2, 5),
+        Edge(3, 3),
+    )
+    buildNetwork(container, nodes, edges)
+}
+
+private fun buildNetwork(container: HTMLElement, nodes: Array<Node>, edges: Array<Edge>) {
     val visData = VisData
     val visNet = Vis
-    val data = Data(js("new visData.DataSet([\n" +
-            "        { id: 1, label: \"Node 1\" },\n" +
-            "        { id: 2, label: \"Node 2\" },\n" +
-            "        { id: 3, label: \"Node 3\" },\n" +
-            "        { id: 4, label: \"Node 4\" },\n" +
-            "        { id: 5, label: \"Node 5\" },\n" +
-            "      ])"), js("new visData.DataSet([\n" +
-            "        { from: 1, to: 3 },\n" +
-            "        { from: 1, to: 2 },\n" +
-            "        { from: 2, to: 4 },\n" +
-            "        { from: 2, to: 5 },\n" +
-            "        { from: 3, to: 3 },\n" +
-            "      ])"))
+    val data = Data(js("new visData.DataSet(nodes)"), js("new visData.DataSet(edges)"))
     val options = Options()
     js("new visNet.Network(container, data, options);")
 }
