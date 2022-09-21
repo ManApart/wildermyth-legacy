@@ -38,21 +38,18 @@ external object LocalForage {
 @JsNonModule
 @JsName("vis")
 external object Vis {
-//    class DataSet(data: Array<dynamic>?, options: dynamic?)
-//    class DataSet(data: Array<Item>?, options: Options?)
     class Network(container: HTMLElement, data: Data?, options: Options?)
 }
 
 interface Item
-class Node(id: Int, label: String) : Item
-//class DataSet(data: List<Any>?, options: Options? = null)
-class Edge(from: Int, to: Int) : Item
-class Data(nodes: VisData.DataSet, edges: VisData.DataSet)
+class Node(val id: Int, val label: String) : Item
+class Edge(val from: Int, val to: Int) : Item
+class Data(nodes: Any, edges: VisData.DataSet)
 class Options
 
 @JsModule("vis-data")
 @JsNonModule
 @JsName("vis")
 external object VisData {
-    class DataSet(data: Array<dynamic>, options: Any?)
+    class DataSet(data: Array<Item>, options: Any?)
 }
