@@ -37,7 +37,11 @@ external object LocalForage {
 @JsModule("vis-network")
 @JsNonModule
 @JsName("vis")
-external object Vis
+external object Vis {
+    class Network {
+        fun on(event: String, handler: (Json) -> Unit)
+    }
+}
 
 @JsModule("vis-data")
 @JsNonModule

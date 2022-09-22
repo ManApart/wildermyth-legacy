@@ -12,6 +12,7 @@ import getAdditionalInfo
 import getCharacter
 import getCharacters
 import getCompany
+import getCroppedHead
 import getPicture
 import jsonMapper
 import kotlinx.browser.document
@@ -132,21 +133,9 @@ fun onKeyUp(key: KeyboardEvent) {
 }
 
 fun setFavicon(character: LegacyCharacter) {
-    getPicture("${character.uuid}/head")?.let { picture ->
-        val width = 100.0
-        val height = 115.0
-
-        val image = Image().apply { src = picture }
-
-        val canvas = (document.createElement("canvas") as HTMLCanvasElement)
-        canvas.width = width.toInt()
-        canvas.height = height.toInt()
-        val ctx = canvas.getContext("2d") as CanvasRenderingContext2D
-        ctx.drawImage(image, 45.0, 55.0, width, height, 0.0, 0.0, width, height)
-        val cropped = canvas.toDataURL("image/png", 0.9)
-
+    getCroppedHead(character)?.let { cropped ->
         favicon.setAttribute("href", cropped)
-    }
+    } ?: println("Unable to find favicon!")
 }
 
 private fun nextCharacter(character: LegacyCharacter): LegacyCharacter {
