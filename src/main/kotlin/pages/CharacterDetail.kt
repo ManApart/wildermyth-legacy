@@ -133,7 +133,7 @@ fun onKeyUp(key: KeyboardEvent) {
 }
 
 fun setFavicon(character: LegacyCharacter) {
-    getCroppedHead(character)?.let { cropped ->
+    getPicture(character.uuid + "/favicon")?.let { cropped ->
         favicon.setAttribute("href", cropped)
     } ?: println("Unable to find favicon!")
 }

@@ -12,6 +12,7 @@ import JSZip
 import JsonObject
 import LegacyCharacter
 import doRouting
+import getCroppedHead
 import jsonMapper
 import kotlinx.serialization.decodeFromString
 import org.khronos.webgl.ArrayBuffer
@@ -63,7 +64,9 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, ori
             val json = JSON.parse<Json>(contents)
             val characters = parseLegacy(json)
             characters.forEach { saveCharacter(it) }
-            Promise.all(characters.map { handleZipPictures(zip, it.snapshots.last()) }.toTypedArray())
+            Promise.all(characters.map { handleZipPictures(zip, it.snapshots.last()) }.toTypedArray()).then {
+                Promise.all(characters.map { cropFavicon(it) }.toTypedArray())
+            }
         }.then {
             doRouting(originalHash)
             persistMemory()
@@ -77,7 +80,6 @@ private fun handleZipPictures(zip: JSZip.ZipObject, character: Character): Promi
             handleSinglePicture(zip, character, "body", "body"),
         ).toTypedArray()
     )
-
 }
 
 private fun handleSinglePicture(zip: JSZip.ZipObject, character: Character, zipName: String, saveName: String): Promise<*>? {
@@ -88,7 +90,10 @@ private fun handleSinglePicture(zip: JSZip.ZipObject, character: Character, zipN
             savePicture("${character.uuid}/$saveName", contents)
         }
     } else null
+}
 
+private fun cropFavicon(character: LegacyCharacter): Promise<*> {
+    return getCroppedHead(character).then { pic -> pic?.let {  savePicture("${character.uuid}/favicon", it) } }
 }
 
 fun parseLegacy(json: Json): List<LegacyCharacter> {

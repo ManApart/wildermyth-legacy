@@ -18,7 +18,7 @@ import kotlinx.html.js.onClickFunction
 import org.w3c.dom.HTMLElement
 
 interface DataItem
-class Node(val id: Int, val label: String, val image: String, val shape: String = "circularImage")
+class Node(val id: Int, val label: String, var image: String, val shape: String = "circularImage")
 class Edge(val from: Int, val to: Int) {
     override fun equals(other: Any?): Boolean {
         return other is Edge &&
@@ -86,12 +86,11 @@ private fun findAllFriends(character: LegacyCharacter): Set<LegacyCharacter> {
     return checked
 }
 
-private fun buildNodes(friends: Set<LegacyCharacter>): Pair<Map<Int, LegacyCharacter>,Array<Node>> {
+private fun buildNodes(friends: Set<LegacyCharacter>): Pair<Map<Int, LegacyCharacter>, Array<Node>> {
     val lookup = mutableMapOf<Int, LegacyCharacter>()
     val nodes = friends.mapIndexed { i, it ->
-        val pic = getPicture(it.uuid+ "/head")
+        val pic = getPicture(it.uuid + "/head") ?: ""
 //        val pic = getCroppedHead(it, 35.0, 45.0, 120.0, 135.0)
-            ?: "".also { println("Unable to find cropped!") }
         lookup[i] = it
         Node(i, it.snapshots.last().name, pic)
     }.toTypedArray()
