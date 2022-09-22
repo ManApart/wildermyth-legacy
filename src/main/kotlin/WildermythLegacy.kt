@@ -38,14 +38,23 @@ fun doRouting() {
 }
 
 fun doRouting(windowHash: String) {
-    if (windowHash.startsWith("#detail/")) {
-        val hash = windowHash.replace("#detail/", "")
-        getCharacter(hash)?.let { character ->
-            characterDetail(character)
-        } ?: displayCharacters()
-    } else {
-        displayCharacters()
-        characterSearch()
+    when {
+        windowHash.startsWith("#detail/") -> {
+            val hash = windowHash.replace("#detail/", "")
+            getCharacter(hash)?.let { character ->
+                characterDetail(character)
+            } ?: displayCharacters()
+        }
+        windowHash.startsWith("#network/") -> {
+            val hash = windowHash.replace("#network/", "")
+            getCharacter(hash)?.let { character ->
+                buildRelationshipNetwork(character)
+            } ?: displayCharacters()
+        }
+        else -> {
+            displayCharacters()
+            characterSearch()
+        }
     }
 }
 
@@ -53,6 +62,7 @@ fun clearSections() {
     el("character-cards-section").innerHTML = ""
     el("import-section").innerHTML = ""
     el("character-detail-section").innerHTML = ""
+    el("relationship-network-section").innerHTML = ""
     el("nav").innerHTML = ""
 }
 

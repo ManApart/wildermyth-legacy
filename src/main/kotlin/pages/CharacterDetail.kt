@@ -50,7 +50,7 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
             if (showAggregates) {
                 friendshipSection(character)
             } else {
-                friendshipSection(snapshot)
+                friendshipSection(character, snapshot)
             }
             gearSection(snapshot)
             customHistorySection(additionalInfo)
@@ -131,7 +131,7 @@ fun onKeyUp(key: KeyboardEvent) {
     }
 }
 
-private fun setFavicon(character: LegacyCharacter) {
+fun setFavicon(character: LegacyCharacter) {
     getPicture("${character.uuid}/head")?.let { picture ->
         val width = 100.0
         val height = 115.0
@@ -358,7 +358,7 @@ fun TagConsumer<HTMLElement>.friendshipSection(character: LegacyCharacter) {
         div("character-section") {
             id = "friendships-section"
             div {
-                h2 { +"Relationships" }
+                relationshipHeader(character)
                 character.friendships.forEach { friendShip ->
                     relativeCard(friendShip.relativeId, friendShip.kind.getTitle(friendShip.level), friendShip.level)
                 }
@@ -367,16 +367,27 @@ fun TagConsumer<HTMLElement>.friendshipSection(character: LegacyCharacter) {
     }
 }
 
-fun TagConsumer<HTMLElement>.friendshipSection(snapshot: Character) {
+fun TagConsumer<HTMLElement>.friendshipSection(character: LegacyCharacter, snapshot: Character) {
     if (snapshot.friendships.isNotEmpty()) {
         div("character-section") {
             id = "friendships-section"
             div {
-                h2 { +"Relationships" }
+                relationshipHeader(character)
                 snapshot.friendships.forEach { friendShip ->
                     relativeCard(friendShip.relativeId, friendShip.kind.getTitle(friendShip.level), friendShip.level)
                 }
             }
+        }
+    }
+}
+
+private fun TagConsumer<HTMLElement>.relationshipHeader(character: LegacyCharacter) {
+    h2("relationship-header") {
+        +"Relationships"
+        onClickFunction = { buildRelationshipNetwork(character) }
+        img {
+            classes = setOf("network-image")
+            src = "./network.png"
         }
     }
 }
