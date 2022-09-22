@@ -14,6 +14,7 @@ import kotlinx.html.id
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.HTMLElement
+import kotlin.js.Date
 
 interface DataItem
 class Node(val id: Int, val label: String)
@@ -61,10 +62,48 @@ private fun buildPage(character: LegacyCharacter) {
 
 private fun buildNetwork(character: LegacyCharacter) {
     val container = el("relationship-network-canvas") as HTMLElement
+    val start = Date().getTime()
+
     val friends = findAllFriends(character)
     val nodes = buildNodes(friends)
     val edges = buildEdges(friends)
+//    val (nodes, edges) = buildNodesAndEdges(character)
+
+    println("Completed in " + (Date().getTime()-start))
     buildNetwork(container, nodes, edges)
+}
+
+private fun buildNodesAndEdges(character: LegacyCharacter): Pair<Array<Node>, Array<Edge>> {
+    val checked = mutableSetOf<LegacyCharacter>()
+    val newOptions = ArrayDeque<LegacyCharacter>()
+    val nodes = mutableSetOf<Node>()
+    val edges = mutableSetOf<Edge>()
+    val lookup = mutableMapOf<String, Int>()
+    var i = 1
+    newOptions.add(character)
+    while (newOptions.size > 0) {
+        val option = newOptions.removeLast()
+        checked.add(option)
+        if (!lookup.containsKey(option.uuid)) {
+            nodes.add(Node(i, option.snapshots.first().name))
+            lookup[option.uuid] = i
+            i++
+        }
+        val optionId = lookup[option.uuid]!!
+
+        val friends = option.friendships.mapNotNull { getCharacter(it.relativeId) }
+        newOptions.addAll(friends.filterNot { checked.contains(it) })
+        friends.forEach { friend ->
+            if (!lookup.containsKey(friend.uuid)) {
+                lookup[friend.uuid] = i
+                nodes.add(Node(i, friend.snapshots.first().name))
+                i++
+            }
+            edges.add(Edge(optionId, lookup[friend.uuid]!!))
+        }
+    }
+
+    return Pair(nodes.toTypedArray(), edges.toTypedArray())
 }
 
 private fun findAllFriends(character: LegacyCharacter): Set<LegacyCharacter> {
