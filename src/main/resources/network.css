@@ -1,8 +1,18 @@
+#relationship-network-section {
+    position: relative;
+    margin-top: -20px;
+}
+
+#network-nav{
+    position: absolute;
+    top: 0px;
+}
+
 .network-image {
     width: 5%;
     margin-left: 10px;
 }
 
 #relationship-network-canvas {
-    height: 800px;
+    height: 95vh;
 }
