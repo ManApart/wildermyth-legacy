@@ -17,7 +17,14 @@ import org.w3c.dom.HTMLElement
 
 interface DataItem
 class Node(val id: Int, val label: String)
-class Edge(val from: Int, val to: Int)
+class Edge(val from: Int, val to: Int) {
+    override fun equals(other: Any?): Boolean {
+        return other is Edge &&
+                ((from == other.from && to == other.to) ||
+                        (from == other.to && to == other.from))
+    }
+}
+
 class Data(val nodes: dynamic, val edges: dynamic)
 class Options
 
@@ -71,18 +78,16 @@ private fun findAllFriends(character: LegacyCharacter): Set<LegacyCharacter> {
 }
 
 private fun buildNodes(friends: Set<LegacyCharacter>): Array<Node> {
-
     return friends.mapIndexed { i, it -> Node(i, it.snapshots.last().name) }.toTypedArray()
 }
 
 private fun buildEdges(friends: Set<LegacyCharacter>): Array<Edge> {
     val lookup = friends.mapIndexed { i, character -> character.uuid to i }.toMap()
-    val allRelationships = friends.mapIndexed { i, character ->
+    return friends.mapIndexed { i, character ->
         character.friendships.mapNotNull { friendship ->
             lookup[friendship.relativeId]?.let { Edge(i, it) }
         }
-    }.flatten()
-    return allRelationships.toTypedArray()
+    }.flatten().toSet().toTypedArray()
 }
 
 private fun buildNetwork(container: HTMLElement, nodes: Array<Node>, edges: Array<Edge>) {
