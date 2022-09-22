@@ -50,17 +50,39 @@ private fun buildPage(character: LegacyCharacter) {
 
 private fun buildNetwork(character: LegacyCharacter) {
     val container = el("relationship-network-canvas") as HTMLElement
-    val nodes = character.friendships.mapNotNull { getCharacter(it.relativeId) }.mapIndexed { i, it -> Node(i, it.snapshots.last().name) }.toTypedArray()
-
-//    val nodes = (1..5).map { Node(it, "Node $it") }.toTypedArray()
-    val edges = arrayOf(
-        Edge(1, 3),
-        Edge(1, 2),
-        Edge(2, 4),
-        Edge(2, 5),
-        Edge(3, 3),
-    )
+    val friends = findAllFriends(character)
+    val nodes = buildNodes(friends)
+    val edges = buildEdges(friends)
     buildNetwork(container, nodes, edges)
+}
+
+private fun findAllFriends(character: LegacyCharacter): Set<LegacyCharacter> {
+    val checked = mutableSetOf<LegacyCharacter>()
+    val newOptions = ArrayDeque<LegacyCharacter>()
+    newOptions.add(character)
+    while (newOptions.size > 0) {
+        val option = newOptions.removeLast()
+        checked.add(option)
+        val friends = option.friendships.mapNotNull { getCharacter(it.relativeId) }
+        newOptions.addAll(friends.filterNot { checked.contains(it) })
+    }
+
+    return checked
+}
+
+private fun buildNodes(friends: Set<LegacyCharacter>): Array<Node> {
+
+    return friends.mapIndexed { i, it -> Node(i, it.snapshots.last().name) }.toTypedArray()
+}
+
+private fun buildEdges(friends: Set<LegacyCharacter>): Array<Edge> {
+    val lookup = friends.mapIndexed { i, character -> character.uuid to i }.toMap()
+    val allRelationships = friends.mapIndexed { i, character ->
+        character.friendships.mapNotNull { friendship ->
+            lookup[friendship.relativeId]?.let { Edge(i, it) }
+        }
+    }.flatten()
+    return allRelationships.toTypedArray()
 }
 
 private fun buildNetwork(container: HTMLElement, nodes: Array<Node>, edges: Array<Edge>) {
