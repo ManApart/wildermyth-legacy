@@ -23,6 +23,10 @@ class Edge(val from: Int, val to: Int) {
                 ((from == other.from && to == other.to) ||
                         (from == other.to && to == other.from))
     }
+
+    override fun hashCode(): Int {
+        return from + to
+    }
 }
 
 class Data(val nodes: dynamic, val edges: dynamic)
