@@ -6,6 +6,7 @@ import VisData
 import clearSections
 import el
 import getCharacter
+import getPicture
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.button
@@ -16,7 +17,7 @@ import kotlinx.html.js.onClickFunction
 import org.w3c.dom.HTMLElement
 
 interface DataItem
-class Node(val id: Int, val label: String)
+class Node(val id: Int, val label: String, val image: String, val shape: String = "circularImage")
 class Edge(val from: Int, val to: Int) {
     override fun equals(other: Any?): Boolean {
         return other is Edge &&
@@ -85,7 +86,10 @@ private fun findAllFriends(character: LegacyCharacter): Set<LegacyCharacter> {
 }
 
 private fun buildNodes(friends: Set<LegacyCharacter>): Array<Node> {
-    return friends.mapIndexed { i, it -> Node(i, it.snapshots.last().name) }.toTypedArray()
+    return friends.mapIndexed { i, it ->
+        val pic = getPicture("${it.uuid}/head") ?: ""
+        Node(i, it.snapshots.last().name, pic)
+    }.toTypedArray()
 }
 
 private fun buildEdges(friends: Set<LegacyCharacter>): Array<Edge> {
@@ -101,6 +105,23 @@ private fun buildNetwork(container: HTMLElement, nodes: Array<Node>, edges: Arra
     val visData = VisData
     val visNet = Vis
     val data = Data(js("new visData.DataSet(nodes)"), js("new visData.DataSet(edges)"))
-    val options = Options()
+    val options = getOptions()
     js("new visNet.Network(container, data, options);")
+}
+
+private fun getOptions(): dynamic {
+    return js("""{
+        nodes: {
+      borderWidth: 4,
+      size: 30,
+      color: {
+        border: "#222222",
+        background: "#666666",
+      },
+      font: { color: "#222222" },
+    },
+    edges: {
+      color: "#222222",
+    }
+    }""")
 }
