@@ -89,7 +89,7 @@ private fun findAllFriends(character: LegacyCharacter): Set<LegacyCharacter> {
 private fun buildNodes(friends: Set<LegacyCharacter>): Pair<Map<Int, LegacyCharacter>, Array<Node>> {
     val lookup = mutableMapOf<Int, LegacyCharacter>()
     val nodes = friends.mapIndexed { i, it ->
-        val pic = getPicture(it.uuid + "/head") ?: ""
+        val pic = getPicture(it.uuid + "/favicon") ?: ""
 //        val pic = getCroppedHead(it, 35.0, 45.0, 120.0, 135.0)
         lookup[i] = it
         Node(i, it.snapshots.last().name, pic)
