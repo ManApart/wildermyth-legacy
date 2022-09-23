@@ -6,10 +6,15 @@
 
     body, textarea, table{
         font-size: 1.4em;
+        word-break: break-all;
     }
 
     textarea {
         height: 250px;
+    }
+
+    #character-details {
+        overflow: hidden;
     }
 
     .character-card {

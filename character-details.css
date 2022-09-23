@@ -94,6 +94,11 @@
     margin-bottom: 4px;
 }
 
+.relationship-header:hover {
+    transform: scale(1.2);
+    transform-origin: left;
+}
+
 .relationship-inner{
     height: 100%;
 }
