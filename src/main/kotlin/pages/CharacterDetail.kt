@@ -133,9 +133,11 @@ fun onKeyUp(key: KeyboardEvent) {
 }
 
 fun setFavicon(character: LegacyCharacter) {
-    getPicture(character.uuid + "/favicon")?.let { cropped ->
-        favicon.setAttribute("href", cropped)
-    } ?: println("Unable to find favicon!")
+    getCroppedHead(character).then {
+        it?.let { cropped ->
+            favicon.setAttribute("href", cropped)
+        } ?: println("Unable to find favicon!")
+    }
 }
 
 private fun nextCharacter(character: LegacyCharacter): LegacyCharacter {

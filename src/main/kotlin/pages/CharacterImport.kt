@@ -66,8 +66,6 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, ori
             val characters = parseLegacy(json)
             characters.forEach { saveCharacter(it) }
             Promise.all(characters.map { handleZipPictures(zip, it.snapshots.last()) }.toTypedArray())
-        }.then{
-            Promise.all(getCharacters().map { cropFavicon(it) }.toTypedArray())
         }.then {
             doRouting(originalHash)
             persistMemory()
@@ -91,14 +89,6 @@ private fun handleSinglePicture(zip: JSZip.ZipObject, character: Character, zipN
             savePicture("${character.uuid}/$saveName", contents)
         }
     } else null
-}
-
-private fun cropFavicon(character: LegacyCharacter): Promise<*>{
-    return getCroppedHead(character).then { pic ->
-        pic?.let {
-            savePicture("${character.uuid}/favicon", it)
-        }
-    }
 }
 
 fun parseLegacy(json: Json): List<LegacyCharacter> {

@@ -6,8 +6,7 @@ import VisData
 import clearSections
 import el
 import getCharacter
-import getCroppedHead
-import getPicture
+import getCroppedHeadWithId
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.button
@@ -16,8 +15,8 @@ import kotlinx.html.id
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.HTMLElement
+import kotlin.js.Promise
 
-interface DataItem
 class Node(val id: Int, val label: String, var image: String, val shape: String = "circularImage")
 class Edge(val from: Int, val to: Int) {
     override fun equals(other: Any?): Boolean {
@@ -32,7 +31,6 @@ class Edge(val from: Int, val to: Int) {
 }
 
 class Data(val nodes: dynamic, val edges: dynamic)
-class Options
 
 fun buildRelationshipNetwork(character: LegacyCharacter) {
     val snapshot = character.snapshots.last()
@@ -65,10 +63,12 @@ private fun buildNetwork(character: LegacyCharacter) {
     val container = el("relationship-network-canvas") as HTMLElement
 
     val friends = findAllFriends(character)
-    val (lookup, nodes) = buildNodes(friends)
-    val edges = buildEdges(friends)
+    Promise.all(friends.map { getCroppedHeadWithId(it, 35.0, 45.0, 120.0, 135.0) }.toTypedArray()).then { heads ->
+        val (nodeLookup, nodes) = buildNodes(friends, heads.toMap())
+        val edges = buildEdges(friends)
 
-    buildNetwork(container, lookup, nodes, edges)
+        buildNetwork(container, nodeLookup, nodes, edges)
+    }
 }
 
 
@@ -86,11 +86,10 @@ private fun findAllFriends(character: LegacyCharacter): Set<LegacyCharacter> {
     return checked
 }
 
-private fun buildNodes(friends: Set<LegacyCharacter>): Pair<Map<Int, LegacyCharacter>, Array<Node>> {
+private fun buildNodes(friends: Set<LegacyCharacter>, headLookup: Map<String, String?>): Pair<Map<Int, LegacyCharacter>, Array<Node>> {
     val lookup = mutableMapOf<Int, LegacyCharacter>()
     val nodes = friends.mapIndexed { i, it ->
-        val pic = getPicture(it.uuid + "/favicon") ?: ""
-//        val pic = getCroppedHead(it, 35.0, 45.0, 120.0, 135.0)
+        val pic = headLookup[it.uuid] ?: ""
         lookup[i] = it
         Node(i, it.snapshots.last().name, pic)
     }.toTypedArray()
