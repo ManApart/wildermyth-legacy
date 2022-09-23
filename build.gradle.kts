@@ -15,6 +15,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
     implementation(npm("jszip", "3.10.1"))
     implementation(npm("localforage", "1.10.0"))
+    implementation(npm("vis-network", "9.1.2"))
+    implementation(npm("vis-data", "7.1.4"))
     testImplementation(kotlin("test"))
 }
 

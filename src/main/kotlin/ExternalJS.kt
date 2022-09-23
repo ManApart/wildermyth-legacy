@@ -1,4 +1,5 @@
 import org.khronos.webgl.ArrayBuffer
+import org.w3c.dom.HTMLElement
 import kotlin.js.Json
 import kotlin.js.Promise
 
@@ -31,3 +32,18 @@ external object LocalForage {
     fun setItem(key: String, value: Any): Promise<*>
     fun getItem(key: String): Promise<Any?>
 }
+
+
+@JsModule("vis-network")
+@JsNonModule
+@JsName("vis")
+external object Vis {
+    class Network {
+        fun on(event: String, handler: (Json) -> Unit)
+    }
+}
+
+@JsModule("vis-data")
+@JsNonModule
+@JsName("vis")
+external object VisData

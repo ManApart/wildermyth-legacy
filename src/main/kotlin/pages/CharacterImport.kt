@@ -12,6 +12,8 @@ import JSZip
 import JsonObject
 import LegacyCharacter
 import doRouting
+import getCharacters
+import getCroppedHead
 import jsonMapper
 import kotlinx.serialization.decodeFromString
 import org.khronos.webgl.ArrayBuffer
@@ -77,7 +79,6 @@ private fun handleZipPictures(zip: JSZip.ZipObject, character: Character): Promi
             handleSinglePicture(zip, character, "body", "body"),
         ).toTypedArray()
     )
-
 }
 
 private fun handleSinglePicture(zip: JSZip.ZipObject, character: Character, zipName: String, saveName: String): Promise<*>? {
@@ -88,7 +89,6 @@ private fun handleSinglePicture(zip: JSZip.ZipObject, character: Character, zipN
             savePicture("${character.uuid}/$saveName", contents)
         }
     } else null
-
 }
 
 fun parseLegacy(json: Json): List<LegacyCharacter> {

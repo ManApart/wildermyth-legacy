@@ -10,6 +10,7 @@ import org.w3c.dom.set
 import org.w3c.files.Blob
 import org.w3c.files.FileReader
 import kotlin.js.Promise
+import kotlin.js.Promise.Companion.resolve
 
 @Serializable
 data class InMemoryStorage(
@@ -52,6 +53,10 @@ fun savePicture(path: String, blob: Blob): Promise<Unit> {
         }
         fr.readAsDataURL(blob)
     }
+}
+
+fun savePicture(path: String, content: String){
+    inMemoryStorage.pictures[path] = content
 }
 
 fun getAdditionalInfo(): MutableMap<String, AdditionalInfo> {
@@ -98,7 +103,7 @@ fun persistMemory() {
 
 fun loadMemory(): Promise<*> {
     return LocalForage.getItem("memory").then { persisted ->
-        if (persisted != null && persisted != undefined){
+        if (persisted != null && persisted != undefined) {
             inMemoryStorage = jsonMapper.decodeFromString(persisted as String)
             inMemoryStorage.characters.values.forEach { legacyCharacter -> legacyCharacter.snapshots.forEach { it.reload() } }
         }

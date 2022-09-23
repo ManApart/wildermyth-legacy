@@ -12,6 +12,7 @@ import getAdditionalInfo
 import getCharacter
 import getCharacters
 import getCompany
+import getCroppedHead
 import getPicture
 import jsonMapper
 import kotlinx.browser.document
@@ -50,7 +51,7 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
             if (showAggregates) {
                 friendshipSection(character)
             } else {
-                friendshipSection(snapshot)
+                friendshipSection(character, snapshot)
             }
             gearSection(snapshot)
             customHistorySection(additionalInfo)
@@ -131,21 +132,11 @@ fun onKeyUp(key: KeyboardEvent) {
     }
 }
 
-private fun setFavicon(character: LegacyCharacter) {
-    getPicture("${character.uuid}/head")?.let { picture ->
-        val width = 100.0
-        val height = 115.0
-
-        val image = Image().apply { src = picture }
-
-        val canvas = (document.createElement("canvas") as HTMLCanvasElement)
-        canvas.width = width.toInt()
-        canvas.height = height.toInt()
-        val ctx = canvas.getContext("2d") as CanvasRenderingContext2D
-        ctx.drawImage(image, 45.0, 55.0, width, height, 0.0, 0.0, width, height)
-        val cropped = canvas.toDataURL("image/png", 0.9)
-
-        favicon.setAttribute("href", cropped)
+fun setFavicon(character: LegacyCharacter) {
+    getCroppedHead(character).then {
+        it?.let { cropped ->
+            favicon.setAttribute("href", cropped)
+        } ?: println("Unable to find favicon!")
     }
 }
 
@@ -358,7 +349,7 @@ fun TagConsumer<HTMLElement>.friendshipSection(character: LegacyCharacter) {
         div("character-section") {
             id = "friendships-section"
             div {
-                h2 { +"Relationships" }
+                relationshipHeader(character)
                 character.friendships.forEach { friendShip ->
                     relativeCard(friendShip.relativeId, friendShip.kind.getTitle(friendShip.level), friendShip.level)
                 }
@@ -367,16 +358,27 @@ fun TagConsumer<HTMLElement>.friendshipSection(character: LegacyCharacter) {
     }
 }
 
-fun TagConsumer<HTMLElement>.friendshipSection(snapshot: Character) {
+fun TagConsumer<HTMLElement>.friendshipSection(character: LegacyCharacter, snapshot: Character) {
     if (snapshot.friendships.isNotEmpty()) {
         div("character-section") {
             id = "friendships-section"
             div {
-                h2 { +"Relationships" }
+                relationshipHeader(character)
                 snapshot.friendships.forEach { friendShip ->
                     relativeCard(friendShip.relativeId, friendShip.kind.getTitle(friendShip.level), friendShip.level)
                 }
             }
+        }
+    }
+}
+
+private fun TagConsumer<HTMLElement>.relationshipHeader(character: LegacyCharacter) {
+    h2("relationship-header") {
+        +"Relationships"
+        onClickFunction = { buildRelationshipNetwork(character) }
+        img {
+            classes = setOf("network-image")
+            src = "./network.png"
         }
     }
 }

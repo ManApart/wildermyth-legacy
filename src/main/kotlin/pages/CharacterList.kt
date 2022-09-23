@@ -4,6 +4,7 @@ import Character
 import LegacyCharacter
 import characterCards
 import clearSections
+import el
 import favicon
 import getAdditionalInfo
 import getCharacters
@@ -28,7 +29,7 @@ import kotlin.js.Promise
 
 
 fun displayCharacters() {
-    val section = document.getElementById("character-cards-section")!!
+    val section = el("character-cards-section")
     clearSections()
     document.title = "Wildermyth Legacy"
     favicon.setAttribute("href", "favicon.png")
@@ -38,12 +39,10 @@ fun displayCharacters() {
 }
 
 fun characterSearch() {
-    val section = document.getElementById("character-cards-section")!!
     val characters = getCharacters()
         .filterFavorites(searchOptions.favoritesOnly)
         .hideNPC(searchOptions.hideNPC)
         .filterSearch(searchOptions.searchText)
-//    buildCharacters(section, characters)
     filterCharacterDoms(characters)
     saveSearch(searchOptions)
 }
