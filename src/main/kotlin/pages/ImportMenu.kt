@@ -1,5 +1,7 @@
 package pages
 
+import getAdditionalInfo
+import jsonMapper
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.*
@@ -7,7 +9,9 @@ import kotlinx.html.dom.append
 import kotlinx.html.js.input
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
+import kotlinx.serialization.encodeToString
 import org.khronos.webgl.ArrayBuffer
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.files.FileReader
 import org.w3c.files.get
@@ -50,6 +54,13 @@ fun importMenu() {
 
             div {
                 id = "instructions-text"
+                h4 { +"Using the Uploader" }
+                p { +"If this all seems a bit much, try using the instead. If we're lucky, it will find your game paths and files, and create the zip for you. You'll still need to export each character though, for the pictures." }
+                a("./wilder-upload.exe"){
+                    id = "download-tool-link"
+                    +"Download Tool"
+                }
+
                 h4 { +"Initial Setup" }
                 p { +"To set everything up, we'll need to gather some files and create a single zip to upload. The completed zip should look like the picture to the right/below." }
                 ol {
@@ -108,3 +119,4 @@ fun importMenu() {
 
     }
 }
+
