@@ -95,6 +95,29 @@ fun importMenu() {
                     li { +"Upload the zip using the button below." }
                     li { +"While nothing is stored server side, the zip contents are stored in the browsers local storage. This means reloading the page won't drop your data!" }
                 }
+
+                h4 { +"Exporting All Characters" }
+                p { +"If you have a lot of characters, you can use this autohotkey script to automate the character export." }
+                ol {
+                    li  {
+                        +"Download and install "
+                        a("https://www.autohotkey.com/", target = "_blank"){+"AutoHotkey."}
+                    }
+                    li  {
+                        +"Download and open the "
+                        a("./WildermythLegacy.ahk"){+"wildermyth script."}
+                    }
+                    li {
+                        +"In the game, navigate to your heroes legacy, where you see all your characters standing around. The script has to start there. When it starts it will open you hero list, and then start clicking through each character."
+                    }
+                    li {
+                        +"The Loop runs up to 700 times (so max 700 characters). If you don't manually stop it, it will keep running (because it doesn't know how many characters you have), and so it could re-export characters (which is fine)."
+                    }
+                    li {
+                        +"To start (and stop) the script, press Ctrl + e."
+                    }
+                }
+
                 h4 { +"Additional Info File" }
                 ol {
                     li { +"Any editing of tags or character history on the site is stored locally in your browser." }
