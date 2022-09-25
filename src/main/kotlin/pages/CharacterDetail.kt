@@ -445,7 +445,7 @@ private fun TagConsumer<HTMLElement>.companyCard(companyId: String) {
 }
 
 fun TagConsumer<HTMLElement>.aspectsSection(character: Character) {
-    val allAspects = character.aspects.filterNot { it.hiddenAspect() }.sortedBy { it.name }
+    val allAspects = character.aspects.sortedBy { it.name }
     val firstHalf = allAspects.subList(0, allAspects.size / 2)
     val secondHalf = allAspects.subList(allAspects.size / 2, allAspects.size)
     div("character-section") {
@@ -472,12 +472,6 @@ private fun DIV.buildAspectTable(firstHalf: List<Aspect>) {
             }
         }
     }
-}
-
-private fun Aspect.hiddenAspect(): Boolean {
-    return name in listOf("familyWith", "childOf", "parentOf", "historyStat2", "roleStats")
-            || name.startsWith("human")
-            || name.startsWith("relationship")
 }
 
 private fun TagConsumer<HTMLElement>.gearSection(snapshot: Character) {
