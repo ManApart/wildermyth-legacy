@@ -7,14 +7,18 @@ import clearSections
 import el
 import getCharacter
 import getCroppedHeadWithId
+import getDepth
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.html.button
+import kotlinx.html.*
 import kotlinx.html.dom.append
-import kotlinx.html.id
 import kotlinx.html.js.div
+import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLSelectElement
+import org.w3c.dom.get
+import saveDepth
 import kotlin.js.Promise
 
 class Node(val id: Int, val label: String, var image: String, val shape: String = "circularImage")
@@ -32,7 +36,7 @@ class Edge(val from: Int, val to: Int) {
 
 class Data(val nodes: dynamic, val edges: dynamic)
 
-fun buildRelationshipNetwork(character: LegacyCharacter) {
+fun buildRelationshipNetwork(character: LegacyCharacter, depth: Int = getDepth()) {
     val snapshot = character.snapshots.last()
     clearSections()
     document.title = snapshot.name
@@ -40,7 +44,7 @@ fun buildRelationshipNetwork(character: LegacyCharacter) {
     window.history.pushState(null, "null", "#network/" + character.uuid)
     setFavicon(character)
     buildPage(character)
-    buildNetwork(character)
+    buildNetwork(character, depth)
 }
 
 private fun buildPage(character: LegacyCharacter) {
@@ -55,14 +59,38 @@ private fun buildPage(character: LegacyCharacter) {
                     characterDetail(character)
                 }
             }
+            span {
+                id = "snapshot-span"
+                label { +"Depth:" }
+                select {
+                    id = "depth-select"
+                    (1..5).forEach {
+                        option {
+                            +"$it"
+                            selected = it == getDepth()
+                        }
+                    }
+                    option {
+                        +"50"
+                        selected = 50 == getDepth()
+                    }
+
+                    onChangeFunction = {
+                        val input = el(id) as HTMLSelectElement
+                        val i = input.selectedIndex
+                        saveDepth(input.options[i]?.textContent?.toIntOrNull() ?: 2)
+                        buildRelationshipNetwork(character, i)
+                    }
+                }
+            }
         }
     }
 }
 
-private fun buildNetwork(character: LegacyCharacter) {
+private fun buildNetwork(character: LegacyCharacter, depth: Int) {
     val container = el("relationship-network-canvas") as HTMLElement
 
-    val friends = findAllFriends(character)
+    val friends = findAllFriends(character, depth)
     Promise.all(friends.map { getCroppedHeadWithId(it, 35.0, 45.0, 120.0, 135.0) }.toTypedArray()).then { heads ->
         val (nodeLookup, nodes) = buildNodes(friends, heads.toMap())
         val edges = buildEdges(friends)
@@ -72,15 +100,18 @@ private fun buildNetwork(character: LegacyCharacter) {
 }
 
 
-private fun findAllFriends(character: LegacyCharacter): Set<LegacyCharacter> {
+private fun findAllFriends(character: LegacyCharacter, maxDepth: Int): Set<LegacyCharacter> {
     val checked = mutableSetOf<LegacyCharacter>()
-    val newOptions = ArrayDeque<LegacyCharacter>()
-    newOptions.add(character)
+    val newOptions = ArrayDeque<Pair<LegacyCharacter, Int>>()
+    newOptions.add(Pair(character, -1))
     while (newOptions.size > 0) {
-        val option = newOptions.removeLast()
+        val (option, depth) = newOptions.removeLast()
         checked.add(option)
-        val friends = option.friendships.mapNotNull { getCharacter(it.relativeId) }
-        newOptions.addAll(friends.filterNot { checked.contains(it) })
+        if (depth < maxDepth) {
+            val deeper = depth+1
+            val friends = option.friendships.mapNotNull { getCharacter(it.relativeId) }
+            newOptions.addAll(friends.filterNot { checked.contains(it) }.map { Pair(it, deeper) })
+        }
     }
 
     return checked

@@ -117,3 +117,11 @@ fun getSearch(): CharacterSearchOptions {
 fun saveSearch(options: CharacterSearchOptions) {
     localStorage["search-options"] = jsonMapper.encodeToString(options)
 }
+
+fun getDepth(): Int {
+    return localStorage["relationship-depth"]?.toIntOrNull() ?: 2
+}
+
+fun saveDepth(depth: Int) {
+    localStorage["relationship-depth"] = depth.toString()
+}
