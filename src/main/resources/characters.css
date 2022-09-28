@@ -124,6 +124,7 @@
     padding-bottom: 20px;
     height: 200px;
     overflow-y: scroll;
+    word-break: normal;
 }
 
 .character-bio::-webkit-scrollbar-track {

@@ -11,6 +11,7 @@ import kotlinx.html.js.onKeyUpFunction
 import kotlinx.serialization.encodeToString
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
+import saveSearch
 import searchOptions
 
 fun buildNav() {
@@ -50,6 +51,7 @@ fun buildNav() {
             checkBox("list-view", "View as List", searchOptions.listView) {
                 searchOptions.listView = it
                 val section = document.getElementById("character-cards-section")!!
+                saveSearch(searchOptions)
                 buildCharacters(section, getCharacters())
             }
         }
