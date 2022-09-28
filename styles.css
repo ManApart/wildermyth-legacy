@@ -42,6 +42,7 @@ button {
   display: inline-block;
   font-size: 1.3em;
   margin: 4px;
+  word-break: normal;
 }
 
 button:hover{
