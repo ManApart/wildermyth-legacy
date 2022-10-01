@@ -105,7 +105,7 @@ private fun findAllFriends(character: LegacyCharacter, maxDepth: Int): Set<Legac
     val newOptions = ArrayDeque<Pair<LegacyCharacter, Int>>()
     newOptions.add(Pair(character, -1))
     while (newOptions.size > 0) {
-        val (option, depth) = newOptions.removeLast()
+        val (option, depth) = newOptions.removeFirst()
         checked.add(option)
         if (depth < maxDepth) {
             val deeper = depth+1
@@ -129,9 +129,13 @@ private fun buildNodes(friends: Set<LegacyCharacter>, headLookup: Map<String, St
 
 private fun buildEdges(friends: Set<LegacyCharacter>): Array<Edge> {
     val lookup = friends.mapIndexed { i, character -> character.uuid to i }.toMap()
+    val found = mutableSetOf<String>()
     return friends.mapIndexed { i, character ->
         character.friendships.mapNotNull { friendship ->
-            lookup[friendship.relativeId]?.let { Edge(i, it) }
+            if (!found.contains(friendship.relativeId)) {
+                found.add(friendship.relativeId)
+                lookup[friendship.relativeId]?.let { Edge(i, it) }
+            } else null
         }
     }.flatten().toSet().toTypedArray()
 }
