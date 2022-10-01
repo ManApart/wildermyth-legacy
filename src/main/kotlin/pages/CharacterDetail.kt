@@ -335,9 +335,9 @@ fun TagConsumer<HTMLElement>.familySection(snapshot: Character) {
                 id = "family-section"
                 div {
                     h2 { +"Family" }
-                    parents.forEach { relativeCard(it, "Parent") }
-                    soulMate?.let { relativeCard(it, "Soulmate") }
-                    children.forEach { relativeCard(it, "Child") }
+                    parents.forEach { relativeCard(snapshot, it, "Parent") }
+                    soulMate?.let { relativeCard(snapshot, it, "Soulmate") }
+                    children.forEach { relativeCard(snapshot, it, "Child") }
                 }
             }
         }
@@ -351,7 +351,7 @@ fun TagConsumer<HTMLElement>.friendshipSection(character: LegacyCharacter) {
             div {
                 relationshipHeader(character)
                 character.friendships.forEach { friendShip ->
-                    relativeCard(friendShip.relativeId, friendShip.kind.getTitle(friendShip.level), friendShip.level)
+                    relativeCard(character.snapshots.last(), friendShip.relativeId, friendShip.kind.getTitle(friendShip.level), friendShip.level)
                 }
             }
         }
@@ -365,7 +365,7 @@ fun TagConsumer<HTMLElement>.friendshipSection(character: LegacyCharacter, snaps
             div {
                 relationshipHeader(character)
                 snapshot.friendships.forEach { friendShip ->
-                    relativeCard(friendShip.relativeId, friendShip.kind.getTitle(friendShip.level), friendShip.level)
+                    relativeCard(snapshot, friendShip.relativeId, friendShip.kind.getTitle(friendShip.level), friendShip.level)
                 }
             }
         }
@@ -391,11 +391,12 @@ fun TagConsumer<HTMLElement>.companiesSection(character: LegacyCharacter) {
     }
 }
 
-private fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relationship: String, rank: Int? = null) {
+private fun TagConsumer<HTMLElement>.relativeCard(mySnapshot: Character, relativeUuid: String, relationship: String, rank: Int? = null) {
     val relative = getCharacter(relativeUuid)
     val snapshot = relative?.snapshots?.last()
 
     if (relative != null && snapshot != null) {
+        val compatibility = mySnapshot.getCompatibility(snapshot)
         div("relationship") {
             div("relationship-inner") {
                 onClickFunction = { characterDetail(relative) }
@@ -407,7 +408,8 @@ private fun TagConsumer<HTMLElement>.relativeCard(relativeUuid: String, relation
                 div("relationship-text") {
                     div {
                         h4 { +relationship }
-                        if (rank != null) p("relationship-rank") { +"($rank)" }
+                        val rankText = if (rank != null) "Rank $rank, " else ""
+                        p("relationship-rank") { +"(${rankText}Compatibility $compatibility)" }
                     }
                     p { +snapshot.name }
                 }

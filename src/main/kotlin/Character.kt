@@ -200,4 +200,12 @@ data class Character(
         return relationship?.name ?: "hometown"
     }
 
+    fun getCompatibility(other: Character): Int {
+        val myStats = personality.entries.filter { it.value > 50 }.map { it.key }
+        val otherStats = other.personality.entries.filter { it.value > 50 }.map { it.key }
+
+        return myStats.sumOf { getCompatibility(it, otherStats) }
+    }
+
+
 }
