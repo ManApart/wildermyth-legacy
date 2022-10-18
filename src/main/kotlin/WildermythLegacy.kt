@@ -51,6 +51,12 @@ fun doRouting(windowHash: String) {
                 buildRelationshipNetwork(character)
             } ?: displayCharacters()
         }
+        windowHash.startsWith("#family/") -> {
+            val hash = windowHash.replace("#family/", "")
+            getCharacter(hash)?.let { character ->
+                buildRelationshipNetwork(character, true)
+            } ?: displayCharacters()
+        }
         else -> {
             displayCharacters()
             characterSearch()

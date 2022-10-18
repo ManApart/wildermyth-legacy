@@ -47,7 +47,7 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
                 statsSection(character, snapshot)
                 companiesSection(character)
             }
-            familySection(snapshot)
+            familySection(character, snapshot)
             if (showAggregates) {
                 friendshipSection(character)
             } else {
@@ -328,13 +328,13 @@ fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snap
     }
 }
 
-fun TagConsumer<HTMLElement>.familySection(snapshot: Character) {
+fun TagConsumer<HTMLElement>.familySection(character: LegacyCharacter, snapshot: Character) {
     with(snapshot.family) {
         if (soulMate != null || parents.isNotEmpty() || children.isNotEmpty()) {
             div("character-section") {
                 id = "family-section"
                 div {
-                    h2 { +"Family" }
+                    familyHeader(character)
                     parents.forEach { relativeCard(snapshot, it, "Parent") }
                     soulMate?.let { relativeCard(snapshot, it, "Soulmate") }
                     children.forEach { relativeCard(snapshot, it, "Child") }
@@ -372,10 +372,21 @@ fun TagConsumer<HTMLElement>.friendshipSection(character: LegacyCharacter, snaps
     }
 }
 
+private fun TagConsumer<HTMLElement>.familyHeader(character: LegacyCharacter) {
+    h2("relationship-header") {
+        +"Family"
+        onClickFunction = { buildRelationshipNetwork(character, true) }
+        img {
+            classes = setOf("network-image")
+            src = "./network.png"
+        }
+    }
+}
+
 private fun TagConsumer<HTMLElement>.relationshipHeader(character: LegacyCharacter) {
     h2("relationship-header") {
         +"Relationships"
-        onClickFunction = { buildRelationshipNetwork(character) }
+        onClickFunction = { buildRelationshipNetwork(character ) }
         img {
             classes = setOf("network-image")
             src = "./network.png"

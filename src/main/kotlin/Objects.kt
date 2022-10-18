@@ -71,7 +71,9 @@ data class HistoryRelationshipRaw(
 @Serializable
 data class AdditionalInfo(val uuid: String, var favorite: Boolean = false, val history: MutableList<HistoryEntry> = mutableListOf())
 
-data class Family(val soulMate: String? = null, val parents: List<String> = listOf(), val children: List<String> = listOf())
+data class Family(val soulMate: String? = null, val parents: List<String> = listOf(), val children: List<String> = listOf()) {
+    val all = listOfNotNull(soulMate) + parents + children
+}
 
 @Serializable
 data class Company(

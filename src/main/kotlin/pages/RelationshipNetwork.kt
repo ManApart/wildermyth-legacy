@@ -36,18 +36,22 @@ class Edge(val from: Int, val to: Int) {
 
 class Data(val nodes: dynamic, val edges: dynamic)
 
-fun buildRelationshipNetwork(character: LegacyCharacter, depth: Int = getDepth()) {
+fun buildRelationshipNetwork(character: LegacyCharacter, familyOnly: Boolean = false, depth: Int = getDepth()) {
     val snapshot = character.snapshots.last()
     clearSections()
     document.title = snapshot.name
     document.documentElement?.scrollTop = 0.0
-    window.history.pushState(null, "null", "#network/" + character.uuid)
+    if (familyOnly) {
+        window.history.pushState(null, "null", "#family/" + character.uuid)
+    } else {
+        window.history.pushState(null, "null", "#network/" + character.uuid)
+    }
     setFavicon(character)
-    buildPage(character)
-    buildNetwork(character, depth)
+    buildPage(character, familyOnly)
+    buildNetwork(character, familyOnly, depth)
 }
 
-private fun buildPage(character: LegacyCharacter) {
+private fun buildPage(character: LegacyCharacter, familyOnly: Boolean) {
     val section = el("relationship-network-section")
     section.append {
         div { id = "relationship-network-canvas" }
@@ -59,27 +63,29 @@ private fun buildPage(character: LegacyCharacter) {
                     characterDetail(character)
                 }
             }
-            span {
-                id = "snapshot-span"
-                label { +"Depth:" }
-                select {
-                    id = "depth-select"
-                    (1..5).forEach {
-                        option {
-                            +"$it"
-                            selected = it == getDepth()
+            if (!familyOnly) {
+                span {
+                    id = "snapshot-span"
+                    label { +"Depth:" }
+                    select {
+                        id = "depth-select"
+                        (1..5).forEach {
+                            option {
+                                +"$it"
+                                selected = it == getDepth()
+                            }
                         }
-                    }
-                    option {
-                        +"50"
-                        selected = 50 == getDepth()
-                    }
+                        option {
+                            +"50"
+                            selected = 50 == getDepth()
+                        }
 
-                    onChangeFunction = {
-                        val input = el(id) as HTMLSelectElement
-                        val i = input.selectedIndex
-                        saveDepth(input.options[i]?.textContent?.toIntOrNull() ?: 2)
-                        buildRelationshipNetwork(character, i)
+                        onChangeFunction = {
+                            val input = el(id) as HTMLSelectElement
+                            val i = input.selectedIndex
+                            saveDepth(input.options[i]?.textContent?.toIntOrNull() ?: 2)
+                            buildRelationshipNetwork(character, familyOnly, i)
+                        }
                     }
                 }
             }
@@ -87,13 +93,13 @@ private fun buildPage(character: LegacyCharacter) {
     }
 }
 
-private fun buildNetwork(character: LegacyCharacter, depth: Int) {
+private fun buildNetwork(character: LegacyCharacter, familyOnly: Boolean, depth: Int) {
     val container = el("relationship-network-canvas") as HTMLElement
 
-    val friends = findAllFriends(character, depth)
+    val friends = if (familyOnly) findAllRelatives(character, depth) else findAllFriends(character, depth)
     Promise.all(friends.map { getCroppedHeadWithId(it, 35.0, 45.0, 120.0, 135.0) }.toTypedArray()).then { heads ->
         val (nodeLookup, nodes) = buildNodes(friends, heads.toMap())
-        val edges = buildEdges(friends)
+        val edges = if (familyOnly) buildFamilyEdges(friends) else buildEdges(friends)
 
         buildNetwork(container, nodeLookup, nodes, edges)
     }
@@ -108,9 +114,27 @@ private fun findAllFriends(character: LegacyCharacter, maxDepth: Int): Set<Legac
         val (option, depth) = newOptions.removeFirst()
         checked.add(option)
         if (depth < maxDepth) {
-            val deeper = depth+1
+            val deeper = depth + 1
             val friends = option.friendships.mapNotNull { getCharacter(it.relativeId) }
             newOptions.addAll(friends.filterNot { checked.contains(it) }.map { Pair(it, deeper) })
+        }
+    }
+
+    return checked
+}
+
+private fun findAllRelatives(character: LegacyCharacter, maxDepth: Int): Set<LegacyCharacter> {
+    val checked = mutableSetOf<LegacyCharacter>()
+    val newOptions = ArrayDeque<Pair<LegacyCharacter, Int>>()
+    newOptions.add(Pair(character, -1))
+    while (newOptions.size > 0) {
+        val (option, depth) = newOptions.removeFirst()
+        checked.add(option)
+        if (depth < maxDepth) {
+            val deeper = depth + 1
+            val family = option.snapshots.last().family
+            val relatives = (family.parents + family.children + listOfNotNull(family.soulMate)).mapNotNull { getCharacter(it) }
+            newOptions.addAll(relatives.filterNot { checked.contains(it) }.map { Pair(it, deeper) })
         }
     }
 
@@ -137,6 +161,20 @@ private fun buildEdges(friends: Set<LegacyCharacter>): Array<Edge> {
                 lookup[friendship.relativeId]?.let { Edge(i, it) }
             } else null
         }
+    }.flatten().toSet().toTypedArray()
+}
+
+private fun buildFamilyEdges(relatives: Set<LegacyCharacter>): Array<Edge> {
+    val lookup = relatives.mapIndexed { i, character -> character.uuid to i }.toMap()
+    val found = mutableSetOf<String>()
+    return relatives.mapIndexed { i, character ->
+        val family = character.snapshots.last().family
+        val edges = family.children.mapNotNull { child -> lookup[child]?.let { Edge(i, it) } }.toMutableList()
+        if (family.soulMate != null && !found.contains(family.soulMate)) {
+            found.add(family.soulMate)
+            lookup[family.soulMate]?.let { edges.add(Edge(i, it)) }
+        }
+        edges
     }.flatten().toSet().toTypedArray()
 }
 
