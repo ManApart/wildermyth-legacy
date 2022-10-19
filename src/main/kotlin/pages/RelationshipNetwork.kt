@@ -22,7 +22,7 @@ import saveDepth
 import kotlin.js.Promise
 
 class Node(val id: Int, val label: String, var image: String, val shape: String = "circularImage")
-class Edge(val from: Int, val to: Int) {
+class Edge(val from: Int, val to: Int, val dashes: Boolean = false) {
     override fun equals(other: Any?): Boolean {
         return other is Edge &&
                 ((from == other.from && to == other.to) ||
@@ -172,7 +172,7 @@ private fun buildFamilyEdges(relatives: Set<LegacyCharacter>): Array<Edge> {
         val edges = family.children.mapNotNull { child -> lookup[child]?.let { Edge(i, it) } }.toMutableList()
         if (family.soulMate != null && !found.contains(family.soulMate)) {
             found.add(family.soulMate)
-            lookup[family.soulMate]?.let { edges.add(Edge(i, it)) }
+            lookup[family.soulMate]?.let { edges.add(Edge(i, it, true)) }
         }
         edges
     }.flatten().toSet().toTypedArray()
