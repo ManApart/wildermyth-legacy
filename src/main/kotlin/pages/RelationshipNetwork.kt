@@ -22,7 +22,7 @@ import saveDepth
 import kotlin.js.Promise
 
 class Node(val id: Int, val label: String, var image: String, val shape: String = "circularImage")
-class Edge(val from: Int, val to: Int, val dashes: Boolean = false) {
+class Edge(val from: Int, val to: Int, val dashes: Boolean = false, val arrows: String? = undefined) {
     override fun equals(other: Any?): Boolean {
         return other is Edge &&
                 ((from == other.from && to == other.to) ||
@@ -99,7 +99,7 @@ private fun buildNetwork(character: LegacyCharacter, familyOnly: Boolean, depth:
     val friends = if (familyOnly) findAllRelatives(character, depth) else findAllFriends(character, depth)
     Promise.all(friends.map { getCroppedHeadWithId(it, 35.0, 45.0, 120.0, 135.0) }.toTypedArray()).then { heads ->
         val (nodeLookup, nodes) = buildNodes(friends, heads.toMap())
-        val edges = if (familyOnly) buildFamilyEdges(friends) else buildEdges(friends)
+        val edges = if (familyOnly) buildFamilyEdges(friends) else buildFriendEdges(friends)
 
         buildNetwork(container, nodeLookup, nodes, edges)
     }
@@ -151,7 +151,7 @@ private fun buildNodes(friends: Set<LegacyCharacter>, headLookup: Map<String, St
     return Pair(lookup, nodes)
 }
 
-private fun buildEdges(friends: Set<LegacyCharacter>): Array<Edge> {
+private fun buildFriendEdges(friends: Set<LegacyCharacter>): Array<Edge> {
     val lookup = friends.mapIndexed { i, character -> character.uuid to i }.toMap()
     val found = mutableSetOf<String>()
     return friends.mapIndexed { i, character ->
@@ -169,7 +169,7 @@ private fun buildFamilyEdges(relatives: Set<LegacyCharacter>): Array<Edge> {
     val found = mutableSetOf<String>()
     return relatives.mapIndexed { i, character ->
         val family = character.snapshots.last().family
-        val edges = family.children.mapNotNull { child -> lookup[child]?.let { Edge(i, it) } }.toMutableList()
+        val edges = family.children.mapNotNull { child -> lookup[child]?.let { Edge(i, it, false, "to") } }.toMutableList()
         if (family.soulMate != null && !found.contains(family.soulMate)) {
             found.add(family.soulMate)
             lookup[family.soulMate]?.let { edges.add(Edge(i, it, true)) }
