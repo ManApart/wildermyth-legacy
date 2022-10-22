@@ -440,7 +440,7 @@ private fun TagConsumer<HTMLElement>.relativeCard(mySnapshot: Character, relativ
 
 private fun TagConsumer<HTMLElement>.compatibilitySection(character: LegacyCharacter) {
     val me = character.snapshots.last()
-    val levelGroups = character.findAllFriends(10)
+    val levelGroups = getCharacters()
         .groupBy { me.getCompatibility(it.snapshots.last()) }
         .entries.sortedByDescending { it.key }
 
