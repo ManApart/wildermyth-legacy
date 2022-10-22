@@ -65,6 +65,7 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
         templateClean == "site" -> entry.roleMatch("site")
         templateClean == "hero" -> entry.roleMatch("hero")
         templateClean == "company" -> entry.roleMatch("company")
+        templateClean == "town" -> hometown
         templateClean == "hometown" -> hometown
         type == "awm" -> replaceAWM(resultOptions)
         type == "mf" -> replaceMF(resultOptions)
