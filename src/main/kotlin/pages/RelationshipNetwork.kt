@@ -37,19 +37,6 @@ class Edge(val from: Int, val to: Int, val dashes: Boolean = false, val arrows: 
 
 class Data(val nodes: dynamic, val edges: dynamic)
 
-//TODO - build out an actual table / page in own file
-fun buildCompatibilityTable(character: LegacyCharacter) {
-    val me = character.snapshots.last()
-    findAllFriends(character, 10)
-        .map { it.snapshots.last() }
-        .groupBy { me.getCompatibility(it) }
-        .entries.sortedByDescending { it.key }
-        .forEach { (level, friends) ->
-            val names = friends.joinToString(", ") { it.name }
-            println("${me.name} is $level with $names")
-        }
-}
-
 fun buildRelationshipNetwork(character: LegacyCharacter, familyOnly: Boolean = false, depth: Int = getDepth()) {
     val snapshot = character.snapshots.last()
     clearSections()
@@ -110,49 +97,13 @@ private fun buildPage(character: LegacyCharacter, familyOnly: Boolean) {
 private fun buildNetwork(character: LegacyCharacter, familyOnly: Boolean, depth: Int) {
     val container = el("relationship-network-canvas") as HTMLElement
 
-    val friends = if (familyOnly) findAllRelatives(character, depth) else findAllFriends(character, depth)
+    val friends = if (familyOnly) character.findAllRelatives(depth) else character.findAllFriends(depth)
     Promise.all(friends.map { getCroppedHeadWithId(it, 35.0, 45.0, 120.0, 135.0) }.toTypedArray()).then { heads ->
         val (nodeLookup, nodes) = buildNodes(friends, heads.toMap())
         val edges = if (familyOnly) buildFamilyEdges(friends) else buildFriendEdges(friends)
 
         buildNetwork(container, nodeLookup, nodes, edges)
     }
-}
-
-
-private fun findAllFriends(character: LegacyCharacter, maxDepth: Int): Set<LegacyCharacter> {
-    val checked = mutableSetOf<LegacyCharacter>()
-    val newOptions = ArrayDeque<Pair<LegacyCharacter, Int>>()
-    newOptions.add(Pair(character, -1))
-    while (newOptions.size > 0) {
-        val (option, depth) = newOptions.removeFirst()
-        checked.add(option)
-        if (depth < maxDepth) {
-            val deeper = depth + 1
-            val friends = option.friendships.mapNotNull { getCharacter(it.relativeId) }
-            newOptions.addAll(friends.filterNot { checked.contains(it) }.map { Pair(it, deeper) })
-        }
-    }
-
-    return checked
-}
-
-private fun findAllRelatives(character: LegacyCharacter, maxDepth: Int): Set<LegacyCharacter> {
-    val checked = mutableSetOf<LegacyCharacter>()
-    val newOptions = ArrayDeque<Pair<LegacyCharacter, Int>>()
-    newOptions.add(Pair(character, -1))
-    while (newOptions.size > 0) {
-        val (option, depth) = newOptions.removeFirst()
-        checked.add(option)
-        if (depth < maxDepth) {
-            val deeper = depth + 1
-            val family = option.snapshots.last().family
-            val relatives = (family.parents + family.children + listOfNotNull(family.soulMate)).mapNotNull { getCharacter(it) }
-            newOptions.addAll(relatives.filterNot { checked.contains(it) }.map { Pair(it, deeper) })
-        }
-    }
-
-    return checked
 }
 
 private fun buildNodes(friends: Set<LegacyCharacter>, headLookup: Map<String, String?>): Pair<Map<Int, LegacyCharacter>, Array<Node>> {

@@ -54,6 +54,7 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
             } else {
                 friendshipSection(character, snapshot)
             }
+            compatibilitySection(character)
             gearSection(snapshot)
             customHistorySection(additionalInfo)
             gameHistorySection(snapshot)
@@ -388,18 +389,10 @@ private fun TagConsumer<HTMLElement>.familyHeader(character: LegacyCharacter) {
 private fun TagConsumer<HTMLElement>.relationshipHeader(character: LegacyCharacter) {
     h2("relationship-header") {
         +"Relationships"
-        onClickFunction = { buildRelationshipNetwork(character ) }
+        onClickFunction = { buildRelationshipNetwork(character) }
         img {
             classes = setOf("network-image")
             src = "images/network.png"
-        }
-        img {
-            classes = setOf("network-image")
-            src = "images/heart.svg"
-            onClickFunction = { e ->
-                e.stopPropagation()
-                buildCompatibilityTable(character )
-            }
         }
     }
 }
@@ -442,6 +435,33 @@ private fun TagConsumer<HTMLElement>.relativeCard(mySnapshot: Character, relativ
             p { +relativeUuid }
         }
     }
+}
+
+private fun TagConsumer<HTMLElement>.compatibilitySection(character: LegacyCharacter) {
+    val me = character.snapshots.last()
+    val levelGroups = character.findAllFriends(10)
+        .groupBy { me.getCompatibility(it.snapshots.last()) }
+        .entries.sortedByDescending { it.key }
+
+    div("compatibility") {
+        levelGroups.forEach { (level, friends) ->
+            div("compatibility-row") {
+                h4 { +"Compatibility $level" }
+                friends.forEach { friend ->
+                    getPicture("${friend.uuid}/head")?.let { picture ->
+                        div("company-friend-pic-wrapper") {
+                            img(classes = "company-friend-pic") {
+                                src = picture
+                                alt = friend.snapshots.last().name
+                                onClickFunction = { characterDetail(friend) }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 private fun TagConsumer<HTMLElement>.companyCard(companyId: String) {

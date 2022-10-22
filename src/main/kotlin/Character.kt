@@ -15,6 +15,41 @@ data class LegacyCharacter(
     private fun getFriendships(): List<Friendship> {
         return snapshots.flatMap { it.friendships }.groupBy { it.relativeId }.map { (_, options) -> options.maxBy { it.level } }
     }
+
+    fun findAllFriends(maxDepth: Int): Set<LegacyCharacter> {
+        val checked = mutableSetOf<LegacyCharacter>()
+        val newOptions = ArrayDeque<Pair<LegacyCharacter, Int>>()
+        newOptions.add(Pair(this, -1))
+        while (newOptions.size > 0) {
+            val (option, depth) = newOptions.removeFirst()
+            checked.add(option)
+            if (depth < maxDepth) {
+                val deeper = depth + 1
+                val friends = option.friendships.mapNotNull { getCharacter(it.relativeId) }
+                newOptions.addAll(friends.filterNot { checked.contains(it) }.map { Pair(it, deeper) })
+            }
+        }
+
+        return checked
+    }
+
+    fun findAllRelatives(maxDepth: Int): Set<LegacyCharacter> {
+        val checked = mutableSetOf<LegacyCharacter>()
+        val newOptions = ArrayDeque<Pair<LegacyCharacter, Int>>()
+        newOptions.add(Pair(this, -1))
+        while (newOptions.size > 0) {
+            val (option, depth) = newOptions.removeFirst()
+            checked.add(option)
+            if (depth < maxDepth) {
+                val deeper = depth + 1
+                val family = option.snapshots.last().family
+                val relatives = (family.parents + family.children + listOfNotNull(family.soulMate)).mapNotNull { getCharacter(it) }
+                newOptions.addAll(relatives.filterNot { checked.contains(it) }.map { Pair(it, deeper) })
+            }
+        }
+
+        return checked
+    }
 }
 
 @Serializable
