@@ -27,6 +27,7 @@ import saveAdditionalInfo
 import kotlin.js.Date
 import kotlinx.serialization.encodeToString
 import org.w3c.dom.events.KeyboardEvent
+import kotlin.math.abs
 
 private lateinit var currentCharacter: LegacyCharacter
 fun characterDetail(character: LegacyCharacter, snapshot: Character = character.snapshots.last(), showAggregates: Boolean = true) {
@@ -443,10 +444,19 @@ private fun TagConsumer<HTMLElement>.compatibilitySection(character: LegacyChara
         .groupBy { me.getCompatibility(it.snapshots.last()) }
         .entries.sortedByDescending { it.key }
 
-    div("compatibility") {
+    div("character-section") {
+        id = "compatibility-section"
+        h2 { +"Compatibility" }
         levelGroups.forEach { (level, friends) ->
             div("compatibility-row") {
-                h4 { +"Compatibility $level" }
+                div {
+                    repeat(abs(level)) {
+                        img {
+                            classes = setOf("compatibility-image")
+                            src = if (level > 0) "images/heart.svg" else "images/zap.svg"
+                        }
+                    }
+                }
                 friends.forEach { friend ->
                     getPicture("${friend.uuid}/head")?.let { picture ->
                         div("company-friend-pic-wrapper") {
