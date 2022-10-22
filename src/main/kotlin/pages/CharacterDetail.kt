@@ -393,6 +393,14 @@ private fun TagConsumer<HTMLElement>.relationshipHeader(character: LegacyCharact
             classes = setOf("network-image")
             src = "images/network.png"
         }
+        img {
+            classes = setOf("network-image")
+            src = "images/heart.svg"
+            onClickFunction = { e ->
+                e.stopPropagation()
+                buildCompatibilityTable(character )
+            }
+        }
     }
 }
 

@@ -6,6 +6,7 @@ import VisData
 import clearSections
 import el
 import getCharacter
+import getCompatibility
 import getCroppedHeadWithId
 import getDepth
 import kotlinx.browser.document
@@ -35,6 +36,19 @@ class Edge(val from: Int, val to: Int, val dashes: Boolean = false, val arrows: 
 }
 
 class Data(val nodes: dynamic, val edges: dynamic)
+
+//TODO - build out an actual table / page in own file
+fun buildCompatibilityTable(character: LegacyCharacter) {
+    val me = character.snapshots.last()
+    findAllFriends(character, 10)
+        .map { it.snapshots.last() }
+        .groupBy { me.getCompatibility(it) }
+        .entries.sortedByDescending { it.key }
+        .forEach { (level, friends) ->
+            val names = friends.joinToString(", ") { it.name }
+            println("${me.name} is $level with $names")
+        }
+}
 
 fun buildRelationshipNetwork(character: LegacyCharacter, familyOnly: Boolean = false, depth: Int = getDepth()) {
     val snapshot = character.snapshots.last()
