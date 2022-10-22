@@ -115,6 +115,7 @@ fun loadMemory(): Promise<*> {
         if (persisted != null && persisted != undefined) {
             inMemoryStorage = jsonMapper.decodeFromString(persisted as String)
             inMemoryStorage.characters.values.forEach { legacyCharacter -> legacyCharacter.snapshots.forEach { it.reload() } }
+            inMemoryStorage.companyByGameId = inMemoryStorage.companies.values.associateBy { it.gameId }
         }
     }
 }
