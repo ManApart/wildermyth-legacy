@@ -1,3 +1,4 @@
+import LocalForage.config
 import kotlinx.browser.localStorage
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -94,6 +95,7 @@ fun saveStoryProps(props: Map<String, String>) {
 }
 
 fun createDB() {
+    config(LocalForageConfig("wildermyth-legacy"))
 }
 
 fun persistMemory() {
