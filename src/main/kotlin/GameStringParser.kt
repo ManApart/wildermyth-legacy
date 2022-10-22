@@ -74,7 +74,7 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
         type == "personality" -> replacePersonality(typeOptions, resultOptions)
         typeOptions.any { it in personalityNames } -> replacePersonality(typeOptions, resultOptions)
         else -> {
-            println("$name encountered unknown type: $type")
+            println("$name encountered unknown type: $type. Using ${resultOptions.last()}")
             println(jsonMapper.encodeToString(entry))
             resultOptions.last()
         }

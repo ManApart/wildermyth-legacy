@@ -159,12 +159,21 @@ data class Character(
                 getBioString("origin"),
                 getBioString("dote"),
                 getBioString("mote"),
-            ).joinToString(" ")
+            ).joinToString(" ").ifBlank {
+                getBioString("villain") ?: getBioStringContains("custom") ?: ""
+            }
         }
     }
 
     private fun getBioString(startsWith: String): String? {
         val entry = history.firstOrNull { it.id.startsWith(startsWith) }
+        return if (entry != null) {
+            getStoryProp(entry.id)?.let { storyProp -> interpolate(storyProp, entry) }
+        } else null
+    }
+
+    private fun getBioStringContains(contains: String): String? {
+        val entry = history.firstOrNull { it.id.contains(contains, ignoreCase = true) }
         return if (entry != null) {
             getStoryProp(entry.id)?.let { storyProp -> interpolate(storyProp, entry) }
         } else null
