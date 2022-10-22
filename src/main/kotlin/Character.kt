@@ -20,6 +20,7 @@ data class LegacyCharacter(
 @Serializable
 data class Character(
     val uuid: String,
+    val gameId: String,
     val name: String,
     val aspects: List<Aspect> = listOf(),
     val temporal: Map<String, Int> = mapOf(),

@@ -4,14 +4,12 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
-import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.get
 import org.w3c.dom.set
 import org.w3c.files.Blob
 import org.w3c.files.FileReader
 import kotlin.js.Promise
-import kotlin.js.Promise.Companion.resolve
 
 @Serializable
 data class InMemoryStorage(
@@ -20,7 +18,11 @@ data class InMemoryStorage(
     val additionalInfo: MutableMap<String, AdditionalInfo> = mutableMapOf(),
     var companies: Map<String, Company> = mapOf(),
     var storyProps: Map<String, String> = mapOf(),
-)
+) {
+    @Transient
+    var companyByGameId = mapOf<String, Company>()
+
+}
 
 private var inMemoryStorage = InMemoryStorage()
 var characterCards: Map<String, HTMLElement> = mapOf()
@@ -56,7 +58,7 @@ fun savePicture(path: String, blob: Blob): Promise<Unit> {
     }
 }
 
-fun savePicture(path: String, content: String){
+fun savePicture(path: String, content: String) {
     inMemoryStorage.pictures[path] = content
 }
 
@@ -79,11 +81,16 @@ fun saveAdditionalInfo(info: AdditionalInfo) {
 }
 
 fun getCompany(uuid: String): Company {
-    return inMemoryStorage.companies[uuid] ?: Company(uuid, 0.0, "Unknown")
+    return inMemoryStorage.companies[uuid] ?: Company(uuid, "Unknown", 0.0, "Unknown")
+}
+
+fun getCompanyForGameId(uuid: String): Company {
+    return inMemoryStorage.companyByGameId[uuid] ?: Company(uuid, "Unknown", 0.0, "Unknown")
 }
 
 fun saveCompanies(companies: Map<String, Company>) {
     inMemoryStorage.companies = companies.toMap()
+    inMemoryStorage.companyByGameId = companies.values.associateBy { it.gameId }
 }
 
 fun getStoryProp(id: String): String? {

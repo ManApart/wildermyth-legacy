@@ -12,6 +12,7 @@ import getAdditionalInfo
 import getCharacter
 import getCharacters
 import getCompany
+import getCompanyForGameId
 import getCroppedHead
 import getPicture
 import jsonMapper
@@ -90,7 +91,8 @@ private fun TagConsumer<HTMLElement>.buildNav(character: LegacyCharacter, showAg
                 id = "snapshot-select"
                 character.snapshots.forEach {
                     option {
-                        +"${it.name}: ${it.age}yrs"
+                        val company = getCompanyForGameId(it.gameId)
+                        +company.name
                         selected = showAggregates == false && snapshot == it
                     }
                 }

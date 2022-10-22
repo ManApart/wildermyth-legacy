@@ -78,6 +78,7 @@ data class Family(val soulMate: String? = null, val parents: List<String> = list
 @Serializable
 data class Company(
     val id: String,
+    val gameId: String,
     val date: Double,
     val name: String,
     val mainThreat: String = "Unknown",

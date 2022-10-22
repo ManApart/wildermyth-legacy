@@ -112,6 +112,7 @@ fun parseLegacyCharacter(json: Json): LegacyCharacter {
 }
 
 fun parseCharacter(uuid: String, json: Json): Character? {
+    val gameId = (json["gameId"] as Json)["value"] as String
     val allEntities = (json["entities"] as Array<Array<Json>>)
     val characterEntities = allEntities.firstOrNull { it[0]["value"] == uuid }
         ?: return null.also { println("No character entities found for $uuid") }
@@ -126,7 +127,7 @@ fun parseCharacter(uuid: String, json: Json): Character? {
     val history = rawHistory.map { parseHistoryEntry(it) }
     val gear = parseGear(allEntities)
 
-    return Character(uuid, name, aspects, temporal, history, gear)
+    return Character(uuid, gameId, name, aspects, temporal, history, gear)
 }
 
 private fun parseCompanies(json: Json, uuid: String): List<String> {
@@ -136,7 +137,8 @@ private fun parseCompanies(json: Json, uuid: String): List<String> {
                 val name = companyJson["companyName"] as String
                 val date = companyJson["date"] as Double
                 val mainThreat = companyJson["mainThreat"] as String
-                companies[companyId] = Company(companyId, date, name, mainThreat)
+                val gameId = ((companyJson["gameId"] as Json)["value"] as String)
+                companies[companyId] = Company(companyId, gameId, date, name, mainThreat)
             }
             companies[companyId]?.characters?.add(uuid)
         }
