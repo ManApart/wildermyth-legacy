@@ -16,8 +16,6 @@ import kotlinx.dom.removeClass
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
-import kotlinx.html.js.h1
-import kotlinx.html.js.img
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
@@ -25,7 +23,6 @@ import org.w3c.dom.HTMLImageElement
 import saveAdditionalInfo
 import saveSearch
 import searchOptions
-import kotlin.js.Promise
 
 
 fun displayCharacters() {
@@ -128,12 +125,12 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot:
             img {
                 classes = setOf("favorite-image")
                 id = character.uuid + "-star"
-                src = if (info.favorite) "./star-active.png" else "./star.png"
+                src = if (info.favorite) "images/star-active.png" else "images/star.png"
                 onClickFunction = { e ->
                     e.stopPropagation()
                     info.favorite = !info.favorite
                     saveAdditionalInfo(info)
-                    (document.getElementById(character.uuid + "-star") as HTMLImageElement).src = if (info.favorite) "./star-active.png" else "./star.png"
+                    (document.getElementById(character.uuid + "-star") as HTMLImageElement).src = if (info.favorite) "images/star-active.png" else "images/star.png"
                 }
             }
             h1 {
@@ -195,12 +192,12 @@ fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snaps
             img {
                 classes = setOf("favorite-image")
                 id = character.uuid + "-star"
-                src = if (info.favorite) "./star-active.png" else "./star.png"
+                src = if (info.favorite) "images/star-active.png" else "images/star.png"
                 onClickFunction = { e ->
                     e.stopPropagation()
                     info.favorite = !info.favorite
                     saveAdditionalInfo(info)
-                    (document.getElementById(character.uuid + "-star") as HTMLImageElement).src = if (info.favorite) "./star-active.png" else "./star.png"
+                    (document.getElementById(character.uuid + "-star") as HTMLImageElement).src = if (info.favorite) "images/star-active.png" else "images/star.png"
                 }
             }
         }

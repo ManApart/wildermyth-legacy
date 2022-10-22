@@ -380,7 +380,7 @@ private fun TagConsumer<HTMLElement>.familyHeader(character: LegacyCharacter) {
         onClickFunction = { buildRelationshipNetwork(character, true) }
         img {
             classes = setOf("network-image")
-            src = "./network.png"
+            src = "images/network.png"
         }
     }
 }
@@ -391,7 +391,7 @@ private fun TagConsumer<HTMLElement>.relationshipHeader(character: LegacyCharact
         onClickFunction = { buildRelationshipNetwork(character ) }
         img {
             classes = setOf("network-image")
-            src = "./network.png"
+            src = "images/network.png"
         }
     }
 }
