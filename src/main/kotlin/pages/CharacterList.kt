@@ -60,17 +60,27 @@ private fun List<LegacyCharacter>.filterSearch(searchText: String): List<LegacyC
 
 private fun filterCharacters(initial: List<LegacyCharacter>, searchText: String): List<LegacyCharacter> {
     return initial.filter { character ->
-        val latest = character.snapshots.last()
-        character.snapshots.any {
-            it.classLevel
-            it.name.lowercase().contains(searchText)
-        } ||
-                character.snapshots.flatMap { it.aspects }.any { it.name.lowercase().contains(searchText) } ||
-                latest.classLevel.takeIf { it != undefined }?.name?.lowercase()?.contains(searchText) ?: false ||
-                latest.personalityFirst.name.lowercase().contains(searchText) ||
-                latest.personalitySecond.name.lowercase().contains(searchText)
-
+        characterFilter(character, searchText)
+                || latestFilter(character.snapshots.last(), searchText)
+                || snapshotsFilter(character.snapshots, searchText)
     }
+}
+
+private fun characterFilter(character: LegacyCharacter, searchText: String): Boolean {
+    return character.legacyTierLevel.format().lowercase().contains(searchText)
+}
+
+private fun snapshotsFilter(snapshots: Array<Character>, searchText: String): Boolean {
+    return snapshots.any { snapshot ->
+        snapshot.name.lowercase().contains(searchText)
+                || snapshot.aspects.any { it.name.lowercase().contains(searchText) }
+    }
+}
+
+private fun latestFilter(latest: Character, searchText: String): Boolean {
+    return latest.classLevel.takeIf { it != undefined }?.name?.lowercase()?.contains(searchText) ?: false ||
+            latest.personalityFirst.name.lowercase().contains(searchText) ||
+            latest.personalitySecond.name.lowercase().contains(searchText)
 }
 
 fun filterCharacterDoms(characters: List<LegacyCharacter>) {
@@ -157,7 +167,7 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot:
             }
             div("character-summary") {
                 val npc = if (character.npc) " (npc)" else ""
-                +"$age year old ${classLevel.format()} ${className.capitalize()}$npc"
+                +"$age year old ${classLevel.format()} ${className.capitalize()} ${legacyTierLevel.format()}$npc"
             }
             div("character-bio") {
                 +bio
@@ -205,7 +215,7 @@ fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snaps
 }
 
 fun Enum<*>.format(): String {
-    return if (this == undefined) "" else name.lowercase().capitalize()
+    return if (this == undefined) "" else name.split("_").joinToString(" ") { it.lowercase().capitalize() }
 }
 
 fun String.format(): String {

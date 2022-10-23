@@ -16,6 +16,13 @@ data class LegacyCharacter(
         return snapshots.flatMap { it.friendships }.groupBy { it.relativeId }.map { (_, options) -> options.maxBy { it.level } }
     }
 
+    @Transient
+    val legacyTierLevel = getLegacyTierLevel()
+
+    private fun getLegacyTierLevel(): LegacyTierLevel {
+        return snapshots.maxByOrNull { it.legacyTierLevel.ordinal }?.legacyTierLevel ?: LegacyTierLevel.FOLK_HERO
+    }
+
     fun findAllFriends(maxDepth: Int): Set<LegacyCharacter> {
         val checked = mutableSetOf<LegacyCharacter>()
         val newOptions = ArrayDeque<Pair<LegacyCharacter, Int>>()
@@ -98,6 +105,17 @@ data class Character(
 
     @Transient
     private var classLevelBacking = parseClassLevel()
+
+    val legacyTierLevel: LegacyTierLevel
+        get() {
+            if (legacyTierLevelBacking == undefined) {
+                legacyTierLevelBacking = parseLegacyTierLevel()
+            }
+            return legacyTierLevelBacking
+        }
+
+    @Transient
+    private var legacyTierLevelBacking = parseLegacyTierLevel()
 
     @Transient
     val age = getAge()
@@ -187,6 +205,11 @@ data class Character(
     private fun parseClassLevel(): ClassLevel {
         val level = aspects.firstOrNull { it.name == "classLevel" }?.values?.get(1)?.toIntOrNull() ?: 0
         return classLevelFromInt(level)
+    }
+
+    private fun parseLegacyTierLevel(): LegacyTierLevel {
+        val level = history.filter { it.id.startsWith("legacyHero.tier_") }.mapNotNull { it.id.substring("legacyHero.tier_".length).toIntOrNull() }.maxOrNull() ?: 0
+        return legacyTierLevelFromInt(level)
     }
 
     private fun getAge(): Int {

@@ -6,6 +6,10 @@ enum class ClassLevel { GREENHORN, BLOODHORN, BLUEHORN, BRONZEHORN, SILVERHORN, 
 
 fun classLevelFromInt(level: Int) = ClassLevel.values()[level]
 
+enum class LegacyTierLevel { FOLK_HERO, LOCAL_LEGEND, FABLED_ADVENTURER, BALLADSUNG_HERO, MYTHWALKER }
+
+fun legacyTierLevelFromInt(level: Int) = LegacyTierLevel.values()[level]
+
 enum class Personality { BOOKISH, COWARD, GOOFBALL, HEALER, HOTHEAD, LEADER, LONER, GREEDY, POET, ROMANTIC, SNARK }
 
 val personalityNames = Personality.values().map { it.name.lowercase() }
