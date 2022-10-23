@@ -182,7 +182,10 @@ private fun changeSnapshot(snapshotI: Int, character: LegacyCharacter) {
 fun TagConsumer<HTMLElement>.customHistorySection(additionalInfo: AdditionalInfo) {
     div("character-section") {
         id = "custom-history-entries"
-        h2 { +"Journal" }
+        h2 {
+            +"Journal"
+            title = "Add your own notes here. They're saved to your browser. You can also export them from the main page to save them locally or transfer them to another browser."
+        }
         additionalInfo.history.forEachIndexed { i, entry ->
             div("custom-history-entry") {
 
@@ -379,6 +382,7 @@ fun TagConsumer<HTMLElement>.friendshipSection(character: LegacyCharacter, snaps
 private fun TagConsumer<HTMLElement>.familyHeader(character: LegacyCharacter) {
     h2("relationship-header") {
         +"Family"
+        title = "${character.snapshots.last().name}'s family. Click to see a family tree."
         onClickFunction = { buildRelationshipNetwork(character, true) }
         img {
             classes = setOf("network-image")
@@ -390,6 +394,7 @@ private fun TagConsumer<HTMLElement>.familyHeader(character: LegacyCharacter) {
 private fun TagConsumer<HTMLElement>.relationshipHeader(character: LegacyCharacter) {
     h2("relationship-header") {
         +"Relationships"
+        title = "Highest relationship levels that ${character.snapshots.last().name} has formed. Click to explore a network map."
         onClickFunction = { buildRelationshipNetwork(character) }
         img {
             classes = setOf("network-image")
@@ -446,7 +451,10 @@ private fun TagConsumer<HTMLElement>.compatibilitySection(character: LegacyChara
 
     div("character-section") {
         id = "compatibility-section"
-        h2 { +"Compatibility" }
+        h2 {
+            +"Compatibility"
+            title = "How compatible ${me.name} is with other characters. More hearts means faster friendship and love. More lightning bolts means faster becoming rivals."
+        }
         levelGroups.forEach { (level, friends) ->
             div("compatibility-row") {
                 div {
