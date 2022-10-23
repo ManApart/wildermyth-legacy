@@ -208,7 +208,7 @@ data class Character(
     }
 
     private fun parseLegacyTierLevel(): LegacyTierLevel {
-        val level = history.filter { it.id.startsWith("legacyHero.tier_") }.mapNotNull { it.id.substring("legacyHero.tier_".length).toIntOrNull() }.maxOrNull() ?: 0
+        val level = aspects.filter { it.name == "legacyTier" && it.values.isNotEmpty() }.maxOfOrNull { it.values.first().toIntOrNull() ?: 0 } ?: 0
         return legacyTierLevelFromInt(level)
     }
 

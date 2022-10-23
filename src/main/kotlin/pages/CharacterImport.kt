@@ -155,7 +155,7 @@ private fun parseKillCount(json: Json): Int {
 
 private fun parseAspects(base: Json): List<Aspect> {
     val aspectJson = (base["aspects"] as Json)["entries"] as Array<Array<Any>>
-    val stringAspects = aspectJson.flatten().filterIsInstance<String>()
+    val stringAspects = aspectJson.map { it.last() as Json }.filter { it["aspect"] != null }
     return stringAspects.map { it.toAspect() }
 }
 
@@ -164,11 +164,36 @@ private fun parseTemporal(base: Json): Map<String, Int> {
     return temporalJson.associate { values -> values.first() as String to values.last() as Int }
 }
 
+fun Json.toAspect(): Aspect {
+    val id = (this["aspect"] as String?) ?: ""
+    val value = listOfNotNull((this["value"] as Int?)?.toString())
+    return when {
+        id.contains("|") -> {
+            val parts = id.split("|")
+            Aspect(parts.first(), parts.subList(1, parts.size) + value)
+        }
+        id.contains(":") -> {
+            val parts = id.split(":")
+            Aspect(parts.first(), parts.subList(1, parts.size) + value)
+        }
+        else -> Aspect(id, value)
+    }
+}
+
 fun String.toAspect(): Aspect {
-    return if (contains("|")) {
-        val parts = this.split("|")
-        Aspect(parts.first(), parts.subList(1, parts.size))
-    } else Aspect(this)
+    return when {
+        contains("|") -> {
+            val parts = this.split("|")
+            Aspect(parts.first(), parts.subList(1, parts.size))
+        }
+
+        contains(":") -> {
+            val parts = this.split(":")
+            Aspect(parts.first(), parts.subList(1, parts.size))
+        }
+
+        else -> Aspect(this)
+    }
 }
 
 private fun parseHistoryEntry(base: Json): HistoryEntry {
