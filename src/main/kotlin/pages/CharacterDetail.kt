@@ -121,7 +121,9 @@ private fun TagConsumer<HTMLElement>.buildNav(character: LegacyCharacter, showAg
 
 fun onKeyDown(key: KeyboardEvent) {
     if (window.location.hash.contains("detail")) {
-        key.preventDefault()
+        if (key.key in listOf("ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown")) {
+            key.preventDefault()
+        }
     }
 }
 
