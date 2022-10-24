@@ -40,12 +40,6 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
     window.history.pushState(null, "null", "#detail/" + character.uuid)
     setFavicon(character)
 
-    character.snapshots.forEach { snapshot ->
-        snapshot.aspects.filter { it.name == "legacyTier" }.forEach {
-            println(it.values.first())
-        }
-    }
-
     section.append {
         buildNav(character, showAggregates, snapshot)
         div {

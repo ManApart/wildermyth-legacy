@@ -235,7 +235,7 @@ data class Character(
     private fun getFamily(): Family {
         val parents = aspects.filter { it.name == "childOf" }.map { it.values.first() }
         val children = aspects.filter { it.name == "parentOf" }.map { it.values.first() }
-        val lover = aspects.firstOrNull { it.name == "lockedRelationship" && it.values.first() == "lover" }?.values?.last()
+        val lover = aspects.firstOrNull { it.name == "lockedRelationship" && it.values.first() == "lover" }?.values?.get(1)
         return Family(lover, parents, children)
     }
 
@@ -244,7 +244,7 @@ data class Character(
         return relationships.mapNotNull { friendship ->
             val level = friendship.name.last().digitToIntOrNull()
             val kind = FriendshipKind.values().firstOrNull { friendship.name.contains(it.name.lowercase()) }
-            val relativeId = friendship.values.last()
+            val relativeId = friendship.values.first()
             if (level == null || kind == null) return@mapNotNull null
             Friendship(relativeId, kind, level)
         }
