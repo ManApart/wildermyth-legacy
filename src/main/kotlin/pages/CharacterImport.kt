@@ -11,11 +11,13 @@ import HistoryEntryRaw
 import JSZip
 import JsonObject
 import LegacyCharacter
+import LegacyTierLevel
 import doRouting
 import getCharacters
 import getCroppedHead
 import jsonMapper
 import kotlinx.serialization.decodeFromString
+import legacyTierLevelFromInt
 import org.khronos.webgl.ArrayBuffer
 import org.w3c.files.Blob
 import persistMemory
@@ -106,9 +108,10 @@ fun parseLegacyCharacter(json: Json): LegacyCharacter {
     val snapshots = (json["snapshots"] as Array<Json>).mapNotNull { parseCharacter(uuid, it) }.toTypedArray()
     val companyIds = parseCompanies(json, uuid)
     val isNPC = (json["usage"] as String? == "background")
+    val tier = legacyTierLevelFromInt(json["tier"] as Int? ?: 0)
 
     val killCount = parseKillCount(json)
-    return LegacyCharacter(uuid, snapshots, companyIds, isNPC, killCount)
+    return LegacyCharacter(uuid, snapshots, companyIds, isNPC, tier, killCount, JSON.stringify(json))
 }
 
 fun parseCharacter(uuid: String, json: Json): Character? {
@@ -172,10 +175,12 @@ fun Json.toAspect(): Aspect {
             val parts = id.split("|")
             Aspect(parts.first(), parts.subList(1, parts.size) + value)
         }
+
         id.contains(":") -> {
             val parts = id.split(":")
             Aspect(parts.first(), parts.subList(1, parts.size) + value)
         }
+
         else -> Aspect(id, value)
     }
 }

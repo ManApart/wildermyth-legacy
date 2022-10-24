@@ -113,6 +113,9 @@ private fun TagConsumer<HTMLElement>.buildNav(character: LegacyCharacter, showAg
             id = "log-button"
             +"Log Detail"
             onClickFunction = {
+                println("Raw Json (not saved; only exists after import):")
+                println(character.rawJson)
+                println("Parsed Character:")
                 println(jsonMapper.encodeToString(character))
             }
         }

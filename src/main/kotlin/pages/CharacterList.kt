@@ -167,7 +167,7 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot:
             }
             div("character-summary") {
                 val npc = if (character.npc) " (npc)" else ""
-                +"$age year old ${classLevel.format()} ${className.capitalize()} ${legacyTierLevel.format()}$npc"
+                +"$age year old ${classLevel.format()} ${className.capitalize()} ${character.legacyTierLevel.format()}$npc"
             }
             div("character-bio") {
                 +bio

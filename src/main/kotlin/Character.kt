@@ -7,20 +7,16 @@ data class LegacyCharacter(
     val snapshots: Array<Character>,
     val companyIds: List<String> = listOf(),
     val npc: Boolean = false,
+    val legacyTierLevel: LegacyTierLevel = LegacyTierLevel.FOLK_HERO,
     val killCount: Int = 0,
+    @Transient
+    val rawJson: String? = null,
 ) {
     @Transient
     val friendships = getFriendships()
 
     private fun getFriendships(): List<Friendship> {
         return snapshots.flatMap { it.friendships }.groupBy { it.relativeId }.map { (_, options) -> options.maxBy { it.level } }
-    }
-
-    @Transient
-    val legacyTierLevel = getLegacyTierLevel()
-
-    private fun getLegacyTierLevel(): LegacyTierLevel {
-        return snapshots.maxByOrNull { it.legacyTierLevel.ordinal }?.legacyTierLevel ?: LegacyTierLevel.FOLK_HERO
     }
 
     fun findAllFriends(maxDepth: Int): Set<LegacyCharacter> {
@@ -105,17 +101,6 @@ data class Character(
 
     @Transient
     private var classLevelBacking = parseClassLevel()
-
-    val legacyTierLevel: LegacyTierLevel
-        get() {
-            if (legacyTierLevelBacking == undefined) {
-                legacyTierLevelBacking = parseLegacyTierLevel()
-            }
-            return legacyTierLevelBacking
-        }
-
-    @Transient
-    private var legacyTierLevelBacking = parseLegacyTierLevel()
 
     @Transient
     val age = getAge()
@@ -205,11 +190,6 @@ data class Character(
     private fun parseClassLevel(): ClassLevel {
         val level = aspects.firstOrNull { it.name == "classLevel" }?.values?.get(1)?.toIntOrNull() ?: 0
         return classLevelFromInt(level)
-    }
-
-    private fun parseLegacyTierLevel(): LegacyTierLevel {
-        val level = aspects.filter { it.name == "legacyTier" && it.values.isNotEmpty() }.maxOfOrNull { it.values.first().toIntOrNull() ?: 0 } ?: 0
-        return legacyTierLevelFromInt(level)
     }
 
     private fun getAge(): Int {
