@@ -1,5 +1,6 @@
 package pages
 
+import characterSearch
 import getAdditionalInfo
 import getCharacters
 import jsonMapper
