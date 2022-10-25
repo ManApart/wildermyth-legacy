@@ -71,9 +71,8 @@ data class HistoryRelationshipRaw(
     fun parse() = HistoryRelationship(name, other?.value, role, gender)
 }
 
-
 @Serializable
-data class AdditionalInfo(val uuid: String, var favorite: Boolean = false, val history: MutableList<HistoryEntry> = mutableListOf())
+data class AdditionalInfo(val uuid: String, var favorite: Boolean = false, val tags: MutableSet<String> = mutableSetOf(), val history: MutableList<HistoryEntry> = mutableListOf())
 
 data class Family(val soulMate: String? = null, val parents: List<String> = listOf(), val children: List<String> = listOf()) {
     val all = listOfNotNull(soulMate) + parents + children

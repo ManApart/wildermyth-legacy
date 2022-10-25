@@ -72,5 +72,6 @@ fun clearSections() {
     el("nav").innerHTML = ""
 }
 
-
+//TODO - replace this with the typed version below
 fun el(id: String) = document.getElementById(id)!!
+fun <T> el(id: String) = document.getElementById(id) as T

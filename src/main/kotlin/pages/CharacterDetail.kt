@@ -7,6 +7,7 @@ import Gear
 import HistoryEntry
 import LegacyCharacter
 import clearSections
+import el
 import favicon
 import getAdditionalInfo
 import getCharacter
@@ -18,6 +19,7 @@ import getPicture
 import jsonMapper
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.dom.clear
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.*
@@ -47,6 +49,7 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
             characterCard(character, snapshot, false)
             div("details-subsection") {
                 statsSection(character, snapshot)
+                tagsSection(additionalInfo)
                 companiesSection(character)
             }
             familySection(character, snapshot)
@@ -334,6 +337,67 @@ fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snap
                         td { +"Kills" }
                         td { +"${legacyCharacter.killCount}" }
                     }
+                }
+            }
+        }
+    }
+}
+
+fun TagConsumer<HTMLElement>.tagsSection(info: AdditionalInfo) {
+    div("character-section") {
+        id = "tags-section"
+        h2 { +"Tags" }
+        div {
+            id = "tag-display"
+            displayTags(info)
+        }
+        input {
+            id = "add-tag-input"
+            type = InputType.text
+            placeholder = "New tag"
+            onKeyUpFunction = { e ->
+                val key = (e as KeyboardEvent)
+                if (key.key == "Enter") {
+                    saveTag(info)
+                }
+            }
+        }
+        img {
+            src = "./images/plus-circle.svg"
+            onClickFunction = {
+                saveTag(info)
+            }
+        }
+    }
+}
+
+private fun saveTag(info: AdditionalInfo) {
+    val input = el<HTMLInputElement>("add-tag-input")
+    val display = el<HTMLDivElement>("tag-display")
+    val tag = input.value
+    if (tag.isNotBlank()) {
+        info.tags.add(tag)
+        input.value = ""
+        saveAdditionalInfo(info)
+        refreshTagDisplay(display, info)
+    }
+}
+
+private fun refreshTagDisplay(div: HTMLDivElement, info: AdditionalInfo) {
+    div.innerHTML = ""
+    div.append { displayTags(info) }
+}
+
+private fun TagConsumer<HTMLElement>.displayTags(info: AdditionalInfo) {
+    info.tags.forEach { tag ->
+        span("tag-label") {
+            +tag
+            img {
+                src = "./images/x-circle.svg"
+                onClickFunction = {
+                    info.tags.remove(tag)
+                    saveAdditionalInfo(info)
+                    refreshTagDisplay(el<HTMLDivElement>("tag-display"), info)
                 }
             }
         }
