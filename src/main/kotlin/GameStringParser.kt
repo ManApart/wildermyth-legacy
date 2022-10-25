@@ -61,10 +61,12 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
         templateClean == "name" -> name
         templateClean == "fullname" -> name
         templateClean == "firstname" -> name.split(" ").first()
+        templateClean == "lastname" -> name.split(" ").last()
         templateClean == "site" -> entry.roleMatch("site")
         templateClean == "overlandtile" -> entry.roleMatch("overlandtile")
         templateClean == "site" -> entry.roleMatch("site")
         templateClean == "hero" -> entry.roleMatch("hero")
+        templateClean == "mystic" -> entry.roleMatch("mystic")
         templateClean == "company" -> entry.roleMatch("company")
         templateClean == "town" -> hometown
         templateClean == "hometown" -> hometown
@@ -74,6 +76,7 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
         type.startsWith("npc") -> entry.roleMatch(type)
         type.startsWith("hook") -> entry.roleMatch(type)
         type == "personality" -> replacePersonality(typeOptions, resultOptions)
+        type == "personality2" -> replacePersonality(typeOptions, resultOptions, 1)
         typeOptions.any { it in personalityNames } -> replacePersonality(typeOptions, resultOptions)
         else -> {
             println("$name encountered unknown type: $type. Using ${resultOptions.last()}")
@@ -130,9 +133,8 @@ private fun Character.replaceAWM(resultOptions: List<String>): String {
     return if (attractedToWomen) resultOptions.first() else resultOptions.last()
 }
 
-private fun Character.replacePersonality(typeOptions: List<String>, resultOptions: List<String>): String {
-    val highest = typeOptions.maxByOrNull { personality[Personality.valueOf(it.uppercase())] ?: 0 }
-        ?: typeOptions.firstOrNull()
+private fun Character.replacePersonality(typeOptions: List<String>, resultOptions: List<String>, level: Int = 0): String {
+    val highest = typeOptions.sortedByDescending { personality[Personality.valueOf(it.uppercase())] ?: 0 }.getOrNull(level) ?: typeOptions.firstOrNull()
     if (highest == null){
         println("Null Personality for $name")
         return "personality"
