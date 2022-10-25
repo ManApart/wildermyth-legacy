@@ -1,4 +1,5 @@
 import kotlinx.serialization.encodeToString
+import kotlin.math.min
 
 interface Chunk {
     fun interpolate(character: Character, entry: HistoryEntry): String
@@ -136,7 +137,7 @@ private fun Character.replacePersonality(typeOptions: List<String>, resultOption
         println("Null Personality for $name")
         return "personality"
     }
-    val resultIndex = typeOptions.indexOf(highest)
+    val resultIndex = min(resultOptions.size-1, typeOptions.indexOf(highest))
     return resultOptions[resultIndex]
 }
 
