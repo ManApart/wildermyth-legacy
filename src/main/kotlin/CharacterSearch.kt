@@ -24,14 +24,6 @@ private fun List<LegacyCharacter>.filterSearch(searchText: String): List<LegacyC
     }
 }
 
-//I think using this could interfere with normal search.
-//EG if The Mystic Return is a company, searching 'mystic' would only return mystics in that company
-//To make it effective you'd need an or, but then wouldn't be able to filter out company characters
-private fun List<LegacyCharacter>.filterByCompanies(searchText: String): List<LegacyCharacter> {
-    val companyCharacters = getCompanies().filter { it.name.contains(searchText) }.flatMap { it.characters }
-    return if (companyCharacters.isEmpty()) this else filter { it.uuid in companyCharacters }
-}
-
 private fun filterCharacters(initial: List<LegacyCharacter>, searchText: String): List<LegacyCharacter> {
     return initial.filter { character ->
         characterFilter(character, searchText)
