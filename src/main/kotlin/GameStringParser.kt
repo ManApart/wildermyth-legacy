@@ -62,12 +62,7 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
         templateClean == "fullname" -> name
         templateClean == "firstname" -> name.split(" ").first()
         templateClean == "lastname" -> name.split(" ").last()
-        templateClean == "site" -> entry.roleMatch("site")
-        templateClean == "overlandtile" -> entry.roleMatch("overlandtile")
-        templateClean == "site" -> entry.roleMatch("site")
-        templateClean == "hero" -> entry.roleMatch("hero")
-        templateClean == "mystic" -> entry.roleMatch("mystic")
-        templateClean == "company" -> entry.roleMatch("company")
+        templateClean in listOf("site", "hero", "mystic", "hunter", "warrior", "company", "overlandtile") -> entry.roleMatch(templateClean)
         templateClean == "town" -> hometown
         templateClean == "hometown" -> hometown
         type == "awm" -> replaceAWM(resultOptions)

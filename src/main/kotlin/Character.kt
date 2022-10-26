@@ -165,7 +165,12 @@ data class Character(
             ).joinToString(" ").ifBlank {
                 getBioString("villain")
                     ?: getBioString("plot")
-                    ?: getBioStringContains("custom") ?: ""
+                    ?: getBioStringContains("custom")
+                    ?: listOfNotNull(
+                        getBioStringContains("origin"),
+                        getBioStringContains("dote"),
+                        getBioStringContains("mote"),
+                    ).joinToString(" ")
             }
         }
     }
