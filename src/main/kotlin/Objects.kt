@@ -107,7 +107,7 @@ data class CharacterSearchOptions(
     var searchText: String = "",
     var favoritesOnly: Boolean = false,
     var hideNPC: Boolean = false,
-    var listView: Boolean = false,
+    var listView: Boolean = true,
 )
 
 @Serializable

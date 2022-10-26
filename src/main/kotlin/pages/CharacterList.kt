@@ -143,11 +143,16 @@ fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snaps
                     }
                 }
 
-                h1 {
-                    +name
-                }
-                if (character.npc) {
-                    p("character-list-item-npc") { +"(npc)" }
+                div("character-list-info") {
+                    h1 {
+                        +name
+                    }
+                    if (character.npc) {
+                        p("character-list-item-npc") { +"(npc)" }
+                    }
+                    div("character-list-summary") {
+                        +"${characterClass.name.format()} ${character.legacyTierLevel.format()}"
+                    }
                 }
             }
             val info = getAdditionalInfo(character.uuid)
