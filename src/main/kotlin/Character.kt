@@ -138,8 +138,16 @@ data class Character(
     @Transient
     private var personalitySecondBacking = parsePersonalitySecond()
 
+    val family: Family
+        get() {
+            if (familyBacking == undefined) {
+                familyBacking = getFamily()
+            }
+            return familyBacking
+        }
+
     @Transient
-    val family = getFamily()
+    private var familyBacking = getFamily()
 
     @Transient
     val friendships = getFriendships()
