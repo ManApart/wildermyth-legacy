@@ -56,25 +56,29 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
     val type = parts.first()
     val typeOptions = type.split("/")
     val resultOptionsInitial = parts.last().split("/")
-    val resultOptions = if (typeOptions.size == resultOptionsInitial.size) resultOptionsInitial else resultOptionsInitial.flatMap { it.split(",") }
+    val resultOptions = if (typeOptions.size <= resultOptionsInitial.size) resultOptionsInitial else resultOptionsInitial.flatMap { it.split(",") }
     return when {
         templateClean == "name" -> name
         templateClean == "fullname" -> name
         templateClean == "firstname" -> name.split(" ").first()
         templateClean == "lastname" -> name.split(" ").last()
-        templateClean in listOf("site", "hero", "mystic", "hunter", "warrior", "company", "overlandtile") -> entry.roleMatch(templateClean)
         templateClean == "town" -> hometown
         templateClean == "hometown" -> hometown
+        templateClean == "company" -> getCompany(uuid).name
         type == "awm" -> replaceAWM(resultOptions)
         type == "mf" -> replaceMF(resultOptions)
         type.contains(".") -> replaceRelationshipTemplate(type, resultOptions, entry)
+        entry.relationships.any { it.role == templateClean } -> entry.roleMatch(templateClean)
+        entry.relationships.any { it.role == template } -> entry.roleMatch(template)
         type.startsWith("npc") -> entry.roleMatch(type)
         type.startsWith("hook") -> entry.roleMatch(type)
         type == "personality" -> replacePersonality(typeOptions, resultOptions)
         type == "personality2" -> replacePersonality(typeOptions, resultOptions, 1)
         typeOptions.any { it in personalityNames } -> replacePersonality(typeOptions, resultOptions)
+        type == "cvawn_waterlingParent/cvawn_fallbackParent" -> cvawnParent(resultOptions)
         else -> {
             println("$name encountered unknown type: $type. Using ${resultOptions.last()}")
+            println(resultOptions)
             println(jsonMapper.encodeToString(entry))
             resultOptions.last()
         }
@@ -96,7 +100,7 @@ fun Character.replaceRelationshipTemplate(fullType: String, resultOptions: List<
         } ?: let {
         when {
             relationship != null && type == "mf" -> relationship.replaceMF(resultOptions)
-            relationship != null && type == "fullname" -> (relationship.name?: "someone")
+            relationship != null && type == "fullname" -> (relationship.name ?: "someone")
             else -> {
                 println("Relationship Attributes not supported: $name ${entry.id} $fullType")
                 println(jsonMapper.encodeToString(entry))
@@ -130,14 +134,20 @@ private fun Character.replaceAWM(resultOptions: List<String>): String {
 
 private fun Character.replacePersonality(typeOptions: List<String>, resultOptions: List<String>, level: Int = 0): String {
     val highest = typeOptions.sortedByDescending { personality[Personality.valueOf(it.uppercase())] ?: 0 }.getOrNull(level) ?: typeOptions.firstOrNull()
-    if (highest == null){
+    if (highest == null) {
         println("Null Personality for $name")
         return "personality"
     }
-    val resultIndex = min(resultOptions.size-1, typeOptions.indexOf(highest))
+    val resultIndex = min(resultOptions.size - 1, typeOptions.indexOf(highest))
     return resultOptions[resultIndex]
 }
 
 private fun HistoryEntry.roleMatch(role: String): String {
     return relationships.firstOrNull { it.role == role }?.name ?: role
+}
+
+private fun Character.cvawnParent(resultOptions: List<String>): String {
+    return if (family.parents.firstOrNull() != null) {
+        resultOptions.last()
+    } else resultOptions[1]
 }
