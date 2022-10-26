@@ -84,6 +84,10 @@ fun getCompany(uuid: String): Company {
     return inMemoryStorage.companies[uuid] ?: Company(uuid, "Unknown", 0.0, "Unknown")
 }
 
+fun getCompanies(): List<Company> {
+    return inMemoryStorage.companies.values.toList()
+}
+
 fun getCompanyForGameId(uuid: String): Company {
     return inMemoryStorage.companyByGameId[uuid] ?: Company(uuid, "Unknown", 0.0, "Unknown")
 }
