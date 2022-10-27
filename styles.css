@@ -128,6 +128,11 @@ table {
   margin-left: 38%
 }
 
+#loading-status {
+    text-align: center;
+    font-size: 300%;
+}
+
 #instructions-text{
     margin-right: 20px;
     max-width: 770px;
