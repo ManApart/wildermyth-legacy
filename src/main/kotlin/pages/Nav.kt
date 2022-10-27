@@ -54,6 +54,7 @@ fun buildNav() {
                 val section = document.getElementById("character-cards-section")!!
                 saveSearch(searchOptions)
                 buildCharacters(section, getCharacters())
+                characterSearch()
             }
         }
     }

@@ -144,7 +144,7 @@
 .character-list-item {
     display: inline-block;
     background: var(--card-background);
-    width: 470px;
+    width: 450px;
     margin: 4px;
     padding: 4px;
 }
