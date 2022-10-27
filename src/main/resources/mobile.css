@@ -80,6 +80,10 @@
         width: 95%;
     }
 
+    .character-list-info {
+        width: inherit;
+    }
+
     #log-button{
         display: none;
     }
