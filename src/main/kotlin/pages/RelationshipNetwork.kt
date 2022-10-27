@@ -82,7 +82,7 @@ private fun buildPage(character: LegacyCharacter, familyOnly: Boolean) {
                         }
 
                         onChangeFunction = {
-                            val input = el(id) as HTMLSelectElement
+                            val input = el<HTMLSelectElement>(id)
                             val i = input.selectedIndex
                             saveDepth(input.options[i]?.textContent?.toIntOrNull() ?: 2)
                             buildRelationshipNetwork(character, familyOnly, i)
@@ -95,7 +95,7 @@ private fun buildPage(character: LegacyCharacter, familyOnly: Boolean) {
 }
 
 private fun buildNetwork(character: LegacyCharacter, familyOnly: Boolean, depth: Int) {
-    val container = el("relationship-network-canvas") as HTMLElement
+    val container = el("relationship-network-canvas")
 
     val friends = if (familyOnly) character.findAllRelatives(depth) else character.findAllFriends(depth)
     Promise.all(friends.map { getCroppedHeadWithId(it, 35.0, 45.0, 120.0, 135.0) }.toTypedArray()).then { heads ->
