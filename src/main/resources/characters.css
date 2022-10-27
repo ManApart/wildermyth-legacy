@@ -176,17 +176,20 @@
 .character-list-info {
     display: inline-block;
     vertical-align: top;
+    width: 335px;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .character-list-item h1 {
-    display: inline-block;
+    display: inline;
     vertical-align: top;
     margin-top: 10px;
     margin-left: 10px;
 }
 
 .character-list-item-npc {
-    display: inline-block;
+    display: inline;
     vertical-align: top;
     margin-top: 35px;
     margin-left: 10px;
