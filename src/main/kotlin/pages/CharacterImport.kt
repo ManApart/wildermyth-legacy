@@ -11,14 +11,17 @@ import HistoryEntryRaw
 import JSZip
 import JsonObject
 import LegacyCharacter
-import LegacyTierLevel
 import doRouting
-import getCharacters
-import getCroppedHead
+import el
 import jsonMapper
+import kotlinx.html.dom.append
+import kotlinx.html.id
+import kotlinx.html.js.div
+import kotlinx.html.js.p
 import kotlinx.serialization.decodeFromString
 import legacyTierLevelFromInt
 import org.khronos.webgl.ArrayBuffer
+import org.w3c.dom.HTMLParagraphElement
 import org.w3c.files.Blob
 import persistMemory
 import saveAdditionalInfo
@@ -32,21 +35,47 @@ import kotlin.js.Promise
 private val companies = mutableMapOf<String, Company>()
 
 fun importZip(data: ArrayBuffer, originalHash: String) {
+    val status = initialLoading()
+
     JSZip().loadAsync(data).then { zip ->
+        status.updateStatus("Loaded Zip")
         val keys = JsonObject.keys(zip.files)
-        handleAdditionalInfo(zip)
-        handleStoryProps(zip)
-        handleZipCharacterData(zip, keys, originalHash)
+        handleAdditionalInfo(zip, status)
+        handleStoryProps(zip, status)
+        handleZipCharacterData(zip, keys, status, originalHash)
     }
 }
 
-private fun handleAdditionalInfo(zip: JSZip.ZipObject) {
+private fun initialLoading(): HTMLParagraphElement {
+    val importSection = el("import-section")
+    val characterListSection = el("character-cards-section")
+
+    importSection.innerHTML = ""
+    characterListSection.innerHTML = ""
+    importSection.append {
+        div {
+            p {
+                id = "loading-status"
+                +"Starting Import"
+            }
+        }
+    }
+    return el<HTMLParagraphElement>("loading-status")
+}
+
+private fun HTMLParagraphElement.updateStatus(status: String) {
+    innerText = "Loading: $status"
+}
+
+
+private fun handleAdditionalInfo(zip: JSZip.ZipObject, status: HTMLParagraphElement) {
     zip.file("AdditionalInfo.json")?.async<String>("string")?.then { content ->
         saveAdditionalInfo(jsonMapper.decodeFromString<MutableMap<String, AdditionalInfo>>(content))
+        status.updateStatus("Parsed Additional Info")
     }
 }
 
-private fun handleStoryProps(zip: JSZip.ZipObject) {
+private fun handleStoryProps(zip: JSZip.ZipObject, status: HTMLParagraphElement) {
     zip.file("story.properties")?.async<String>("string")?.then { content ->
         val props = content.split("\n").mapNotNull {
             val parts = it.split("=")
@@ -55,20 +84,27 @@ private fun handleStoryProps(zip: JSZip.ZipObject) {
             if (key != null && prop != null) key to prop else null
         }.toMap()
         saveStoryProps(props)
+        status.updateStatus("Saved Story Props")
     }
 }
 
-private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, originalHash: String) {
+private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, status: HTMLParagraphElement, originalHash: String) {
     val legacyJson = keys.first { fileName ->
         fileName.endsWith("legacy.json")
     }
+    var handled = 0
     zip.file(legacyJson)!!.async<String>("string")
         .then { contents ->
             val json = JSON.parse<Json>(contents)
-            val characters = parseLegacy(json)
+            val characters = parseLegacy(json, status)
             characters.forEach { saveCharacter(it) }
-            Promise.all(characters.map { handleZipPictures(zip, it.snapshots.last()) }.toTypedArray())
+            status.updateStatus("Saved All Characters")
+            Promise.all(characters.map { handleZipPictures(zip, it.snapshots.last()).then {
+                handled++
+                status.updateStatus("Parsed $handled pictures")
+            } }.toTypedArray())
         }.then {
+            status.updateStatus("Parsed All Characters")
             doRouting(originalHash)
             persistMemory()
         }
@@ -93,11 +129,17 @@ private fun handleSinglePicture(zip: JSZip.ZipObject, character: Character, zipN
     } else null
 }
 
-fun parseLegacy(json: Json): List<LegacyCharacter> {
+fun parseLegacy(json: Json, status: HTMLParagraphElement): List<LegacyCharacter> {
     val player = json["playerName"] as String
     println("Parsing $player's legacy")
+    var parsedCount = 0
     return (json["entries"] as Array<Json>)
-        .map { parseLegacyCharacter(it) }
+        .map {
+            parseLegacyCharacter(it).also {
+                parsedCount++
+                status.updateStatus("Parsed $parsedCount Characters")
+            }
+        }
         .also {
             saveCompanies(companies)
         }

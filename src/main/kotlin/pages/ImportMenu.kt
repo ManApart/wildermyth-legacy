@@ -1,7 +1,6 @@
 package pages
 
-import getAdditionalInfo
-import jsonMapper
+import el
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.*
@@ -9,15 +8,13 @@ import kotlinx.html.dom.append
 import kotlinx.html.js.input
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
-import kotlinx.serialization.encodeToString
 import org.khronos.webgl.ArrayBuffer
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.files.FileReader
 import org.w3c.files.get
 
 fun importMenu() {
-    val section = document.getElementById("import-section")!!
+    val section = el("import-section")
     section.innerHTML = ""
     document.getElementById("character-detail-section")!!.innerHTML = ""
     document.getElementById("nav")!!.innerHTML = ""
