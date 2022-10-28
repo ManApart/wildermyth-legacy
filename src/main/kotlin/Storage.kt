@@ -18,6 +18,8 @@ data class InMemoryStorage(
     val additionalInfo: MutableMap<String, AdditionalInfo> = mutableMapOf(),
     var companies: Map<String, Company> = mapOf(),
     var storyProps: Map<String, String> = mapOf(),
+    var dynamicProps: Map<String, String> = mapOf(),
+    var aspectProps: Map<String, String> = mapOf(),
 ) {
     @Transient
     var companyByGameId = mapOf<String, Company>()
@@ -103,6 +105,22 @@ fun getStoryProp(id: String): String? {
 
 fun saveStoryProps(props: Map<String, String>) {
     inMemoryStorage.storyProps = props
+}
+
+fun getDynamicProp(id: String): String? {
+    return inMemoryStorage.dynamicProps[id]
+}
+
+fun saveDynamicProps(props: Map<String, String>) {
+    inMemoryStorage.dynamicProps = props
+}
+
+fun getAspectProp(id: String): String? {
+    return inMemoryStorage.aspectProps[id]
+}
+
+fun saveAspectProps(props: Map<String, String>) {
+    inMemoryStorage.aspectProps = props
 }
 
 fun createDB() {

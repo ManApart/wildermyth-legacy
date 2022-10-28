@@ -69,6 +69,7 @@ data class Character(
     fun reload() {
         //Since story props don't exist when parsing json from indexDB, reload them after the in-memory db is loaded
         this.bio = getBio()
+        gear.forEach { it.reload() }
     }
 
     @Transient

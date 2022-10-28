@@ -1,4 +1,5 @@
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import pages.toAspect
 
 enum class CharacterClass { WARRIOR, HUNTER, MYSTIC }
@@ -122,7 +123,20 @@ data class Gear(
     val isEquipped: Boolean = false,
     val slots: List<String> = listOf(),
     val ownerAspects: List<Aspect> = listOf()
-)
+) {
+    @Transient
+    var description = parseDescription()
+
+    private fun parseDescription(): String {
+        val propId = if (itemId.endsWith("_t1")) itemId.substring(0, itemId.indexOf("_")) else itemId
+        return (getDynamicProp("itemArtifactBlurb.${propId}")?.let { "$it. " } ?: "") +
+                (getDynamicProp("itemSummary.${propId}") ?: "")
+    }
+
+    fun reload() {
+        description = parseDescription()
+    }
+}
 
 @Serializable
 data class GearRaw(

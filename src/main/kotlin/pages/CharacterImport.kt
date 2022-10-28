@@ -25,9 +25,11 @@ import org.w3c.dom.HTMLParagraphElement
 import org.w3c.files.Blob
 import persistMemory
 import saveAdditionalInfo
+import saveAspectProps
 import saveCompanies
 import kotlin.js.Json
 import saveCharacter
+import saveDynamicProps
 import savePicture
 import saveStoryProps
 import kotlin.js.Promise
@@ -41,7 +43,7 @@ fun importZip(data: ArrayBuffer, originalHash: String) {
         status.updateStatus("Loaded Zip")
         val keys = JsonObject.keys(zip.files)
         handleAdditionalInfo(zip, status)
-        handleStoryProps(zip, status)
+        handlePropertyFiles(zip, status)
         handleZipCharacterData(zip, keys, status, originalHash)
     }
 }
@@ -75,16 +77,22 @@ private fun handleAdditionalInfo(zip: JSZip.ZipObject, status: HTMLParagraphElem
     }
 }
 
-private fun handleStoryProps(zip: JSZip.ZipObject, status: HTMLParagraphElement) {
-    zip.file("story.properties")?.async<String>("string")?.then { content ->
+private fun handlePropertyFiles(zip: JSZip.ZipObject, status: HTMLParagraphElement) {
+    handlePropsFile(zip, "story.properties", ::saveStoryProps, status)
+    handlePropsFile(zip, "dynamic.properties", ::saveDynamicProps, status)
+    handlePropsFile(zip, "aspects.properties", ::saveAspectProps, status)
+}
+
+private fun handlePropsFile(zip: JSZip.ZipObject, fileName: String, save: (Map<String, String>) -> Unit, status: HTMLParagraphElement) {
+    zip.file(fileName)?.async<String>("string")?.then { content ->
         val props = content.split("\n").mapNotNull {
             val parts = it.split("=")
             val key = parts.firstOrNull()
             val prop = parts.getOrNull(1)
             if (key != null && prop != null) key to prop else null
         }.toMap()
-        saveStoryProps(props)
-        status.updateStatus("Saved Story Props")
+        save(props)
+        status.updateStatus("Saved $fileName")
     }
 }
 

@@ -631,6 +631,7 @@ private fun TagConsumer<HTMLElement>.gearCard(gear: Gear) {
                 p { +"Level $tier$artifactText ${category.capitalize()} $subCatText" }
                 p { +"$equipVerb to ${slots.joinToString(", ") { it.lowercase().replace("augment_", "") }.capitalize()}" }
                 p { +"Grants $aspectText" }
+                p { +description }
             }
         }
     }
