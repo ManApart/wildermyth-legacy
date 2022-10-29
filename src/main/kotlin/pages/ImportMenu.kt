@@ -52,7 +52,7 @@ fun importMenu() {
             div {
                 id = "instructions-text"
                 h4 { +"Using the Uploader" }
-                p { +"If this all seems a bit much, try using the instead. If we're lucky, it will find your game paths and files, and create the zip for you. You'll still need to export each character though, for the pictures." }
+                p { +"If this all seems a bit much, try using download tool the instead. If we're lucky, it will find your game paths and files and create the zip for you. You'll still need to export each character though if you want character pictures." }
                 a("./wilder-upload.exe"){
                     id = "download-tool-link"
                     +"Download Tool"
@@ -122,13 +122,15 @@ fun importMenu() {
                     li { +"You can include this json file at the top level of the zip you upload to the site and it will be loaded." }
                     li { +"This let's you use a single zip to load your data onto multiple devices." }
                 }
-                h4 { +"Story Properties" }
+                h4 { +"Additional Properties Files" }
                 ol {
-                    li { +"In order to get the text for history entries, you need to provide the story.properties file." }
-                    li { +"Go to <GameFolder>/Wildermyth/assets/text/story" }
-                    li { +"Grab story.properties" }
-                    li { +"Add it to the zip you upload." }
-                    li { +"Now character bios (that you haven't overridden already) will no longer be blank!" }
+                    li { +"In order to get the text for history entries, items, and abilities you need to provide the several properties files from the game." }
+                    li { +"Go to <GameFolder>/Wildermyth/assets/text/" }
+                    li { +"Grab aspects/aspects.properties" }
+                    li { +"Grab dynamic/dynamic.properties" }
+                    li { +"Grab story/story.properties" }
+                    li { +"Add each file to the zip you upload." }
+                    li { +"Now character bios (that you haven't overridden already) will no longer be blank and you'll get text for abilities and gear!" }
                 }
             }
             img {
