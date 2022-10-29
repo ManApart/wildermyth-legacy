@@ -1,0 +1,22 @@
+
+#profile-links {
+    text-align: center;
+}
+
+.profile-link {
+    margin: 2%;
+    font-size: 190%;
+}
+
+#company-lists{
+    background-color: var(--main-background);
+}
+
+#company-lists .company{
+    width: 95%;
+}
+
+.count-column {
+    text-align: center;
+    width: inherit;
+}

@@ -102,15 +102,11 @@ table {
 }
 
 #top-nav {
-    grid-template-columns: minmax(100px, .2fr) auto minmax(100px, .2fr);
+    grid-template-columns: minmax(100px, .2fr) minmax(100px, .2fr) auto minmax(100px, .2fr);
 }
 
-#upload-button {
-    margin-right: 5%;
-}
-
-#export-button {
-    margin-left: 5%;
+.nav-button {
+    margin-right: 2%;
 }
 
 #search-checks {

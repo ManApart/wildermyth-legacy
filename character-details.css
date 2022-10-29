@@ -211,22 +211,22 @@
     scale: 1.1;
 }
 
-#aspects-section{
+.two-column-section{
     width: 100%;
 }
 
-#aspect-tables{
+.column-tables{
     display: flex;
     flex-wrap: nowrap;
     padding: 12px;
     background-color: var(--card-background);
 }
 
-.aspects-table{
+.column-table{
     width: 95%
 }
 
-#aspect-tables table {
+.column-tables table {
     background-color: var(--bio-background);
     margin: 0px;
     width: 100%;
