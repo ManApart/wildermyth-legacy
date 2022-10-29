@@ -102,7 +102,6 @@ private fun TagConsumer<HTMLElement>.buildUnlockTable(unlocks: List<Unlock>) {
     div("column-table") {
         table {
             tr {
-                th { +"Id" }
                 th { +"Name" }
                 th(classes = "count-column") { +"Count" }
             }
@@ -110,8 +109,10 @@ private fun TagConsumer<HTMLElement>.buildUnlockTable(unlocks: List<Unlock>) {
                 unlocks.forEach { unlock ->
                     val progress = if (unlock.progress == 0) "" else unlock.progress.toString()
                     tr {
-                        td { +unlock.id }
-                        td { +unlock.name }
+                        td {
+                            +unlock.name
+                            title = unlock.id
+                        }
                         td(classes = "count-column") { +progress }
                     }
                 }
