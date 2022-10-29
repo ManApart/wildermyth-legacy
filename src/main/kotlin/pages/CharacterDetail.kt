@@ -616,7 +616,14 @@ private fun TagConsumer<HTMLElement>.abilitiesSection(snapshot: Character) {
 private fun TagConsumer<HTMLElement>.abilityCard(ability: Ability) {
     with(ability) {
         div("gear") {
-            h4 { +name }
+            h4 {
+                +name
+                title = "Click to view Wiki"
+                onClickFunction = {
+                    val urlPart = ability.name.replace(" ", "_").replace("+", "")
+                    window.open("https://wildermyth.com/wiki/$urlPart", "_blank")
+                }
+            }
             p("item-id") { +"(${ability.id})" }
             div("gear-details") {
                 p { +description }
@@ -636,7 +643,12 @@ private fun TagConsumer<HTMLElement>.gearSection(snapshot: Character) {
 private fun TagConsumer<HTMLElement>.gearCard(gear: Gear) {
     with(gear) {
         div("gear") {
-            h4 { +name }
+            h4 {
+                +name
+                onClickFunction = {
+                    window.open("https://wildermyth.com/wiki/Equipment", "_blank")
+                }
+            }
             p("item-id") { +"($itemId)" }
             div("gear-details") {
                 val artifactText = if (artifact) " Artifact" else ""
@@ -650,7 +662,9 @@ private fun TagConsumer<HTMLElement>.gearCard(gear: Gear) {
                     }
 
                 p {
-                    +"Level $tier$artifactText ${category.capitalize()} $subCatText $equipVerb to ${slots.joinToString(", ") { it.lowercase().replace("augment_", "") }.capitalize()} and grants $aspectText"
+                    +"Level $tier$artifactText ${category.capitalize()} $subCatText $equipVerb to ${
+                        slots.joinToString(", ") { it.lowercase().replace("augment_", "") }.capitalize()
+                    } and grants $aspectText"
                 }
                 p { +description }
             }
