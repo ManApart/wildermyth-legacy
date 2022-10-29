@@ -620,7 +620,7 @@ private fun TagConsumer<HTMLElement>.gearCard(gear: Gear) {
             div("gear-details") {
                 val artifactText = if (artifact) " Artifact" else ""
                 val subCatText = if (subCategory != null) " ($subCategory)" else ""
-                val equipVerb = if (isEquipped) "Equipped" else "Equips"
+                val equipVerb = if (isEquipped) "equipped" else "equips"
                 val aspectText = ownerAspects
                     .filter { !it.name.startsWith("slotFilled") }
                     .joinToString(", ") {
@@ -628,9 +628,9 @@ private fun TagConsumer<HTMLElement>.gearCard(gear: Gear) {
                         it.name + values
                     }
 
-                p { +"Level $tier$artifactText ${category.capitalize()} $subCatText" }
-                p { +"$equipVerb to ${slots.joinToString(", ") { it.lowercase().replace("augment_", "") }.capitalize()}" }
-                p { +"Grants $aspectText" }
+                p {
+                    +"Level $tier$artifactText ${category.capitalize()} $subCatText $equipVerb to ${slots.joinToString(", ") { it.lowercase().replace("augment_", "") }.capitalize()} and grants $aspectText"
+                }
                 p { +description }
             }
         }

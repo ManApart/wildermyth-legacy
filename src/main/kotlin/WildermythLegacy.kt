@@ -1,6 +1,7 @@
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.KeyboardEvent
 import pages.*
@@ -21,13 +22,13 @@ fun main() {
 
     window.addEventListener("keyup", { event ->
         val key = (event as KeyboardEvent)
-        if (document.activeElement !is HTMLTextAreaElement) {
+        if (document.activeElement !is HTMLTextAreaElement || document.activeElement !is HTMLInputElement) {
             onKeyUp(key)
         }
     })
     window.addEventListener("keydown", { event ->
         val key = (event as KeyboardEvent)
-        if (document.activeElement !is HTMLTextAreaElement) {
+        if (document.activeElement !is HTMLTextAreaElement || document.activeElement !is HTMLInputElement) {
             onKeyDown(key)
         }
     })

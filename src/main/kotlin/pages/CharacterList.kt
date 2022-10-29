@@ -151,7 +151,12 @@ fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snaps
                         p("character-list-item-npc") { +"(npc)" }
                     }
                     div("character-list-summary") {
-                        +"${characterClass.name.format()} ${character.legacyTierLevel.format()}"
+                        +"${characterClass.name.format()} ${character.legacyTierLevel.format()} "
+                        repeat(character.legacyTierLevel.ordinal){
+                            img(classes = "legacy-tier-image") {
+                                src = "images/star-active.png"
+                            }
+                        }
                     }
                 }
             }
