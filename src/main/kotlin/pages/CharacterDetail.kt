@@ -4,6 +4,7 @@ import Ability
 import AdditionalInfo
 import Aspect
 import Character
+import Company
 import Gear
 import HistoryEntry
 import LegacyCharacter
@@ -576,9 +577,11 @@ private fun TagConsumer<HTMLElement>.compatibilitySection(character: LegacyChara
 
 }
 
-private fun TagConsumer<HTMLElement>.companyCard(companyId: String) {
-    val company = getCompany(companyId)
+fun TagConsumer<HTMLElement>.companyCard(companyId: String) {
+    companyCard(getCompany(companyId))
+}
 
+fun TagConsumer<HTMLElement>.companyCard(company: Company) {
     div("company") {
         div {
             h4 { +company.name }
@@ -595,7 +598,6 @@ private fun TagConsumer<HTMLElement>.companyCard(companyId: String) {
                 }
             }
         }
-
     }
 }
 

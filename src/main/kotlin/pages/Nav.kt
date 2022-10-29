@@ -20,10 +20,15 @@ fun buildNav() {
     nav.append {
         div("row") {
             id="top-nav"
-            button {
+            button(classes = "nav-button") {
                 id = "upload-button"
                 +"Upload"
                 onClickFunction = { importMenu() }
+            }
+            button(classes = "nav-button") {
+                id = "profile-button"
+                +"Profile"
+                onClickFunction = { profile() }
             }
             input {
                 id = "search"
@@ -34,7 +39,7 @@ fun buildNav() {
                     characterSearch()
                 }
             }
-            button {
+            button(classes = "nav-button") {
                 id = "export-button"
                 +"Export"
                 onClickFunction = { downloadAdditionalInfo() }

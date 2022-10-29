@@ -40,6 +40,9 @@ fun doRouting() {
 
 fun doRouting(windowHash: String) {
     when {
+        windowHash.startsWith("#profile") -> {
+            profile()
+        }
         windowHash.startsWith("#detail/") -> {
             val hash = windowHash.replace("#detail/", "")
             getCharacter(hash)?.let { character ->
@@ -68,6 +71,7 @@ fun doRouting(windowHash: String) {
 fun clearSections() {
     el("character-cards-section").innerHTML = ""
     el("import-section").innerHTML = ""
+    el("profile-section").innerHTML = ""
     el("character-detail-section").innerHTML = ""
     el("relationship-network-section").innerHTML = ""
     el("nav").innerHTML = ""
