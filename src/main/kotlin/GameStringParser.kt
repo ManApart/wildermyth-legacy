@@ -16,7 +16,12 @@ data class Template(private val input: String, private val children: List<Chunk>
     }
 }
 
-fun Character.interpolate(line: String, entry: HistoryEntry): String {
+private val noHistory = HistoryEntry("None", 0L, "")
+
+private val useLastResult = listOf("test", "/")
+private val useTypeItself = listOf("mysticDeck_indignance_upgrade")
+
+fun Character.interpolate(line: String, entry: HistoryEntry = noHistory): String {
     return buildChunks(line).joinToString("") { it.interpolate(this, entry) }
 }
 
@@ -58,8 +63,7 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
     val resultOptionsInitial = parts.last().split("/")
     val resultOptions = if (typeOptions.size <= resultOptionsInitial.size) resultOptionsInitial else resultOptionsInitial.flatMap { it.split(",") }
     return when {
-        templateClean == "name" -> name
-        templateClean == "fullname" -> name
+        templateClean in listOf("name", "fullname", "self") -> name
         templateClean == "firstname" -> name.split(" ").first()
         templateClean == "lastname" -> name.split(" ").last()
         templateClean == "town" -> hometown
@@ -67,6 +71,7 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
         templateClean == "company" -> getCompany(uuid).name
         type == "awm" -> replaceAWM(resultOptions)
         type == "mf" -> replaceMF(resultOptions)
+        type == "int" -> parts.last()
         type.contains(".") -> replaceRelationshipTemplate(type, resultOptions, entry)
         entry.relationships.any { it.role == templateClean } -> entry.roleMatch(templateClean)
         entry.relationships.any { it.role == template } -> entry.roleMatch(template)
@@ -76,6 +81,7 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
         type == "personality2" -> replacePersonality(typeOptions, resultOptions, 1)
         typeOptions.any { it in personalityNames } -> replacePersonality(typeOptions, resultOptions)
         type == "cvawn_waterlingParent/cvawn_fallbackParent" -> cvawnParent(resultOptions)
+        type in useLastResult -> resultOptions.last()
         else -> {
             println("$name encountered unknown type: $type. Using ${resultOptions.last()}")
             println(resultOptions)
@@ -101,6 +107,7 @@ fun Character.replaceRelationshipTemplate(fullType: String, resultOptions: List<
         when {
             relationship != null && type == "mf" -> relationship.replaceMF(resultOptions)
             relationship != null && type == "fullname" -> (relationship.name ?: "someone")
+            roleName == "self" -> replaceSelf(type, resultOptions)
             else -> {
                 println("Relationship Attributes not supported: $name ${entry.id} $fullType")
                 println(jsonMapper.encodeToString(entry))
@@ -150,4 +157,28 @@ private fun Character.cvawnParent(resultOptions: List<String>): String {
     return if (family.parents.firstOrNull() != null) {
         resultOptions.last()
     } else resultOptions[1]
+}
+
+private fun Character.replaceSelf(type: String, resultOptions: List<String>): String {
+    val aspectReference = type.contains("upgrade") || type.contains("themeAbility")
+    return when {
+        type == "mf" -> replaceMF(resultOptions)
+        aspectReference && resultOptions.size == 2 -> replaceSelfAspect(type, resultOptions)
+        aspectReference && resultOptions.size == 1 -> replaceSelfAspect(type, listOf(resultOptions.first(), ""))
+        aspectReference && type.contains("/") -> replaceAspectList(type, resultOptions)
+        type in useTypeItself -> type
+        else -> type.also {
+            println("Self type not found for $name $type: $resultOptions")
+        }
+    }
+}
+
+private fun Character.replaceSelfAspect(type: String, resultOptions: List<String>): String {
+    return if (aspects.any { it.name == type }) resultOptions.first() else resultOptions.last()
+}
+
+private fun Character.replaceAspectList(type: String, resultOptions: List<String>): String {
+    val typeOptions = type.split("/")
+    val selected = typeOptions.firstOrNull { option -> aspects.any { it.name == option } }
+    return selected?.let { resultOptions[typeOptions.indexOf(it)] } ?: resultOptions.last()
 }

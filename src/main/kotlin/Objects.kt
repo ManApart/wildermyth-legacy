@@ -138,6 +138,12 @@ data class Gear(
     }
 }
 
+data class Ability(
+    val id: String,
+    val name: String,
+    val description: String,
+)
+
 @Serializable
 data class GearRaw(
     val itemId: String,

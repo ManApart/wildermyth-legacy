@@ -1,5 +1,6 @@
 package pages
 
+import Ability
 import AdditionalInfo
 import Aspect
 import Character
@@ -19,7 +20,6 @@ import getPicture
 import jsonMapper
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.dom.clear
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.*
@@ -59,6 +59,7 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
                 friendshipSection(character, snapshot)
             }
             compatibilitySection(character)
+            abilitiesSection(snapshot)
             gearSection(snapshot)
             customHistorySection(additionalInfo)
             gameHistorySection(snapshot)
@@ -599,6 +600,26 @@ private fun DIV.buildAspectTable(firstHalf: List<Aspect>) {
                         td { +aspect.values.joinToString(", ") }
                     }
                 }
+            }
+        }
+    }
+}
+
+private fun TagConsumer<HTMLElement>.abilitiesSection(snapshot: Character) {
+    div("character-section") {
+        id = "abilities-section"
+        h2 { +"Abilities" }
+        snapshot.abilities.forEach { abilityCard(it) }
+    }
+}
+
+private fun TagConsumer<HTMLElement>.abilityCard(ability: Ability) {
+    with(ability) {
+        div("gear") {
+            h4 { +name }
+            p("item-id") { +"(${ability.id})" }
+            div("gear-details") {
+                p { +description }
             }
         }
     }

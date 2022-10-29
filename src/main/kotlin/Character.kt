@@ -65,10 +65,11 @@ data class Character(
     val history: List<HistoryEntry> = listOf(),
     val gear: List<Gear> = listOf(),
 ) {
-    //Trigger anything that needs to happen again on load.
+
     fun reload() {
         //Since story props don't exist when parsing json from indexDB, reload them after the in-memory db is loaded
-        this.bio = getBio()
+        bio = getBio()
+        abilities = parseAbilities()
         gear.forEach { it.reload() }
     }
 
@@ -163,6 +164,9 @@ data class Character(
 
     @Transient
     private var hometownBacking = parseHomeTown()
+
+    @Transient
+    var abilities = parseAbilities()
 
     private fun getBio(): String {
         val historyOverrides = history.joinToString(" ") { it.textOverride }
@@ -271,5 +275,17 @@ data class Character(
         return myStats.sumOf { getCompatibility(it, otherStats) }
     }
 
+    private fun parseAbilities(): List<Ability> {
+        val theme = aspects.firstOrNull { it.name.startsWith("theme_") && it.name.count { letter -> letter == '_' } == 1 }
+
+        val themeAspects = if (theme == null) listOf() else aspects.filter { it.name.startsWith(theme.name) }
+
+        val deckAspects = aspects.filter { it.name.contains("Deck") }
+        return (themeAspects + deckAspects).map { aspect ->
+            val name = getAspectProp("${aspect.name}.name")?.let { interpolate(it) } ?: aspect.name
+            val description = getAspectProp("${aspect.name}.blurb")?.let { interpolate(it) } ?: aspect.name
+            Ability(aspect.name, name, description)
+        }
+    }
 
 }
