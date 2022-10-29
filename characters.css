@@ -206,3 +206,8 @@
 .visible-inline-block {
     display: inline-block;
 }
+
+.legacy-tier-image {
+    display: inline;
+    width: 4%;
+}
