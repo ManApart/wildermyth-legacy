@@ -19,4 +19,5 @@
 .count-column {
     text-align: center;
     width: inherit;
+    text-align: right;
 }
