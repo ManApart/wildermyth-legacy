@@ -11,6 +11,8 @@ import HistoryEntryRaw
 import JSZip
 import JsonObject
 import LegacyCharacter
+import Profile
+import Unlock
 import doRouting
 import el
 import jsonMapper
@@ -31,6 +33,7 @@ import kotlin.js.Json
 import saveCharacter
 import saveDynamicProps
 import savePicture
+import saveProfile
 import saveStoryProps
 import kotlin.js.Promise
 
@@ -104,13 +107,19 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, sta
     zip.file(legacyJson)!!.async<String>("string")
         .then { contents ->
             val json = JSON.parse<Json>(contents)
+            val profile = parseProfile(json)
+            saveProfile(profile)
+            status.updateStatus("Saved Profile")
+
             val characters = parseLegacy(json, status)
             characters.forEach { saveCharacter(it) }
             status.updateStatus("Saved All Characters")
-            Promise.all(characters.map { handleZipPictures(zip, it.snapshots.last()).then {
-                handled++
-                status.updateStatus("Parsed $handled pictures")
-            } }.toTypedArray())
+            Promise.all(characters.map {
+                handleZipPictures(zip, it.snapshots.last()).then {
+                    handled++
+                    status.updateStatus("Parsed $handled pictures")
+                }
+            }.toTypedArray())
         }.then {
             status.updateStatus("Parsed All Characters")
             doRouting(originalHash)
@@ -138,8 +147,6 @@ private fun handleSinglePicture(zip: JSZip.ZipObject, character: Character, zipN
 }
 
 fun parseLegacy(json: Json, status: HTMLParagraphElement): List<LegacyCharacter> {
-    val player = json["playerName"] as String
-    println("Parsing $player's legacy")
     var parsedCount = 0
     return (json["entries"] as Array<Json>)
         .map {
@@ -265,4 +272,24 @@ fun parseGearItem(entity: Array<Json>): Gear {
     val name = entity.firstNotNullOfOrNull { it["name"] as String? } ?: "Unknown"
     val rawJson = entity.first { it["itemId"] != null }
     return jsonMapper.decodeFromString<GearRaw>(JSON.stringify(rawJson)).toGear(uuid, name)
+}
+
+fun parseProfile(json: Json): Profile {
+    val player = json["playerName"] as String
+    println("Parsing $player's legacy")
+    val entries = ((json["unlocks"] as Json)["entries"] as Array<Array<Json>>).map { it.last() }
+
+    val unlocks = entries.map {
+        val id = (it["aspectId"] as String).replace("achievementProgress_", "")
+            .replace("achievement_", "")
+            .replace("legacy_", "")
+            .replace("_", " ")
+            .replace("|", " ")
+            .capitalize()
+            .splitByCapitals()
+        val count = (it["value"] as Int?) ?: 0
+        Unlock(id, count)
+    }
+
+    return Profile(player, unlocks)
 }

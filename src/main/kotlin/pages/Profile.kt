@@ -1,8 +1,10 @@
 package pages
 
+import Profile
 import clearSections
 import getCharacters
 import getCompanies
+import getProfile
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.*
@@ -12,17 +14,18 @@ import kotlinx.html.js.onClickFunction
 import org.w3c.dom.HTMLElement
 
 fun profile() {
+    val profile = getProfile()
     val section = document.getElementById("profile-section")!!
     clearSections()
-    document.title = "Profile"
+    document.title = profile.name + "'s Legacy"
     document.documentElement?.scrollTop = 0.0
     window.history.pushState(null, "null", "#profile")
     setFavicon(getCharacters().random())
 
     section.append {
         buildProfileNav()
-        buildLinks()
-        buildUnlocks()
+        buildLinks(profile)
+        buildUnlocks(profile)
         buildCompanies()
     }
 }
@@ -39,7 +42,7 @@ private fun TagConsumer<HTMLElement>.buildProfileNav() {
     }
 }
 
-private fun TagConsumer<HTMLElement>.buildLinks() {
+private fun TagConsumer<HTMLElement>.buildLinks(profile: Profile) {
     div(classes = "profile-section") {
         id = "profile-links"
         h2 { +"Links" }
@@ -53,6 +56,12 @@ private fun TagConsumer<HTMLElement>.buildLinks() {
             li {
                 a("https://steamcommunity.com/stats/763890/achievements/") {
                     +"Achievements"
+                    target = "_blank"
+                }
+            }
+            li {
+                a("https://steamcommunity.com/id/${profile.name}/stats/763890/achievements/") {
+                    +"Personal Achievements (Guess)"
                     target = "_blank"
                 }
             }
@@ -72,10 +81,28 @@ private fun TagConsumer<HTMLElement>.buildLinks() {
     }
 }
 
-private fun TagConsumer<HTMLElement>.buildUnlocks() {
+private fun TagConsumer<HTMLElement>.buildUnlocks(profile: Profile) {
     div(classes = "profile-section") {
         id = "profile-unlocks"
         h2 { +"Achievements" }
+        table {
+            tr {
+                th { +"Achievement" }
+                th { +"Id" }
+                th { +"Count" }
+            }
+            tbody {
+                profile.unlocks.forEach { unlock ->
+                    val achievementName = unlock.id
+                    val progress = if (unlock.progress == 0) "" else unlock.progress.toString()
+                    tr {
+                        td { +unlock.id }
+                        td { +achievementName}
+                        td { +progress }
+                    }
+                }
+            }
+        }
     }
 }
 

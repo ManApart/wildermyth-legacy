@@ -13,6 +13,7 @@ import kotlin.js.Promise
 
 @Serializable
 data class InMemoryStorage(
+    var profile: Profile = Profile("unknown"),
     val characters: MutableMap<String, LegacyCharacter> = mutableMapOf(),
     val pictures: MutableMap<String, String> = mutableMapOf(),
     val additionalInfo: MutableMap<String, AdditionalInfo> = mutableMapOf(),
@@ -28,6 +29,14 @@ data class InMemoryStorage(
 
 private var inMemoryStorage = InMemoryStorage()
 var characterCards: Map<String, HTMLElement> = mapOf()
+
+fun getProfile(): Profile {
+    return inMemoryStorage.profile
+}
+
+fun saveProfile(profile: Profile) {
+    inMemoryStorage.profile = profile
+}
 
 fun getCharacters(): List<LegacyCharacter> {
     return inMemoryStorage.characters.values.toList()

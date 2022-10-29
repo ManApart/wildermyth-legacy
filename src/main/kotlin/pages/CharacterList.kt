@@ -188,3 +188,8 @@ fun Enum<*>.format(): String {
 fun String.format(): String {
     return lowercase().capitalize()
 }
+
+private val capitalSplitRegex = "(?=\\p{Upper})".toRegex()
+fun String.splitByCapitals() : String {
+    return split(capitalSplitRegex).joinToString(" ")
+}

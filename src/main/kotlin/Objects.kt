@@ -161,3 +161,12 @@ data class GearRaw(
 
 @Serializable
 data class Hook(val id: String, val resolved: Boolean = false)
+
+@Serializable
+data class Profile(
+    val name: String,
+    val unlocks: List<Unlock> = listOf()
+)
+
+@Serializable
+data class Unlock(val id: String, val progress: Int)
