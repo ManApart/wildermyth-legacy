@@ -158,3 +158,6 @@ data class GearRaw(
 ) {
     fun toGear(uuid: String, name: String) = Gear(uuid, name, itemId, category, tier, uniqueCategory ?: subCategory, artifact, isEquipped, slots, ownerAspects.map { it.toAspect() })
 }
+
+@Serializable
+data class Hook(val id: String, val resolved: Boolean = false)

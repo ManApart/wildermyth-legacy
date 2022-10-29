@@ -119,7 +119,12 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot:
             }
             div("character-summary") {
                 val npc = if (character.npc) " (npc)" else ""
-                +"$age year old ${classLevel.format()} ${className.capitalize()} ${character.legacyTierLevel.format()}$npc"
+                +"$age year old ${classLevel.format()} ${className.capitalize()} ${character.legacyTierLevel.format()}$npc "
+                repeat(1 + character.legacyTierLevel.ordinal) {
+                    img(classes = "legacy-tier-image") {
+                        src = "images/star-active.png"
+                    }
+                }
             }
             div("character-bio") {
                 +bio
@@ -152,7 +157,7 @@ fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snaps
                     }
                     div("character-list-summary") {
                         +"${characterClass.name.format()} ${character.legacyTierLevel.format()} "
-                        repeat(character.legacyTierLevel.ordinal){
+                        repeat(1 + character.legacyTierLevel.ordinal) {
                             img(classes = "legacy-tier-image") {
                                 src = "images/star-active.png"
                             }

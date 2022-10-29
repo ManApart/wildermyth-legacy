@@ -48,7 +48,7 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
             id = "character-details"
             characterCard(character, snapshot, false)
             div("details-subsection") {
-                statsSection(character, snapshot)
+                statsSection(character, snapshot, showAggregates)
                 tagsSection(additionalInfo)
                 companiesSection(character)
             }
@@ -291,8 +291,9 @@ private fun DIV.buildHistorySection(character: Character, history: List<HistoryE
     }
 }
 
-fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snapshot: Character) {
+fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snapshot: Character, showAggregates: Boolean) {
     val rawStats = snapshot.aspects.filter { it.name == "historyStat2" }
+    val hooks = if (showAggregates) legacyCharacter.hooks else snapshot.hooks
     div("character-section") {
         id = "stats-section"
         div {
@@ -337,6 +338,12 @@ fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snap
                     tr {
                         td { +"Kills" }
                         td { +"${legacyCharacter.killCount}" }
+                    }
+                    hooks.forEach { hook ->
+                        tr {
+                            td { +hook.id }
+                            td { + if (hook.resolved) "Resolved" else "" }
+                        }
                     }
                 }
             }

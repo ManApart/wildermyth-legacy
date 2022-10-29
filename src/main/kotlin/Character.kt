@@ -13,6 +13,16 @@ data class LegacyCharacter(
     val rawJson: String? = null,
 ) {
     @Transient
+    val hooks = getHooks()
+
+    private fun getHooks(): List<Hook> {
+        val allHooks = snapshots.flatMap { it.hooks }.toSet()
+        return allHooks
+            .filter { hook -> hook.resolved || allHooks.none { it.resolved && it.id == hook.id } }
+            .sortedBy { it.id }
+    }
+
+    @Transient
     val friendships = getFriendships()
 
     private fun getFriendships(): List<Friendship> {
@@ -168,6 +178,9 @@ data class Character(
     @Transient
     var abilities = parseAbilities()
 
+    @Transient
+    val hooks = parseHooks()
+
     private fun getBio(): String {
         val historyOverrides = history.joinToString(" ") { it.textOverride }
         return historyOverrides.ifBlank {
@@ -286,6 +299,20 @@ data class Character(
             val description = getAspectProp("${aspect.name}.blurb")?.let { interpolate(it) } ?: aspect.name
             Ability(aspect.name, name, description)
         }
+    }
+
+    private fun parseHooks(): List<Hook> {
+        val allHooks = aspects
+            .filter { it.name.contains("hook_") && !it.name.endsWith("Resolved") && !it.name.contains("ThisCampaign") }
+            .map { Hook(it.name.replace("hook_", "")) }
+
+        val resolvedHooks = aspects
+            .filter { it.name.contains("hook_") && it.name.endsWith("Resolved") && !it.name.contains("ThisCampaign") }
+            .map { Hook(it.name.replace("hook_", "").replace("Resolved", ""), true) }
+
+        val unresolved = allHooks.filter { option -> resolvedHooks.none { it.id == option.id } }
+
+        return (resolvedHooks + unresolved).sortedBy { it.id }
     }
 
 }
