@@ -32,7 +32,7 @@ import org.w3c.dom.events.KeyboardEvent
 import kotlin.math.abs
 
 private lateinit var currentCharacter: LegacyCharacter
-fun characterDetail(character: LegacyCharacter, snapshot: Character = character.snapshots.last(), showAggregates: Boolean = true) {
+fun characterDetail(character: LegacyCharacter, snapshot: Character = character.snapshots.last(), showAggregates: Boolean = true, startY: Double = 0.0) {
     currentCharacter = character
     val additionalInfo = getAdditionalInfo(character.uuid)
     val section = document.getElementById("character-detail-section")!!
@@ -67,6 +67,7 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
             fullHistorySection(snapshot)
         }
     }
+    window.scrollTo(0.0, startY)
 }
 
 private fun TagConsumer<HTMLElement>.buildNav(character: LegacyCharacter, showAggregates: Boolean, snapshot: Character) {
@@ -74,6 +75,7 @@ private fun TagConsumer<HTMLElement>.buildNav(character: LegacyCharacter, showAg
         id = "character-nav"
         button {
             +"Back"
+            title = "You can also use left/right arrow keys."
             onClickFunction = {
                 characterDetail(previousCharacter(character))
             }
@@ -86,12 +88,14 @@ private fun TagConsumer<HTMLElement>.buildNav(character: LegacyCharacter, showAg
         }
         button {
             +"Next"
+            title = "You can also use left/right arrow keys."
             onClickFunction = {
                 characterDetail(nextCharacter(character))
             }
         }
         span {
             id = "snapshot-span"
+            title = "You can also use up/down arrow keys."
             label { +"Snapshot:" }
             select {
                 id = "snapshot-select"
@@ -137,8 +141,8 @@ fun onKeyDown(key: KeyboardEvent) {
 fun onKeyUp(key: KeyboardEvent) {
     if (window.location.hash.contains("detail")) {
         when (key.key) {
-            "ArrowLeft" -> characterDetail(previousCharacter(currentCharacter))
-            "ArrowRight" -> characterDetail(nextCharacter(currentCharacter))
+            "ArrowLeft" -> characterDetail(previousCharacter(currentCharacter), startY = window.pageYOffset)
+            "ArrowRight" -> characterDetail(nextCharacter(currentCharacter), startY = window.pageYOffset)
             "ArrowUp" -> previousSnapshot(currentCharacter)
             "ArrowDown" -> nextSnapshot(currentCharacter)
         }
@@ -182,9 +186,9 @@ private fun nextSnapshot(character: LegacyCharacter) {
 private fun changeSnapshot(snapshotI: Int, character: LegacyCharacter) {
     val nowShowAggregates = snapshotI >= character.snapshots.size
     if (nowShowAggregates) {
-        characterDetail(character, character.snapshots.last(), true)
+        characterDetail(character, character.snapshots.last(), true, window.pageYOffset)
     } else {
-        characterDetail(character, character.snapshots[snapshotI], false)
+        characterDetail(character, character.snapshots[snapshotI], false, window.pageYOffset)
     }
 }
 
@@ -298,7 +302,12 @@ fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snap
         id = "stats-section"
         div {
             id = "personality-section"
-            h2 { +"Personality" }
+            h2 {
+                +"Personality"
+                onClickFunction = {
+                    window.open("https://wildermyth.com/wiki/Stat#Personality_Stats", "_blank")
+                }
+            }
             table {
                 tbody {
                     snapshot.personality.entries.sortedByDescending { it.value }.forEach { (type, amount) ->
@@ -341,7 +350,12 @@ fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snap
                     }
                     hooks.forEach { hook ->
                         tr {
-                            td { +hook.id }
+                            td {
+                                +"Hook: ${hook.id}"
+                                onClickFunction = {
+                                    window.open("https://wildermyth.com/wiki/Category:${hook.id}", "_blank")
+                                }
+                            }
                             td { + if (hook.resolved) "Resolved" else "" }
                         }
                     }
@@ -530,7 +544,10 @@ private fun TagConsumer<HTMLElement>.compatibilitySection(character: LegacyChara
         id = "compatibility-section"
         h2 {
             +"Compatibility"
-            title = "How compatible ${me.name} is with other characters. More hearts means faster friendship and love. More lightning bolts means faster becoming rivals."
+            title = "How compatible ${me.name} is with other characters. More hearts means faster friendship and love. More lightning bolts means faster becoming rivals. (Click for more info)"
+            onClickFunction = {
+                window.open("https://wildermyth.com/wiki/Relationship", "_blank")
+            }
         }
         levelGroups.forEach { (level, friends) ->
             div("compatibility-row") {
@@ -652,6 +669,7 @@ private fun TagConsumer<HTMLElement>.gearCard(gear: Gear) {
         div("gear") {
             h4 {
                 +name
+                title = "Click to view Wiki"
                 onClickFunction = {
                     window.open("https://wildermyth.com/wiki/Equipment", "_blank")
                 }
