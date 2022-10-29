@@ -169,4 +169,4 @@ data class Profile(
 )
 
 @Serializable
-data class Unlock(val id: String, val progress: Int)
+data class Unlock(val id: String, val name: String, val progress: Int)

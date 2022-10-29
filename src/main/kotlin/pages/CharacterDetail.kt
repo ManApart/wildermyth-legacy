@@ -605,10 +605,10 @@ fun TagConsumer<HTMLElement>.aspectsSection(character: Character) {
     val allAspects = character.aspects.sortedBy { it.name }
     val firstHalf = allAspects.subList(0, allAspects.size / 2)
     val secondHalf = allAspects.subList(allAspects.size / 2, allAspects.size)
-    div("character-section") {
+    div("character-section two-column-section") {
         id = "aspects-section"
         h2 { +"Aspects" }
-        div {
+        div("column-tables") {
             id = "aspect-tables"
             buildAspectTable(firstHalf)
             buildAspectTable(secondHalf)
@@ -617,7 +617,7 @@ fun TagConsumer<HTMLElement>.aspectsSection(character: Character) {
 }
 
 private fun DIV.buildAspectTable(firstHalf: List<Aspect>) {
-    div("aspects-table") {
+    div("column-table") {
         table {
             tbody {
                 firstHalf.forEach { aspect ->

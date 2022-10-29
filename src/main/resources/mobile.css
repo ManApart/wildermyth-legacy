@@ -53,19 +53,24 @@
         width: 100%;
     }
 
-    #aspect-tables table {
+    .column-tables table {
         font-size: 1.5em;
         table-layout: fixed;
-    }
-
-    #aspect-tables table {
         word-break: break-all;
     }
 
-    #aspect-tables{
+    .column-tables{
         flex-wrap: wrap;
         width: 100%;
         overflow: scroll;
+    }
+    .column-table{
+        width: 100%;
+    }
+
+    .count-column {
+        text-align: right;
+        width: 10%;
     }
 
     #full-history-columns{
@@ -90,6 +95,15 @@
 
     #full-history-column-right {
         margin-left: 0px;
+    }
+
+    .profile-link {
+        margin: 1%;
+        font-size: 130%;
+    }
+
+    #company-lists .company{
+        width: 100%;
     }
 
 }

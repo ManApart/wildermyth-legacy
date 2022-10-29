@@ -280,7 +280,8 @@ fun parseProfile(json: Json): Profile {
     val entries = ((json["unlocks"] as Json)["entries"] as Array<Array<Json>>).map { it.last() }
 
     val unlocks = entries.map {
-        val id = (it["aspectId"] as String).replace("achievementProgress_", "")
+        val id = (it["aspectId"] as String)
+        val name = id.replace("achievementProgress_", "")
             .replace("achievement_", "")
             .replace("legacy_", "")
             .replace("_", " ")
@@ -288,7 +289,7 @@ fun parseProfile(json: Json): Profile {
             .capitalize()
             .splitByCapitals()
         val count = (it["value"] as Int?) ?: 0
-        Unlock(id, count)
+        Unlock(id, name, count)
     }
 
     return Profile(player, unlocks)

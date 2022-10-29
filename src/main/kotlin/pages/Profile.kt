@@ -1,6 +1,7 @@
 package pages
 
 import Profile
+import Unlock
 import clearSections
 import getCharacters
 import getCompanies
@@ -25,8 +26,8 @@ fun profile() {
     section.append {
         buildProfileNav()
         buildLinks(profile)
-        buildUnlocks(profile)
         buildCompanies()
+        buildUnlocks(profile)
     }
 }
 
@@ -45,60 +46,73 @@ private fun TagConsumer<HTMLElement>.buildProfileNav() {
 private fun TagConsumer<HTMLElement>.buildLinks(profile: Profile) {
     div(classes = "profile-section") {
         id = "profile-links"
-        h2 { +"Links" }
-        ol {
-            li {
-                a("https://wildermyth.com/wiki/Relationship") {
-                    +"Wiki"
-                    target = "_blank"
-                }
+        span("profile-link") {
+            a("https://wildermyth.com/wiki/Relationship") {
+                +"Wiki"
+                target = "_blank"
             }
-            li {
-                a("https://steamcommunity.com/stats/763890/achievements/") {
-                    +"Achievements"
-                    target = "_blank"
-                }
+        }
+        span("profile-link") {
+            a("https://steamcommunity.com/stats/763890/achievements/") {
+                +"Achievements"
+                target = "_blank"
             }
-            li {
-                a("https://steamcommunity.com/id/${profile.name}/stats/763890/achievements/") {
-                    +"Personal Achievements (Guess)"
-                    target = "_blank"
-                }
+        }
+        span("profile-link") {
+            a("https://steamcommunity.com/id/${profile.name}/stats/763890/achievements/") {
+                +"Personal Achievements (Guess)"
+                target = "_blank"
             }
-            li {
-                a("https://steamcommunity.com/app/763890/workshop/") {
-                    +"Mods"
-                    target = "_blank"
-                }
+        }
+        span("profile-link") {
+            a("https://steamcommunity.com/app/763890/workshop/") {
+                +"Mods"
+                target = "_blank"
             }
-            li {
-                a("https://github.com/ManApart/wildermyth-legacy") {
-                    +"Site Source"
-                    target = "_blank"
-                }
+        }
+        span("profile-link") {
+            a("https://github.com/ManApart/wildermyth-legacy") {
+                +"Site Source"
+                target = "_blank"
             }
         }
     }
 }
 
 private fun TagConsumer<HTMLElement>.buildUnlocks(profile: Profile) {
-    div(classes = "profile-section") {
+    val allUnlocks = profile.unlocks.sortedBy { it.id }
+    val firstHalf = allUnlocks.subList(0, allUnlocks.size / 2)
+    val secondHalf = allUnlocks.subList(allUnlocks.size / 2, allUnlocks.size)
+    div("profile-section two-column-section") {
         id = "profile-unlocks"
-        h2 { +"Achievements" }
+        h2 {
+            +"Achievements"
+            title = "Every achievement you've unlocked or are tracking."
+        }
+        div("column-tables") {
+            id = "unlock-tables"
+
+            buildUnlockTable(firstHalf)
+            buildUnlockTable(secondHalf)
+        }
+    }
+}
+
+private fun TagConsumer<HTMLElement>.buildUnlockTable(unlocks: List<Unlock>) {
+    div("column-table") {
         table {
             tr {
-                th { +"Achievement" }
                 th { +"Id" }
-                th { +"Count" }
+                th { +"Name" }
+                th(classes = "count-column") { +"Count" }
             }
             tbody {
-                profile.unlocks.forEach { unlock ->
-                    val achievementName = unlock.id
+                unlocks.forEach { unlock ->
                     val progress = if (unlock.progress == 0) "" else unlock.progress.toString()
                     tr {
                         td { +unlock.id }
-                        td { +achievementName}
-                        td { +progress }
+                        td { +unlock.name }
+                        td(classes = "count-column") { +progress }
                     }
                 }
             }
@@ -107,11 +121,27 @@ private fun TagConsumer<HTMLElement>.buildUnlocks(profile: Profile) {
 }
 
 private fun TagConsumer<HTMLElement>.buildCompanies() {
+    val allCompanies = getCompanies()
+    val firstHalf = allCompanies.subList(0, allCompanies.size / 2)
+    val secondHalf = allCompanies.subList(allCompanies.size / 2, allCompanies.size)
     div(classes = "profile-section") {
         id = "profile-companies"
-        h2 { +"Companies" }
-        getCompanies().forEach { company ->
-            companyCard(company)
+        h2 {
+            +"Companies"
+            title = "Every company you've completed a campaign with."
+        }
+        div("column-tables") {
+            id = "company-lists"
+            div("column-table") {
+                firstHalf.forEach { company ->
+                    companyCard(company)
+                }
+            }
+            div("column-table") {
+                secondHalf.forEach { company ->
+                    companyCard(company)
+                }
+            }
         }
     }
 }
