@@ -1,5 +1,4 @@
 import pages.filterCharacterDoms
-import pages.format
 
 fun characterSearch() {
     val characters = getCharacters()

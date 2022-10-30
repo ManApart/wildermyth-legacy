@@ -5,7 +5,7 @@ import LegacyCharacter
 import characterCards
 import clearSections
 import el
-import favicon
+import format
 import getAdditionalInfo
 import getCharacters
 import getPicture
@@ -21,7 +21,6 @@ import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
 import saveAdditionalInfo
-import saveSearch
 import searchOptions
 
 
@@ -178,21 +177,4 @@ fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snaps
             }
         }
     }
-}
-
-fun Enum<*>.format(): String {
-    return if (this == undefined) "" else name.split("_").joinToString(" ") { it.lowercase().capitalize() }
-}
-
-fun String.format(): String {
-    return lowercase().capitalize()
-}
-
-private val capitalSplitRegex = "(?=\\p{Upper})".toRegex()
-fun String.splitByCapitals() : String {
-    return split(capitalSplitRegex).joinToString(" ")
-}
-
-fun String.removeAll(vararg parts: String): String {
-    return parts.fold(this){acc, s -> acc.replace(s, "") }
 }

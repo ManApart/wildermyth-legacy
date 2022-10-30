@@ -11,6 +11,7 @@ import LegacyCharacter
 import clearSections
 import el
 import favicon
+import format
 import getAdditionalInfo
 import getCharacter
 import getCharacters

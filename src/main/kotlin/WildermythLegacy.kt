@@ -79,3 +79,20 @@ fun clearSections() {
 
 fun el(id: String) = document.getElementById(id) as HTMLElement
 fun <T> el(id: String) = document.getElementById(id) as T
+
+fun Enum<*>.format(): String {
+    return if (this == undefined) "" else name.split("_").joinToString(" ") { it.lowercase().capitalize() }
+}
+
+fun String.format(): String {
+    return lowercase().capitalize()
+}
+
+private val capitalSplitRegex = "(?=\\p{Upper})".toRegex()
+fun String.splitByCapitals() : String {
+    return split(capitalSplitRegex).joinToString(" ")
+}
+
+fun String.removeAll(vararg parts: String): String {
+    return parts.fold(this){acc, s -> acc.replace(s, "") }
+}
