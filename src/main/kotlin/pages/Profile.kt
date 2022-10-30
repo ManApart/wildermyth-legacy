@@ -192,7 +192,7 @@ private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String,
     val max = data.values.maxOfOrNull { it }
     if (max != null) {
         div("profile-chart-wrapper") {
-            table("charts-css bar show-heading show-labels labels-align-end data-spacing-2 profile-chart") {
+            table("charts-css bar show-heading show-labels labels-align-end data-spacing-4 profile-chart") {
                 id = docId
                 caption { +caption }
                 thead {

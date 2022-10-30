@@ -117,8 +117,12 @@
         font-size: 2rem;
     }
 
+   .profile-chart th{
+        font-weight: 100;
+    }
+
     #legacy-tier-chart, #gender-chart, #character-class-chart, #popularity-chart, #campaigns-chart, #kills-chart {
-        --labels-size: 280px;
+        --labels-size: 350px;
     }
 
 }
