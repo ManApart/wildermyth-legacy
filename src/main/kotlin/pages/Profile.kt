@@ -60,7 +60,7 @@ private fun TagConsumer<HTMLElement>.buildLinks(profile: Profile) {
         }
         span("profile-link") {
             a("https://steamcommunity.com/id/${profile.name}/stats/763890/achievements/") {
-                +"Personal Achievements (Guess)"
+                +"Personal Achievements"
                 target = "_blank"
             }
         }

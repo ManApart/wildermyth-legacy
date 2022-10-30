@@ -35,6 +35,7 @@ import saveDynamicProps
 import savePicture
 import saveProfile
 import saveStoryProps
+import splitByCapitals
 import kotlin.js.Promise
 
 private val companies = mutableMapOf<String, Company>()

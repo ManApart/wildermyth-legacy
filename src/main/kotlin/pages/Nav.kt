@@ -12,6 +12,7 @@ import kotlinx.html.js.onKeyUpFunction
 import kotlinx.serialization.encodeToString
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
+import org.w3c.xhr.XMLHttpRequest
 import saveSearch
 import searchOptions
 
@@ -42,6 +43,7 @@ fun buildNav() {
             button(classes = "nav-button") {
                 id = "export-button"
                 +"Export"
+                title = "Download Journals, Stars, etc"
                 onClickFunction = { downloadAdditionalInfo() }
             }
         }
@@ -81,6 +83,25 @@ private fun TagConsumer<HTMLElement>.checkBox(id: String, text: String, startChe
 }
 
 private fun downloadAdditionalInfo() {
+    manualDownload()
+    attemptAutoDownload()
+}
+
+private fun attemptAutoDownload() {
+    XMLHttpRequest().apply {
+        open("POST", "http://localhost:3333")
+        setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+        onerror = {
+            println("Call to local failed")
+        }
+        onload = {
+            println("Saved to local")
+        }
+        send(jsonMapper.encodeToString(getAdditionalInfo()))
+    }
+}
+
+private fun manualDownload() {
     val download = document.createElement("a") as HTMLElement
     download.setAttribute("href", "data:text/plain;charset=utf-8," + jsonMapper.encodeToString(getAdditionalInfo()))
     download.setAttribute("download", "AdditionalInfo.json")

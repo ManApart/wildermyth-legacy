@@ -53,7 +53,7 @@ fun importMenu() {
                 id = "instructions-text"
                 h4 { +"Using the Uploader" }
                 p { +"If this all seems a bit much, try using download tool the instead. If we're lucky, it will find your game paths and files and create the zip for you. You'll still need to export each character though if you want character pictures." }
-                a("./wilder-upload.exe"){
+                a("./wilder-upload.exe") {
                     id = "download-tool-link"
                     +"Download Tool"
                 }
@@ -96,13 +96,13 @@ fun importMenu() {
                 h4 { +"Exporting All Characters" }
                 p { +"If you have a lot of characters, you can use this autohotkey script to automate the character export." }
                 ol {
-                    li  {
+                    li {
                         +"Download and install "
-                        a("https://www.autohotkey.com/", target = "_blank"){+"AutoHotkey."}
+                        a("https://www.autohotkey.com/", target = "_blank") { +"AutoHotkey." }
                     }
-                    li  {
+                    li {
                         +"Download and open the "
-                        a("./WildermythLegacy.ahk"){+"wildermyth script."}
+                        a("./WildermythLegacy.ahk") { +"wildermyth script." }
                     }
                     li {
                         +"In the game, navigate to your heroes legacy, where you see all your characters standing around. The script has to start there. When it starts it will open you hero list, and then start clicking through each character."
@@ -117,7 +117,7 @@ fun importMenu() {
 
                 h4 { +"Additional Info File" }
                 ol {
-                    li { +"Any editing of tags or character history on the site is stored locally in your browser." }
+                    li { +"Any editing of tags or character journals on the site is stored locally in your browser." }
                     li { +"Clicking the 'Export' button lets you download this json file so you can back it up." }
                     li { +"You can include this json file at the top level of the zip you upload to the site and it will be loaded." }
                     li { +"This let's you use a single zip to load your data onto multiple devices." }
