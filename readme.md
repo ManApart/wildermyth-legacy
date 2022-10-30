@@ -34,6 +34,7 @@ https://manapart.github.io/wildermyth-legacy/
 - [ChartsCSS](https://github.com/ChartsCSS/charts.css)
 - [Local Forage](https://github.com/localForage/localForage)
 - [VisJs](https://github.com/visjs)
+- [Graph Palette](https://www.pixilart.com/palettes/doggoarts-41778)
 
 ## TODO
 

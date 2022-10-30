@@ -1,6 +1,5 @@
 package pages
 
-import LegacyTierLevel
 import Profile
 import Unlock
 import clearSections
@@ -28,7 +27,7 @@ fun profile() {
     section.append {
         buildProfileNav()
         buildLinks(profile)
-        buildAggregates()
+        buildCharts()
         buildCompanies()
         buildUnlocks(profile)
     }
@@ -150,41 +149,64 @@ private fun TagConsumer<HTMLElement>.buildCompanies() {
     }
 }
 
-private fun TagConsumer<HTMLElement>.buildAggregates() {
+private fun TagConsumer<HTMLElement>.buildCharts() {
     div(classes = "profile-section") {
         id = "profile-aggregates"
         h2 {
             +"Character Composition"
         }
-        legacyTierTable()
+        div("profile-charts") {
+            val legacyTier = getCharacters().groupBy { it.legacyTierLevel }.entries.associate { (level, list) -> level.format() to list.size }
+            chartTable("legacy-tier-chart", legacyTier, listOf("Level", "Count"), "Characters by Legacy Tier")
+
+            val gender = getCharacters().groupBy { it.snapshots.last().sex }.entries.associate { (level, list) -> level.format() to list.size }
+            chartTable("gender-chart", gender, listOf("Sex", "Count"), "Characters by Sex")
+
+            val byClass = getCharacters().groupBy { it.snapshots.last().characterClass }.entries.associate { (level, list) -> level.format() to list.size }
+            chartTable("character-class-chart", byClass, listOf("Class", "Count"), "Characters by Class")
+
+            val popularity = getCharacters().map { it.snapshots.last().name to it.friendships.size }.filter { it.second > 1 }.sortedByDescending { it.second }.take(20).toMap()
+            chartTable("popularity-chart", popularity, listOf("Character", "Friend Count"), "Popularity (Relationship Count)")
+
+            val campaigns = getCharacters().map { it.snapshots.last().name to it.companyIds.size }.filter { it.second > 1 }.sortedByDescending { it.second }.take(20).toMap()
+            chartTable("campaigns-chart", campaigns, listOf("Character", "Campaign Count"), "Campaign Count")
+
+            val kills = getCharacters().map { it.snapshots.last().name to it.killCount }.filter { it.second > 10 }.sortedByDescending { it.second }.take(20).toMap()
+            chartTable("kills-chart", kills, listOf("Character", "Kills"), "Kill Count")
+        }
     }
 }
 
-private fun TagConsumer<HTMLElement>.legacyTierTable() {
-    val characters = getCharacters().groupBy { it.legacyTierLevel }
-    val max = characters.values.maxOf { it.size }
-    table("charts-css bar show-labels profile-chart") {
-        id = "legacy-tier-chart"
-        caption { +"Characters by Legacy Tier" }
-        thead {
-            tr {
-                th(ThScope.col) { +"Level" }
-                th(ThScope.col) { +"Count" }
-            }
-        }
-        tbody {
-            characters.entries.reversed().forEach { (level, list) ->
-                tr {
-                    th(ThScope.row) {
-                        +level.format()
+
+private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String, Int>, headers: List<String>, caption: String) {
+    val max = data.values.maxOfOrNull { it }
+    if (max != null) {
+        div("profile-chart-wrapper") {
+            table("charts-css bar show-heading show-labels labels-align-end data-spacing-2 profile-chart") {
+                id = docId
+                style = "--labels-size: 150px"
+                caption { +caption }
+                thead {
+                    tr {
+                        headers.forEach {
+                            th(ThScope.col) { +it }
+                        }
                     }
-                    td {
-                        style = "--size: calc( ${list.size} / $max )"
-                        +"${list.size}"
+                }
+                tbody {
+                    data.entries.forEach { (key, count) ->
+                        tr {
+                            th(ThScope.row) {
+                                +key.format()
+                            }
+                            td {
+                                style = "--size: calc( $count / $max )"
+                                +"$count"
+                            }
+                        }
                     }
                 }
             }
         }
     }
-
 }
