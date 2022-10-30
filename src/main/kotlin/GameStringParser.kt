@@ -1,4 +1,5 @@
 import kotlinx.serialization.encodeToString
+import pages.removeAll
 import kotlin.math.min
 
 interface Chunk {
@@ -22,23 +23,23 @@ private val useLastResult = listOf("test", "/")
 private val useTypeItself = listOf("mysticDeck_indignance_upgrade")
 
 fun Character.interpolate(line: String, entry: HistoryEntry = noHistory): String {
-    return buildChunks(line).joinToString("") { it.interpolate(this, entry) }
+    return line.cleanInitial().buildChunks().joinToString("") { it.interpolate(this, entry) }
 }
 
-private fun buildChunks(line: String): List<Chunk> {
-    return buildChunks(0, line)
+private fun String.cleanInitial(): String {
+    return removeAll("[b]", "[i]", "[]", "[upgrade]")
 }
 
-private fun buildChunks(from: Int, line: String): List<Chunk> {
-    val templateText = getTemplate(from, line) ?: return listOf(StringChunk(line.substring(from, line.length)))
+private fun String.buildChunks(from: Int = 0): List<Chunk> {
+    val templateText = getTemplate(from, this) ?: return listOf(StringChunk(this.substring(from, length)))
 
-    val children = buildChunks(0, templateText)
+    val children = templateText.buildChunks()
 
-    val templateStart = line.indexOf("<$templateText", from)
+    val templateStart = indexOf("<$templateText", from)
     return listOfNotNull(
-        if (templateStart > from) StringChunk(line.substring(from, templateStart)) else null,
+        if (templateStart > from) StringChunk(substring(from, templateStart)) else null,
         Template(templateText, children),
-    ) + buildChunks(templateStart + templateText.length + 2, line)
+    ) + this.buildChunks(templateStart + templateText.length + 2)
 }
 
 fun getTemplate(from: Int, line: String): String? {

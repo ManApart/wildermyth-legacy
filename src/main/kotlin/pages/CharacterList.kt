@@ -118,7 +118,7 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot:
             }
             div("character-summary") {
                 val npc = if (character.npc) " (npc)" else ""
-                +"$age year old ${classLevel.format()} ${className.capitalize()} ${character.legacyTierLevel.format()}$npc "
+                +"${classLevel.format()} ${className.capitalize()} ${character.legacyTierLevel.format()}$npc "
                 repeat(1 + character.legacyTierLevel.ordinal) {
                     img(classes = "legacy-tier-image") {
                         src = "images/star-active.png"
@@ -191,4 +191,8 @@ fun String.format(): String {
 private val capitalSplitRegex = "(?=\\p{Upper})".toRegex()
 fun String.splitByCapitals() : String {
     return split(capitalSplitRegex).joinToString(" ")
+}
+
+fun String.removeAll(vararg parts: String): String {
+    return parts.fold(this){acc, s -> acc.replace(s, "") }
 }

@@ -153,7 +153,6 @@ fun onKeyUp(key: KeyboardEvent) {
 fun setFavicon(character: LegacyCharacter) {
     getCroppedHead(character).then {
         it?.let { cropped ->
-            println("Favicon for ${character.snapshots.last().name}")
             favicon.setAttribute("href", cropped)
         } ?: println("Unable to find favicon!")
     }
@@ -347,6 +346,10 @@ fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snap
                         td { +snapshot.hometown }
                     }
                     tr {
+                        td { +"Age" }
+                        td { +"${snapshot.age}" }
+                    }
+                    tr {
                         td { +"Kills" }
                         td { +"${legacyCharacter.killCount}" }
                     }
@@ -499,7 +502,12 @@ private fun TagConsumer<HTMLElement>.relationshipHeader(character: LegacyCharact
 fun TagConsumer<HTMLElement>.companiesSection(character: LegacyCharacter) {
     div("character-section") {
         id = "companies-section"
-        h2 { +"Companies" }
+        h2 {
+            +"Companies"
+            onClickFunction = {
+                window.location.hash = "#profile"
+            }
+        }
         character.companyIds.forEach { companyCard(it) }
     }
 }
