@@ -89,6 +89,12 @@ private fun TagConsumer<HTMLElement>.buildNav(character: LegacyCharacter, showAg
             }
         }
         button {
+            +"Profile"
+            onClickFunction = {
+                profile()
+            }
+        }
+        button {
             +"Next"
             title = "You can also use left/right arrow keys."
             onClickFunction = {

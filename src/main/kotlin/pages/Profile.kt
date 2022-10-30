@@ -1,5 +1,6 @@
 package pages
 
+import LegacyCharacter
 import Profile
 import Unlock
 import clearSections
@@ -165,20 +166,24 @@ private fun TagConsumer<HTMLElement>.buildCharts() {
             val byClass = getCharacters().groupBy { it.snapshots.last().characterClass }.entries.associate { (level, list) -> level.format() to list.size }
             chartTable("character-class-chart", byClass, listOf("Class", "Count"), "Characters by Class")
 
-            val popularity = getCharacters().map { it.snapshots.last().name to it.friendships.size }.filter { it.second > 1 }.sortedByDescending { it.second }.take(20).toMap()
+            val popularity = getCharacters().map { it to it.friendships.size }.filter { it.second > 1 }.sortedByDescending { it.second }.take(20).toMap()
             chartTable("popularity-chart", popularity, listOf("Character", "Friend Count"), "Popularity (Relationship Count)")
 
-            val campaigns = getCharacters().map { it.snapshots.last().name to it.companyIds.size }.filter { it.second > 1 }.sortedByDescending { it.second }.take(20).toMap()
+            val campaigns = getCharacters().map { it to it.companyIds.size }.filter { it.second > 1 }.sortedByDescending { it.second }.take(20).toMap()
             chartTable("campaigns-chart", campaigns, listOf("Character", "Campaign Count"), "Campaigns Participated In")
 
-            val kills = getCharacters().map { it.snapshots.last().name to it.killCount }.filter { it.second > 10 }.sortedByDescending { it.second }.take(20).toMap()
+            val kills = getCharacters().map { it to it.killCount }.filter { it.second > 10 }.sortedByDescending { it.second }.take(20).toMap()
             chartTable("kills-chart", kills, listOf("Character", "Kills"), "Confirmed Kills")
         }
     }
 }
 
+private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<LegacyCharacter, Int>, headers: List<String>, caption: String) {
+    val namedData = data.mapKeys { (character, _) -> character.snapshots.last().name }
+    chartTable(docId, namedData, headers, caption) { characterDetail(data.keys.toList()[it]) }
+}
 
-private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String, Int>, headers: List<String>, caption: String) {
+private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String, Int>, headers: List<String>, caption: String, onClick: (Int) -> Unit = {}) {
     val max = data.values.maxOfOrNull { it }
     if (max != null) {
         div("profile-chart-wrapper") {
@@ -193,7 +198,7 @@ private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String,
                     }
                 }
                 tbody {
-                    data.entries.forEach { (key, count) ->
+                    data.entries.forEachIndexed { i, (key, count) ->
                         tr {
                             th(ThScope.row) {
                                 +key.format()
@@ -202,6 +207,7 @@ private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String,
                                 style = "--size: calc( $count / $max )"
                                 +"$count"
                             }
+                            onClickFunction = { onClick(i) }
                         }
                     }
                 }
