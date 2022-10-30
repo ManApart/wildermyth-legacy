@@ -1,8 +1,10 @@
 package pages
 
+import LegacyTierLevel
 import Profile
 import Unlock
 import clearSections
+import format
 import getCharacters
 import getCompanies
 import getProfile
@@ -26,6 +28,7 @@ fun profile() {
     section.append {
         buildProfileNav()
         buildLinks(profile)
+        buildAggregates()
         buildCompanies()
         buildUnlocks(profile)
     }
@@ -145,4 +148,43 @@ private fun TagConsumer<HTMLElement>.buildCompanies() {
             }
         }
     }
+}
+
+private fun TagConsumer<HTMLElement>.buildAggregates() {
+    div(classes = "profile-section") {
+        id = "profile-aggregates"
+        h2 {
+            +"Character Composition"
+        }
+        legacyTierTable()
+    }
+}
+
+private fun TagConsumer<HTMLElement>.legacyTierTable() {
+    val characters = getCharacters().groupBy { it.legacyTierLevel }
+    val max = characters.values.maxOf { it.size }
+    table("charts-css bar show-labels profile-chart") {
+        id = "legacy-tier-chart"
+        caption { +"Characters by Legacy Tier" }
+        thead {
+            tr {
+                th(ThScope.col) { +"Level" }
+                th(ThScope.col) { +"Count" }
+            }
+        }
+        tbody {
+            characters.entries.reversed().forEach { (level, list) ->
+                tr {
+                    th(ThScope.row) {
+                        +level.format()
+                    }
+                    td {
+                        style = "--size: calc( ${list.size} / $max )"
+                        +"${list.size}"
+                    }
+                }
+            }
+        }
+    }
+
 }

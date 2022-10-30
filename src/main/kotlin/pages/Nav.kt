@@ -89,7 +89,7 @@ private fun downloadAdditionalInfo() {
 
 private fun attemptAutoDownload() {
     XMLHttpRequest().apply {
-        open("POST", "http://localhost:3333")
+        open("POST", "http://localhost:3333/wildermyth/additional-info")
         setRequestHeader("Content-Type", "application/json;charset=UTF-8")
         onerror = {
             println("Call to local failed")

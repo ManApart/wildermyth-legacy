@@ -22,3 +22,12 @@
     text-align: right;
     padding-right: 3%;
 }
+
+.profile-chart {
+  height: 200px;
+  margin: 0 auto;
+}
+
+#legacy-tier-chart {
+  --labels-size: 150px;
+}

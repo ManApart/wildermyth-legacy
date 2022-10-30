@@ -29,6 +29,12 @@ cp -r ../wildermyth-legacy/build/distributions/* .
 
 https://manapart.github.io/wildermyth-legacy/
 
+## Credits
+
+- [ChartsCSS](https://github.com/ChartsCSS/charts.css)
+- [Local Forage](https://github.com/localForage/localForage)
+- [VisJs](https://github.com/visjs)
+
 ## TODO
 
 Details page
