@@ -22,3 +22,58 @@
     text-align: right;
     padding-right: 3%;
 }
+
+.profile-charts {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.profile-chart-wrapper {
+    margin: 0px;
+    width: 500px;
+    height: 100%;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 100px;
+}
+
+.profile-chart {
+    margin: 0 auto;
+    --heading-size: 3.5rem;
+    --color-1: #90CAF9;
+    --color-8: #FFE0B2;
+    --color-3: #FF8965;
+    --color-4: #455A64;
+    --color-5: #FFD9D1;
+    --color-6: #795548;
+    --color-7: #B37E71;
+    --color-2: #6B2B17;
+    --color-9: #FFFFFF;
+    --color-10: #4D4D4D;
+
+}
+
+.profile-chart caption {
+    font-size: 1.3rem;
+    font-weight: bold;
+    line-height: 1rem;
+}
+
+.profile-chart tr {
+  transition-duration: 0.3s;
+}
+
+.profile-chart tr:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.profile-chart tr:hover th {
+  background-color: rgba(0, 0, 0, 0.4);
+  color: #fff;
+}
+
+
+#legacy-tier-chart, #gender-chart, #character-class-chart, #popularity-chart, #campaigns-chart, #kills-chart {
+    --labels-size: 150px;
+}
