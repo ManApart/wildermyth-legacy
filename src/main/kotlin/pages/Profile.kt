@@ -43,6 +43,11 @@ private fun TagConsumer<HTMLElement>.buildProfileNav() {
                 window.location.hash = "#"
             }
         }
+        button {
+            id = "upload-button"
+            +"Upload"
+            onClickFunction = { importMenu(false) }
+        }
     }
 }
 

@@ -97,10 +97,6 @@ table {
     margin: auto;
 }
 
-#nav {
-    margin-bottom: 2%;
-}
-
 #top-nav {
     grid-template-columns: minmax(100px, .2fr) minmax(100px, .2fr) auto minmax(100px, .2fr);
 }

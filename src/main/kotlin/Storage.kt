@@ -104,7 +104,7 @@ fun getCompanyForGameId(uuid: String): Company {
 }
 
 fun saveCompanies(companies: Map<String, Company>) {
-    inMemoryStorage.companies = companies.toMap()
+    inMemoryStorage.companies = companies.entries.sortedBy { it.value.date }.associate{ it.key to it.value}
     inMemoryStorage.companyByGameId = companies.values.associateBy { it.gameId }
 }
 

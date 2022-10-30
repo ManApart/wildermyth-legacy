@@ -50,15 +50,18 @@ fun filterCharacterDoms(characters: List<LegacyCharacter>) {
 fun buildCharacters(section: Element, characters: List<LegacyCharacter>) {
     section.innerHTML = ""
     section.append {
-        characters.also { println("Building ${it.size} characters") }
-            .sorted()
-            .forEach { character ->
-                if (searchOptions.listView) {
-                    characterListItem(character, character.snapshots.last(), true)
-                } else {
-                    characterCard(character, character.snapshots.last(), true)
+        div {
+            id = "all-characters"
+            characters.also { println("Building ${it.size} characters") }
+                .sorted()
+                .forEach { character ->
+                    if (searchOptions.listView) {
+                        characterListItem(character, character.snapshots.last(), true)
+                    } else {
+                        characterCard(character, character.snapshots.last(), true)
+                    }
                 }
-            }
+        }
     }
     characterCards = characters.associate { it.uuid to document.getElementById(it.uuid) as HTMLElement }
 }

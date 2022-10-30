@@ -11,6 +11,10 @@
     margin-left: 50px;
 }
 
+#all-characters {
+    margin-top: 2%
+}
+
 .character-card {
     background-color: var(--card-background);
     display: inline-block;

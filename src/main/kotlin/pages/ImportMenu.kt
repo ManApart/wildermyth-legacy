@@ -13,7 +13,7 @@ import org.w3c.dom.HTMLInputElement
 import org.w3c.files.FileReader
 import org.w3c.files.get
 
-fun importMenu() {
+fun importMenu(rebuildNav: Boolean = true) {
     val section = el("import-section")
     section.innerHTML = ""
     document.getElementById("character-detail-section")!!.innerHTML = ""
@@ -24,14 +24,14 @@ fun importMenu() {
             +"Cancel"
             onClickFunction = {
                 section.innerHTML = ""
-                buildNav()
+                if (rebuildNav) buildNav()
             }
         }
         input(InputType.file) {
             id = "import-input"
             type = InputType.file
             onChangeFunction = {
-                buildNav()
+                if (rebuildNav) buildNav()
                 val element = document.getElementById(id) as HTMLInputElement
                 if (element.files != undefined) {
                     val file = element.files!![0]!!
