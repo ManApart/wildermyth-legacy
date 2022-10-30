@@ -153,7 +153,7 @@ private fun TagConsumer<HTMLElement>.buildCharts() {
     div(classes = "profile-section") {
         id = "profile-aggregates"
         h2 {
-            +"Character Composition"
+            +"Character Stats"
         }
         div("profile-charts") {
             val legacyTier = getCharacters().groupBy { it.legacyTierLevel }.entries.associate { (level, list) -> level.format() to list.size }
@@ -169,10 +169,10 @@ private fun TagConsumer<HTMLElement>.buildCharts() {
             chartTable("popularity-chart", popularity, listOf("Character", "Friend Count"), "Popularity (Relationship Count)")
 
             val campaigns = getCharacters().map { it.snapshots.last().name to it.companyIds.size }.filter { it.second > 1 }.sortedByDescending { it.second }.take(20).toMap()
-            chartTable("campaigns-chart", campaigns, listOf("Character", "Campaign Count"), "Campaign Count")
+            chartTable("campaigns-chart", campaigns, listOf("Character", "Campaign Count"), "Campaigns Participated In")
 
             val kills = getCharacters().map { it.snapshots.last().name to it.killCount }.filter { it.second > 10 }.sortedByDescending { it.second }.take(20).toMap()
-            chartTable("kills-chart", kills, listOf("Character", "Kills"), "Kill Count")
+            chartTable("kills-chart", kills, listOf("Character", "Kills"), "Confirmed Kills")
         }
     }
 }
@@ -184,7 +184,6 @@ private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String,
         div("profile-chart-wrapper") {
             table("charts-css bar show-heading show-labels labels-align-end data-spacing-2 profile-chart") {
                 id = docId
-                style = "--labels-size: 150px"
                 caption { +caption }
                 thead {
                     tr {

@@ -27,7 +27,6 @@
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-
 }
 
 .profile-chart-wrapper {
@@ -64,10 +63,17 @@
 .profile-chart tr {
   transition-duration: 0.3s;
 }
+
 .profile-chart tr:hover {
   background-color: rgba(0, 0, 0, 0.2);
 }
+
 .profile-chart tr:hover th {
   background-color: rgba(0, 0, 0, 0.4);
   color: #fff;
+}
+
+
+#legacy-tier-chart, #gender-chart, #character-class-chart, #popularity-chart, #campaigns-chart, #kills-chart {
+    --labels-size: 150px;
 }
