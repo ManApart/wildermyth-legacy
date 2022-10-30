@@ -29,7 +29,7 @@ fun displayCharacters() {
     val section = el("character-cards-section")
     clearSections()
     document.title = "Wildermyth Legacy"
-    favicon.setAttribute("href", "favicon.png")
+    setFavicon(getCharacters().random())
     buildNav()
     buildCharacters(section, getCharacters())
     scrollToCharacter()
@@ -62,7 +62,6 @@ fun buildCharacters(section: Element, characters: List<LegacyCharacter>) {
             }
     }
     characterCards = characters.associate { it.uuid to document.getElementById(it.uuid) as HTMLElement }
-
 }
 
 fun List<LegacyCharacter>.sorted(): List<LegacyCharacter> {

@@ -35,7 +35,7 @@ private fun TagConsumer<HTMLElement>.buildProfileNav() {
     div {
         id = "profile-nav"
         button {
-            +"Back"
+            +"List"
             onClickFunction = {
                 window.location.hash = "#"
             }
