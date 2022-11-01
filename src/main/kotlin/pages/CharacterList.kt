@@ -52,6 +52,12 @@ fun buildCharacters(section: Element, characters: List<LegacyCharacter>) {
     section.append {
         div {
             id = "all-characters"
+
+        }
+    }
+    val characterDoms = el("all-characters")
+    if (characterCards.keys.size < 2) {
+        characterDoms.append {
             characters.also { println("Building ${it.size} characters") }
                 .sorted()
                 .forEach { character ->
@@ -62,8 +68,10 @@ fun buildCharacters(section: Element, characters: List<LegacyCharacter>) {
                     }
                 }
         }
+        characterCards = characters.associate { it.uuid to document.getElementById(it.uuid) as HTMLElement }
+    } else {
+        characterCards.values.forEach { characterDoms.appendChild(it) }
     }
-    characterCards = characters.associate { it.uuid to document.getElementById(it.uuid) as HTMLElement }
 }
 
 fun List<LegacyCharacter>.sorted(): List<LegacyCharacter> {
