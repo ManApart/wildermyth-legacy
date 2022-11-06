@@ -1,5 +1,6 @@
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlinx.serialization.encodeToString
 
 @Serializable
 data class LegacyCharacter(
@@ -117,6 +118,9 @@ data class Character(
 
     @Transient
     val age = getAge()
+
+    @Transient
+    val primaryStats = parsePrimaryStats()
 
     val personality: Map<Personality, Int>
         get() {
@@ -316,6 +320,21 @@ data class Character(
         val unresolved = allHooks.filter { option -> resolvedHooks.none { it.id == option.id } }
 
         return (resolvedHooks + unresolved).sortedBy { it.id }
+    }
+
+    private fun parsePrimaryStats(): Map<Stat, Float> {
+        return aspects.filter { it.name == "historyStat2" }
+            .mapNotNull { aspect ->
+                aspect.values.first().toStat()?.let { stat ->
+                    stat to (aspect.values[1].toFloatOrNull() ?: 0f)
+                }
+            }
+            .sortedByDescending { it.first }
+            .groupBy { it.first }
+            .mapValues { (_, nested) ->
+                nested.sumOf { it.second.toDouble() }.toFloat()
+            }
+
     }
 
 }

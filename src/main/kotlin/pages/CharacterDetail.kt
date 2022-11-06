@@ -317,7 +317,8 @@ private fun DIV.buildHistorySection(character: Character, history: List<HistoryE
 }
 
 fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snapshot: Character, showAggregates: Boolean) {
-    val rawStats = snapshot.aspects.filter { it.name == "historyStat2" }
+//    val rawStats = snapshot.aspects.filter { it.name == "historyStat2" }
+    val rawStats = snapshot.primaryStats
     val hooks = if (showAggregates) legacyCharacter.hooks else snapshot.hooks
     div("character-section") {
         id = "stats-section"
@@ -345,12 +346,10 @@ fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snap
             h2 { +"Stat Bonuses" }
             table {
                 tbody {
-                    rawStats.sortedBy { it.name }.forEach { stat ->
-                        val statName = stat.values.first().format()
-                        val statVal = stat.values[1]
+                    rawStats.entries.forEach { (stat, amount) ->
                         tr {
-                            td { +statName }
-                            td { +statVal }
+                            td { +stat.format() }
+                            td { +"$amount" }
                         }
                     }
                 }

@@ -15,6 +15,10 @@ enum class Personality { BOOKISH, COWARD, GOOFBALL, HEALER, HOTHEAD, LEADER, LON
 
 val personalityNames = Personality.values().map { it.name.lowercase() }
 
+enum class Stat { WARDING, RETIREMENT_AGE, RECOVERY_RATE, RANGE_ACCURACY, HEALTH, BLOCK }
+
+fun String.toStat() = Stat.values().firstOrNull { it.name == this }
+
 @Serializable
 data class Aspect(val name: String, val values: List<String> = listOf())
 
