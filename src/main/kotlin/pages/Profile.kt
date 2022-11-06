@@ -2,19 +2,24 @@ package pages
 
 import LegacyCharacter
 import Profile
+import Stat
 import Unlock
 import clearSections
+import el
 import format
 import getCharacters
 import getCompanies
+import getCompanyForGameId
 import getProfile
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
+import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLSelectElement
 
 fun profile() {
     val profile = getProfile()
@@ -32,6 +37,7 @@ fun profile() {
         buildCompanies()
         buildUnlocks(profile)
     }
+    skillTable(el("profile-charts"), Stat.ARMOR)
 }
 
 private fun TagConsumer<HTMLElement>.buildProfileNav() {
@@ -162,6 +168,7 @@ private fun TagConsumer<HTMLElement>.buildCharts() {
             +"Character Stats"
         }
         div("profile-charts") {
+            id = "profile-charts"
             val legacyTier = getCharacters().groupBy { it.legacyTierLevel }.entries.associate { (level, list) -> level.format() to list.size }
             chartTable("legacy-tier-chart", legacyTier, listOf("Level", "Count"), "Characters by Legacy Tier")
 
@@ -180,7 +187,33 @@ private fun TagConsumer<HTMLElement>.buildCharts() {
             val kills = getCharacters().map { it to it.killCount }.filter { it.second > 10 }.sortedByDescending { it.second }.take(20).toMap()
             chartTable("kills-chart", kills, listOf("Character", "Kills"), "Confirmed Kills")
 
-            val stat = Stat.BLOCK
+        }
+    }
+}
+
+private fun skillTable(parent: HTMLElement, stat: Stat) {
+    el<HTMLElement?>("skill-table-section")?.remove()
+    parent.append {
+        div("profile-charts") {
+            id = "skill-table-section"
+            span {
+                id = "start-skill-select-span"
+                label { +"Skill:" }
+                select {
+                    id = "starting-skill-select"
+                    Stat.values().forEach {
+                        option {
+                            +it.format()
+                            selected = stat == it
+                        }
+                    }
+                    onChangeFunction = {
+                        val optionI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
+                        skillTable(parent, Stat.values()[optionI])
+                    }
+                }
+            }
+
             val bestStat = getCharacters().map { it to (it.snapshots.last().primaryStats[stat] ?: 0f) }.sortedByDescending { it.second }.take(10).toMap()
             chartTable("best-stat-chart", bestStat, listOf("Character", stat.format()), "Highest Starting ${stat.format()}")
         }
