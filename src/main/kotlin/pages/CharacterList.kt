@@ -59,18 +59,19 @@ fun buildCharacters(section: Element, characters: List<LegacyCharacter>, forceRe
     }
     val characterDoms = el("all-characters")
     if (forceRebuild || characterCards.keys.size < 2) {
+        val sortedCharacters = characters
+            .also { println("Building ${it.size} characters") }
+            .sorted(searchOptions.sort)
         characterDoms.append {
-            characters.also { println("Building ${it.size} characters") }
-                .sorted(searchOptions.sort)
-                .forEach { character ->
-                    if (searchOptions.listView) {
-                        characterListItem(character, character.snapshots.last(), true)
-                    } else {
-                        characterCard(character, character.snapshots.last(), true)
-                    }
+            sortedCharacters.forEach { character ->
+                if (searchOptions.listView) {
+                    characterListItem(character, character.snapshots.last(), true)
+                } else {
+                    characterCard(character, character.snapshots.last(), true)
                 }
+            }
         }
-        characterCards = characters.associate { it.uuid to document.getElementById(it.uuid) as HTMLElement }
+        characterCards = sortedCharacters.associate { it.uuid to document.getElementById(it.uuid) as HTMLElement }
     } else if (searchOptions.sort != previousSearch?.sort) {
         characters.sorted(searchOptions.sort).forEach { character ->
             characterCards[character.uuid]?.let { characterDom ->
