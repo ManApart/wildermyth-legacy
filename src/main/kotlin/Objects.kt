@@ -103,12 +103,15 @@ enum class FriendshipKind(val titles: List<String>) {
 
 enum class Sex { MALE, FEMALE, UNKNOWN }
 
+enum class CharacterSort { ALPHABETICAL, RANK, ACQUIRED }
+
 @Serializable
 data class CharacterSearchOptions(
     var searchText: String = "",
     var favoritesOnly: Boolean = false,
     var hideNPC: Boolean = false,
     var listView: Boolean = true,
+    var sort: CharacterSort = CharacterSort.ALPHABETICAL,
 )
 
 @Serializable

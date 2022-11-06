@@ -31,6 +31,7 @@ import saveAdditionalInfo
 import kotlin.js.Date
 import kotlinx.serialization.encodeToString
 import org.w3c.dom.events.KeyboardEvent
+import searchOptions
 import kotlin.math.abs
 
 private lateinit var currentCharacter: LegacyCharacter
@@ -166,14 +167,14 @@ fun setFavicon(character: LegacyCharacter) {
 }
 
 private fun nextCharacter(character: LegacyCharacter): LegacyCharacter {
-    val characters = getCharacters().sorted()
+    val characters = getCharacters().sorted(searchOptions.sort)
     val next = characters.indexOf(character) + 1
     val i = if (next >= characters.size) 0 else next
     return characters[i]
 }
 
 private fun previousCharacter(character: LegacyCharacter): LegacyCharacter {
-    val characters = getCharacters().sorted()
+    val characters = getCharacters().sorted(searchOptions.sort)
     val previous = characters.indexOf(character) - 1
     val i = if (previous < 0) characters.size - 1 else previous
     return characters[i]

@@ -1,6 +1,7 @@
 package pages
 
 import Character
+import CharacterSort
 import LegacyCharacter
 import characterCards
 import clearSections
@@ -47,7 +48,7 @@ fun filterCharacterDoms(characters: List<LegacyCharacter>) {
     }
 }
 
-fun buildCharacters(section: Element, characters: List<LegacyCharacter>) {
+fun buildCharacters(section: Element, characters: List<LegacyCharacter>, forceRebuild: Boolean = false) {
     section.innerHTML = ""
     section.append {
         div {
@@ -56,10 +57,10 @@ fun buildCharacters(section: Element, characters: List<LegacyCharacter>) {
         }
     }
     val characterDoms = el("all-characters")
-    if (characterCards.keys.size < 2) {
+    if (forceRebuild || characterCards.keys.size < 2) {
         characterDoms.append {
             characters.also { println("Building ${it.size} characters") }
-                .sorted()
+                .sorted(searchOptions.sort)
                 .forEach { character ->
                     if (searchOptions.listView) {
                         characterListItem(character, character.snapshots.last(), true)
@@ -70,14 +71,37 @@ fun buildCharacters(section: Element, characters: List<LegacyCharacter>) {
         }
         characterCards = characters.associate { it.uuid to document.getElementById(it.uuid) as HTMLElement }
     } else {
-        characterCards.values.forEach { characterDoms.appendChild(it) }
+        characters.sorted(searchOptions.sort).forEach { character ->
+            characterCards[character.uuid]?.let { characterDom ->
+                characterDoms.appendChild(characterDom)
+            }
+        }
     }
 }
 
-fun List<LegacyCharacter>.sorted(): List<LegacyCharacter> {
+fun List<LegacyCharacter>.sorted(sort: CharacterSort): List<LegacyCharacter> {
+    return when (sort) {
+        CharacterSort.ALPHABETICAL -> sortedAlphabetical()
+        CharacterSort.RANK -> sortedRank()
+        CharacterSort.ACQUIRED -> sortedAcquired()
+    }
+}
+
+private fun List<LegacyCharacter>.sortedAlphabetical(): List<LegacyCharacter> {
     return sortedWith(compareBy<LegacyCharacter> { !getAdditionalInfo(it.uuid).favorite }
         .thenBy { it.snapshots.last().name.split(" ").last() }
         .thenBy { it.snapshots.last().name.split(" ").first() })
+}
+
+private fun List<LegacyCharacter>.sortedRank(): List<LegacyCharacter> {
+    return sortedWith(compareBy<LegacyCharacter> { !getAdditionalInfo(it.uuid).favorite }
+        .thenByDescending { it.legacyTierLevel })
+}
+
+private fun List<LegacyCharacter>.sortedAcquired(): List<LegacyCharacter> {
+    return sortedWith(compareBy<LegacyCharacter> { !getAdditionalInfo(it.uuid).favorite }
+        .thenBy { it.snapshots.first().date })
+
 }
 
 private fun scrollToCharacter() {

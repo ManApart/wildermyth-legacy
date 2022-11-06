@@ -1,17 +1,21 @@
 package pages
 
+import CharacterSort
 import characterSearch
+import format
 import getAdditionalInfo
 import getCharacters
 import jsonMapper
 import kotlinx.browser.document
 import kotlinx.html.*
 import kotlinx.html.dom.append
+import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
 import kotlinx.serialization.encodeToString
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.HTMLSelectElement
 import org.w3c.xhr.XMLHttpRequest
 import saveSearch
 import searchOptions
@@ -59,9 +63,29 @@ fun buildNav() {
             checkBox("list-view", "View as List", searchOptions.listView) {
                 searchOptions.listView = it
                 val section = document.getElementById("character-cards-section")!!
-                saveSearch(searchOptions)
-                buildCharacters(section, getCharacters())
+                buildCharacters(section, getCharacters(), true)
                 characterSearch()
+            }
+            span {
+                id = "character-sort-span"
+                label { +"Sort:" }
+                select {
+                    id = "character-sort-select"
+                    CharacterSort.values().forEach {
+                        option {
+                            +it.format()
+                            selected = searchOptions.sort == it
+                        }
+                    }
+
+                    onChangeFunction = {
+                        val characterSelect = (document.getElementById(id) as HTMLSelectElement)
+                        searchOptions.sort = CharacterSort.values()[characterSelect.selectedIndex]
+                        val section = document.getElementById("character-cards-section")!!
+                        buildCharacters(section, getCharacters())
+                        characterSearch()
+                    }
+                }
             }
         }
     }
