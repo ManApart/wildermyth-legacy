@@ -32,6 +32,7 @@ import kotlin.js.Date
 import kotlinx.serialization.encodeToString
 import org.w3c.dom.events.KeyboardEvent
 import searchOptions
+import sorted
 import kotlin.math.abs
 
 private lateinit var currentCharacter: LegacyCharacter

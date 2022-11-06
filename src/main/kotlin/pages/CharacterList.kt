@@ -26,6 +26,7 @@ import org.w3c.dom.HTMLImageElement
 import previousSearch
 import saveAdditionalInfo
 import searchOptions
+import sorted
 
 
 fun displayCharacters() {
@@ -77,7 +78,6 @@ fun buildCharacters(section: Element, characters: List<LegacyCharacter>, info: M
         characterCards = sortedCharacters.associate { it.uuid to document.getElementById(it.uuid) as HTMLElement }
     } else if (searchOptions.sort != previousSearch?.sort || searchOptions.favoritesFirst != previousSearch?.favoritesFirst) {
         val sortedCharacters = characters.sorted(searchOptions.sort, searchOptions.favoritesFirst, info)
-        log("Sorted")
         sortedCharacters.forEach { character ->
             characterCards[character.uuid]?.let { characterDom ->
                 characterDoms.appendChild(characterDom)
@@ -88,44 +88,6 @@ fun buildCharacters(section: Element, characters: List<LegacyCharacter>, info: M
     } else {
         characterCards.values.forEach { characterDoms.appendChild(it) }
     }
-}
-
-fun List<LegacyCharacter>.sorted(sort: CharacterSort, favoritesFirst: Boolean, info: Map<String, AdditionalInfo>): List<LegacyCharacter> {
-    return when (sort) {
-        CharacterSort.ALPHABETICAL -> sortedAlphabetical(info, favoritesFirst)
-        CharacterSort.RANK -> sortedRank(info, favoritesFirst)
-        CharacterSort.ACQUIRED -> sortedAcquired(info, favoritesFirst)
-    }
-}
-
-private fun List<LegacyCharacter>.sortedAlphabetical(info: Map<String, AdditionalInfo>, favoritesFirst: Boolean): List<LegacyCharacter> {
-    return if (favoritesFirst) {
-        sortedWith(compareBy<LegacyCharacter> { !(info[it.uuid]?.favorite ?: false) }
-            .thenBy { it.snapshots.last().name.split(" ").last() }
-            .thenBy { it.snapshots.last().name.split(" ").first() })
-    } else {
-        sortedWith(compareBy<LegacyCharacter> { it.snapshots.last().name.split(" ").last() }
-            .thenBy { it.snapshots.last().name.split(" ").first() })
-    }
-}
-
-private fun List<LegacyCharacter>.sortedRank(info: Map<String, AdditionalInfo>, favoritesFirst: Boolean): List<LegacyCharacter> {
-    return if (favoritesFirst) {
-        sortedWith(compareBy<LegacyCharacter> { !(info[it.uuid]?.favorite ?: false) }
-            .thenByDescending { it.legacyTierLevel })
-    } else {
-        sortedWith(compareByDescending { it.legacyTierLevel })
-    }
-}
-
-private fun List<LegacyCharacter>.sortedAcquired(info: Map<String, AdditionalInfo>, favoritesFirst: Boolean): List<LegacyCharacter> {
-    return if (favoritesFirst) {
-        sortedWith(compareBy<LegacyCharacter> { !(info[it.uuid]?.favorite ?: false) }
-            .thenBy { it.snapshots.first().date })
-    } else {
-        sortedWith(compareBy { it.snapshots.first().date })
-    }
-
 }
 
 private fun scrollToCharacter() {

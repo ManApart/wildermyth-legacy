@@ -27,7 +27,7 @@ fun buildNav() {
     val nav = document.getElementById("nav")!!
     nav.append {
         div("row") {
-            id="top-nav"
+            id = "top-nav"
             button(classes = "nav-button") {
                 id = "upload-button"
                 +"Upload"
@@ -71,17 +71,17 @@ fun buildNav() {
             checkBox("favorites-first", "Favorites First", searchOptions.favoritesFirst) {
                 searchOptions.favoritesFirst = it
                 val section = document.getElementById("character-cards-section")!!
-                buildCharacters(section, getCharacters())
+                buildCharacters(section, getCharacters(), getAdditionalInfo())
                 characterSearch()
             }
-            checkBox("hide-npc", "Hide NPCs", searchOptions.hideNPC){
+            checkBox("hide-npc", "Hide NPCs", searchOptions.hideNPC) {
                 searchOptions.hideNPC = it
                 characterSearch()
             }
             checkBox("list-view", "View as List", searchOptions.listView) {
                 searchOptions.listView = it
                 val section = document.getElementById("character-cards-section")!!
-                buildCharacters(section, getCharacters(), true)
+                buildCharacters(section, getCharacters(), getAdditionalInfo(), true)
                 characterSearch()
             }
             span {
@@ -100,7 +100,7 @@ fun buildNav() {
                         val characterSelect = (document.getElementById(id) as HTMLSelectElement)
                         searchOptions.sort = CharacterSort.values()[characterSelect.selectedIndex]
                         val section = document.getElementById("character-cards-section")!!
-                        buildCharacters(section, getCharacters())
+                        buildCharacters(section, getCharacters(), getAdditionalInfo())
                         characterSearch()
                     }
                 }

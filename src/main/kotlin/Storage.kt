@@ -16,7 +16,7 @@ data class InMemoryStorage(
     var profile: Profile = Profile("unknown"),
     val characters: MutableMap<String, LegacyCharacter> = mutableMapOf(),
     val pictures: MutableMap<String, String> = mutableMapOf(),
-    val additionalInfo: MutableMap<String, AdditionalInfo> = mutableMapOf(),
+    var additionalInfo: MutableMap<String, AdditionalInfo> = mutableMapOf(),
     var companies: Map<String, Company> = mapOf(),
     var storyProps: Map<String, String> = mapOf(),
     var dynamicProps: Map<String, String> = mapOf(),
@@ -69,16 +69,13 @@ fun savePicture(path: String, blob: Blob): Promise<Unit> {
     }
 }
 
-fun savePicture(path: String, content: String) {
-    inMemoryStorage.pictures[path] = content
-}
-
 fun getAdditionalInfo(): MutableMap<String, AdditionalInfo> {
-    return localStorage["additional-info"]?.let { jsonMapper.decodeFromString(it) } ?: mutableMapOf()
+    return inMemoryStorage.additionalInfo
 }
 
 fun saveAdditionalInfo(info: MutableMap<String, AdditionalInfo>) {
-    localStorage["additional-info"] = jsonMapper.encodeToString(info)
+    inMemoryStorage.additionalInfo = info
+    persistMemory()
 }
 
 fun saveAdditionalInfo(info: AdditionalInfo) {

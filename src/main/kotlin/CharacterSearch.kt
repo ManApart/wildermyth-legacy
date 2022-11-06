@@ -57,3 +57,42 @@ private fun latestFilter(latest: Character, searchText: String): Boolean {
             latest.personalityFirst.name.lowercase().contains(searchText) ||
             latest.personalitySecond.name.lowercase().contains(searchText)
 }
+
+
+fun List<LegacyCharacter>.sorted(sort: CharacterSort, favoritesFirst: Boolean, info: Map<String, AdditionalInfo>): List<LegacyCharacter> {
+    return when (sort) {
+        CharacterSort.ALPHABETICAL -> sortedAlphabetical(info, favoritesFirst)
+        CharacterSort.RANK -> sortedRank(info, favoritesFirst)
+        CharacterSort.ACQUIRED -> sortedAcquired(info, favoritesFirst)
+    }
+}
+
+private fun List<LegacyCharacter>.sortedAlphabetical(info: Map<String, AdditionalInfo>, favoritesFirst: Boolean): List<LegacyCharacter> {
+    return if (favoritesFirst) {
+        sortedWith(compareBy<LegacyCharacter> { !(info[it.uuid]?.favorite ?: false) }
+            .thenBy { it.snapshots.last().name.split(" ").last() }
+            .thenBy { it.snapshots.last().name.split(" ").first() })
+    } else {
+        sortedWith(compareBy<LegacyCharacter> { it.snapshots.last().name.split(" ").last() }
+            .thenBy { it.snapshots.last().name.split(" ").first() })
+    }
+}
+
+private fun List<LegacyCharacter>.sortedRank(info: Map<String, AdditionalInfo>, favoritesFirst: Boolean): List<LegacyCharacter> {
+    return if (favoritesFirst) {
+        sortedWith(compareBy<LegacyCharacter> { !(info[it.uuid]?.favorite ?: false) }
+            .thenByDescending { it.legacyTierLevel })
+    } else {
+        sortedWith(compareByDescending { it.legacyTierLevel })
+    }
+}
+
+private fun List<LegacyCharacter>.sortedAcquired(info: Map<String, AdditionalInfo>, favoritesFirst: Boolean): List<LegacyCharacter> {
+    return if (favoritesFirst) {
+        sortedWith(compareBy<LegacyCharacter> { !(info[it.uuid]?.favorite ?: false) }
+            .thenBy { it.snapshots.first().date })
+    } else {
+        sortedWith(compareBy { it.snapshots.first().date })
+    }
+
+}
