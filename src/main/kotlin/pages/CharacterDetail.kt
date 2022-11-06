@@ -37,7 +37,7 @@ import kotlin.math.abs
 private lateinit var currentCharacter: LegacyCharacter
 fun characterDetail(character: LegacyCharacter, snapshot: Character = character.snapshots.last(), showAggregates: Boolean = true, startY: Double = 0.0) {
     currentCharacter = character
-    val additionalInfo = getAdditionalInfo(character.uuid)
+    val additionalInfo = getAdditionalInfo()[character.uuid] ?: AdditionalInfo(character.uuid)
     val section = document.getElementById("character-detail-section")!!
     clearSections()
     document.title = snapshot.name
@@ -49,7 +49,7 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
         buildNav(character, showAggregates, snapshot)
         div {
             id = "character-details"
-            characterCard(character, snapshot, false)
+            characterCard(character, snapshot, additionalInfo, false)
             div("details-subsection") {
                 statsSection(character, snapshot, showAggregates)
                 tagsSection(additionalInfo)
@@ -171,14 +171,14 @@ fun setFavicon(character: LegacyCharacter) {
 }
 
 private fun nextCharacter(character: LegacyCharacter): LegacyCharacter {
-    val characters = getCharacters().sorted(searchOptions.sort)
+    val characters = getCharacters().sorted(searchOptions.sort, searchOptions.favoritesFirst, getAdditionalInfo())
     val next = characters.indexOf(character) + 1
     val i = if (next >= characters.size) 0 else next
     return characters[i]
 }
 
 private fun previousCharacter(character: LegacyCharacter): LegacyCharacter {
-    val characters = getCharacters().sorted(searchOptions.sort)
+    val characters = getCharacters().sorted(searchOptions.sort, searchOptions.favoritesFirst, getAdditionalInfo())
     val previous = characters.indexOf(character) - 1
     val i = if (previous < 0) characters.size - 1 else previous
     return characters[i]

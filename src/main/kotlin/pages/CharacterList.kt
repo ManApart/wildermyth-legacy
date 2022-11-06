@@ -1,5 +1,6 @@
 package pages
 
+import AdditionalInfo
 import Character
 import CharacterSort
 import LegacyCharacter
@@ -18,6 +19,7 @@ import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
+import log
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
@@ -32,7 +34,7 @@ fun displayCharacters() {
     document.title = "Wildermyth Legacy"
     setFavicon(getCharacters().random())
     buildNav()
-    buildCharacters(section, getCharacters())
+    buildCharacters(section, getCharacters(), getAdditionalInfo())
     scrollToCharacter()
 }
 
@@ -49,7 +51,7 @@ fun filterCharacterDoms(characters: List<LegacyCharacter>) {
     }
 }
 
-fun buildCharacters(section: Element, characters: List<LegacyCharacter>, forceRebuild: Boolean = false) {
+fun buildCharacters(section: Element, characters: List<LegacyCharacter>, info: Map<String, AdditionalInfo>, forceRebuild: Boolean = false) {
     section.innerHTML = ""
     section.append {
         div {
@@ -61,52 +63,68 @@ fun buildCharacters(section: Element, characters: List<LegacyCharacter>, forceRe
     if (forceRebuild || characterCards.keys.size < 2) {
         val sortedCharacters = characters
             .also { println("Building ${it.size} characters") }
-            .sorted(searchOptions.sort)
+            .sorted(searchOptions.sort, searchOptions.favoritesFirst, info)
         characterDoms.append {
             sortedCharacters.forEach { character ->
+                val characterInfo = info[character.uuid] ?: AdditionalInfo(character.uuid)
                 if (searchOptions.listView) {
-                    characterListItem(character, character.snapshots.last(), true)
+                    characterListItem(character, character.snapshots.last(), characterInfo, true)
                 } else {
-                    characterCard(character, character.snapshots.last(), true)
+                    characterCard(character, character.snapshots.last(), characterInfo, true)
                 }
             }
         }
         characterCards = sortedCharacters.associate { it.uuid to document.getElementById(it.uuid) as HTMLElement }
-    } else if (searchOptions.sort != previousSearch?.sort) {
-        val sortedCharacters = characters.sorted(searchOptions.sort)
+    } else if (searchOptions.sort != previousSearch?.sort || searchOptions.favoritesFirst != previousSearch?.favoritesFirst) {
+        val sortedCharacters = characters.sorted(searchOptions.sort, searchOptions.favoritesFirst, info)
+        log("Sorted")
         sortedCharacters.forEach { character ->
             characterCards[character.uuid]?.let { characterDom ->
                 characterDoms.appendChild(characterDom)
             }
         }
+        //resort character doms for next search
         characterCards = sortedCharacters.associate { it.uuid to characterCards[it.uuid]!! }
     } else {
         characterCards.values.forEach { characterDoms.appendChild(it) }
     }
 }
 
-fun List<LegacyCharacter>.sorted(sort: CharacterSort): List<LegacyCharacter> {
+fun List<LegacyCharacter>.sorted(sort: CharacterSort, favoritesFirst: Boolean, info: Map<String, AdditionalInfo>): List<LegacyCharacter> {
     return when (sort) {
-        CharacterSort.ALPHABETICAL -> sortedAlphabetical()
-        CharacterSort.RANK -> sortedRank()
-        CharacterSort.ACQUIRED -> sortedAcquired()
+        CharacterSort.ALPHABETICAL -> sortedAlphabetical(info, favoritesFirst)
+        CharacterSort.RANK -> sortedRank(info, favoritesFirst)
+        CharacterSort.ACQUIRED -> sortedAcquired(info, favoritesFirst)
     }
 }
 
-private fun List<LegacyCharacter>.sortedAlphabetical(): List<LegacyCharacter> {
-    return sortedWith(compareBy<LegacyCharacter> { !getAdditionalInfo(it.uuid).favorite }
-        .thenBy { it.snapshots.last().name.split(" ").last() }
-        .thenBy { it.snapshots.last().name.split(" ").first() })
+private fun List<LegacyCharacter>.sortedAlphabetical(info: Map<String, AdditionalInfo>, favoritesFirst: Boolean): List<LegacyCharacter> {
+    return if (favoritesFirst) {
+        sortedWith(compareBy<LegacyCharacter> { !(info[it.uuid]?.favorite ?: false) }
+            .thenBy { it.snapshots.last().name.split(" ").last() }
+            .thenBy { it.snapshots.last().name.split(" ").first() })
+    } else {
+        sortedWith(compareBy<LegacyCharacter> { it.snapshots.last().name.split(" ").last() }
+            .thenBy { it.snapshots.last().name.split(" ").first() })
+    }
 }
 
-private fun List<LegacyCharacter>.sortedRank(): List<LegacyCharacter> {
-    return sortedWith(compareBy<LegacyCharacter> { !getAdditionalInfo(it.uuid).favorite }
-        .thenByDescending { it.legacyTierLevel })
+private fun List<LegacyCharacter>.sortedRank(info: Map<String, AdditionalInfo>, favoritesFirst: Boolean): List<LegacyCharacter> {
+    return if (favoritesFirst) {
+        sortedWith(compareBy<LegacyCharacter> { !(info[it.uuid]?.favorite ?: false) }
+            .thenByDescending { it.legacyTierLevel })
+    } else {
+        sortedWith(compareByDescending { it.legacyTierLevel })
+    }
 }
 
-private fun List<LegacyCharacter>.sortedAcquired(): List<LegacyCharacter> {
-    return sortedWith(compareBy<LegacyCharacter> { !getAdditionalInfo(it.uuid).favorite }
-        .thenBy { it.snapshots.first().date })
+private fun List<LegacyCharacter>.sortedAcquired(info: Map<String, AdditionalInfo>, favoritesFirst: Boolean): List<LegacyCharacter> {
+    return if (favoritesFirst) {
+        sortedWith(compareBy<LegacyCharacter> { !(info[it.uuid]?.favorite ?: false) }
+            .thenBy { it.snapshots.first().date })
+    } else {
+        sortedWith(compareBy { it.snapshots.first().date })
+    }
 
 }
 
@@ -115,14 +133,13 @@ private fun scrollToCharacter() {
     document.getElementById(hashId)?.scrollIntoView()
 }
 
-fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot: Character, clickable: Boolean) {
+fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot: Character, info: AdditionalInfo, clickable: Boolean) {
     with(snapshot) {
         val className = characterClass.name.lowercase()
         val animDelay = (0..10).random() / 10.0
         div("character-card") {
             id = character.uuid
             if (clickable) onClickFunction = { characterDetail(character) }
-            val info = getAdditionalInfo(character.uuid)
             img {
                 classes = setOf("favorite-image")
                 id = character.uuid + "-star"
@@ -172,7 +189,7 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot:
     }
 }
 
-fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snapshot: Character, clickable: Boolean) {
+fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snapshot: Character, info: AdditionalInfo, clickable: Boolean) {
     with(snapshot) {
         div("character-list-item") {
             id = character.uuid
@@ -204,7 +221,6 @@ fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snaps
                     }
                 }
             }
-            val info = getAdditionalInfo(character.uuid)
             img {
                 classes = setOf("favorite-image")
                 id = character.uuid + "-star"

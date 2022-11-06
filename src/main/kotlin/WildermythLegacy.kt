@@ -5,6 +5,7 @@ import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.KeyboardEvent
 import pages.*
+import kotlin.js.Date
 
 val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
 lateinit var favicon: HTMLElement
@@ -99,4 +100,18 @@ fun String.removeAll(vararg parts: String): String {
 
 fun isMobile(): Boolean {
     return window.screen.width / window.screen.height < 3/4f
+}
+
+private var logTime = Date().getMilliseconds()
+
+fun logStart(message: String) {
+    val now = Date().getMilliseconds()
+    logTime = now
+    println(message)
+}
+fun log(message: String) {
+    val now = Date().getMilliseconds()
+    val elapsed = now-logTime
+    logTime = now
+    println("$elapsed: $message")
 }

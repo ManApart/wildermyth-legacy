@@ -68,6 +68,12 @@ fun buildNav() {
                 searchOptions.favoritesOnly = it
                 characterSearch()
             }
+            checkBox("favorites-first", "Favorites First", searchOptions.favoritesFirst) {
+                searchOptions.favoritesFirst = it
+                val section = document.getElementById("character-cards-section")!!
+                buildCharacters(section, getCharacters())
+                characterSearch()
+            }
             checkBox("hide-npc", "Hide NPCs", searchOptions.hideNPC){
                 searchOptions.hideNPC = it
                 characterSearch()

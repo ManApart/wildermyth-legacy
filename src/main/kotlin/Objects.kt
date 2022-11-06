@@ -109,6 +109,7 @@ enum class CharacterSort { ALPHABETICAL, RANK, ACQUIRED }
 data class CharacterSearchOptions(
     var searchText: String = "",
     var favoritesOnly: Boolean = false,
+    var favoritesFirst: Boolean = true,
     var hideNPC: Boolean = false,
     var listView: Boolean = true,
     var sort: CharacterSort = CharacterSort.ALPHABETICAL,
