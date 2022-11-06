@@ -98,7 +98,7 @@ table {
 }
 
 #top-nav {
-    grid-template-columns: minmax(100px, .2fr) minmax(100px, .2fr) auto minmax(100px, .2fr);
+    grid-template-columns: minmax(100px, .2fr) minmax(100px, .2fr) auto minmax(50px, 50px) minmax(100px, .2fr);
 }
 
 .nav-button {
@@ -109,6 +109,10 @@ table {
     display: inline-block;
     text-align: left;
     margin-left: 20%;
+}
+
+#clear-search{
+    width: 40px;
 }
 
 #upload-instructions{
