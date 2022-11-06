@@ -21,6 +21,7 @@ import kotlinx.html.js.onClickFunction
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
+import previousSearch
 import saveAdditionalInfo
 import searchOptions
 
@@ -70,12 +71,14 @@ fun buildCharacters(section: Element, characters: List<LegacyCharacter>, forceRe
                 }
         }
         characterCards = characters.associate { it.uuid to document.getElementById(it.uuid) as HTMLElement }
-    } else {
+    } else if (searchOptions.sort != previousSearch?.sort) {
         characters.sorted(searchOptions.sort).forEach { character ->
             characterCards[character.uuid]?.let { characterDom ->
                 characterDoms.appendChild(characterDom)
             }
         }
+    } else {
+        characterCards.values.forEach { characterDoms.appendChild(it) }
     }
 }
 

@@ -1,5 +1,7 @@
 import pages.filterCharacterDoms
 
+var previousSearch: CharacterSearchOptions? = null
+
 fun characterSearch() {
     val characters = getCharacters()
         .filterFavorites(searchOptions.favoritesOnly)
@@ -7,6 +9,7 @@ fun characterSearch() {
         .filterSearch(searchOptions.searchText)
     filterCharacterDoms(characters)
     saveSearch(searchOptions)
+    previousSearch = searchOptions.copy()
 }
 
 private fun List<LegacyCharacter>.filterFavorites(doFilter: Boolean): List<LegacyCharacter> {

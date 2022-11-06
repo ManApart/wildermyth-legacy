@@ -69,6 +69,7 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
         templateClean == "town" -> hometown
         templateClean == "hometown" -> hometown
         templateClean == "company" -> getCompany(uuid).name
+        type == "hero.rfln.self" -> resultOptions.last()
         type == "awm" -> replaceAWM(resultOptions)
         type == "mf" -> replaceMF(resultOptions)
         type == "int" -> parts.last()
