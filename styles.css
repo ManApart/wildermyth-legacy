@@ -98,7 +98,6 @@ table {
 }
 
 #top-nav {
-    grid-template-columns: minmax(100px, .2fr) minmax(100px, .2fr) auto minmax(50px, 50px) minmax(100px, .2fr);
 }
 
 .nav-button {
@@ -111,8 +110,24 @@ table {
     margin-left: 20%;
 }
 
+#search-span {
+    display: inline;
+}
+
+#search {
+    margin-left: 4px;
+    width: 50%;
+    padding: 2%;
+}
+
 #clear-search{
     width: 40px;
+}
+
+#character-sort-span {
+    text-align: center;
+    display: inline-block;
+    width: 40%;
 }
 
 #upload-instructions{

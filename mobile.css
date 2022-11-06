@@ -13,6 +13,19 @@
         height: 250px;
     }
 
+    input {
+        font-size: 1.4em;
+    }
+
+    #search {
+        width: 90%;
+    }
+
+    #character-sort-span {
+        display: block;
+        width: inherit;
+    }
+
     #character-details {
         overflow: hidden;
     }
@@ -47,6 +60,21 @@
 
     .character-section {
         width: 100%;
+    }
+
+    #character-nav-buttons {
+        display: flex;
+        grid-template-columns: minmax(100px, .2fr) minmax(100px, .2fr) minmax(100px, .2fr) auto;
+    }
+
+    #character-nav-buttons button {
+        margin: auto;
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+    #snapshot-span {
+        display: block;
+        text-align: center;
     }
 
     .details-subsection{
@@ -123,6 +151,18 @@
 
     #legacy-tier-chart, #gender-chart, #character-class-chart, #popularity-chart, #campaigns-chart, #kills-chart {
         --labels-size: 350px;
+    }
+
+    .tag-label {
+        margin-right: 20px;
+    }
+
+    .tag-label img{
+        width: 40px;
+    }
+
+    #tags-section img {
+        width: 40px;
     }
 
 }
