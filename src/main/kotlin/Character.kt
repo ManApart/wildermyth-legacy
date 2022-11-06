@@ -327,7 +327,7 @@ data class Character(
             .mapNotNull { aspect ->
                 aspect.values.first().toStat()?.let { stat ->
                     stat to (aspect.values[1].toFloatOrNull() ?: 0f)
-                }
+                } ?: null.also{ println("Unknown Stat: ${aspect.values.first()}")}
             }
             .sortedByDescending { it.first }
             .groupBy { it.first }

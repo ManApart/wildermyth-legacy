@@ -15,7 +15,23 @@ enum class Personality { BOOKISH, COWARD, GOOFBALL, HEALER, HOTHEAD, LEADER, LON
 
 val personalityNames = Personality.values().map { it.name.lowercase() }
 
-enum class Stat { WARDING, RETIREMENT_AGE, RECOVERY_RATE, RANGE_ACCURACY, HEALTH, BLOCK }
+enum class Stat {
+    ARMOR,
+    BLOCK,
+    CHARISMA,
+    DODGE,
+    HEALTH,
+    MELEE_ACCURACY,
+    PHYSICAL_DAMAGE_BONUS,
+    POTENCY,
+    RANGE_ACCURACY,
+    RECOVERY_RATE,
+    RETIREMENT_AGE,
+    SPEED,
+    STUNT_CHANCE,
+    TENACITY,
+    WARDING,
+}
 
 fun String.toStat() = Stat.values().firstOrNull { it.name == this }
 

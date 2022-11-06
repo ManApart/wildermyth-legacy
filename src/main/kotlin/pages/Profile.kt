@@ -179,17 +179,21 @@ private fun TagConsumer<HTMLElement>.buildCharts() {
 
             val kills = getCharacters().map { it to it.killCount }.filter { it.second > 10 }.sortedByDescending { it.second }.take(20).toMap()
             chartTable("kills-chart", kills, listOf("Character", "Kills"), "Confirmed Kills")
+
+            val stat = Stat.BLOCK
+            val bestStat = getCharacters().map { it to (it.snapshots.last().primaryStats[stat] ?: 0f) }.sortedByDescending { it.second }.take(10).toMap()
+            chartTable("best-stat-chart", bestStat, listOf("Character", stat.format()), "Highest Starting ${stat.format()}")
         }
     }
 }
 
-private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<LegacyCharacter, Int>, headers: List<String>, caption: String) {
+private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<LegacyCharacter, Number>, headers: List<String>, caption: String) {
     val namedData = data.mapKeys { (character, _) -> character.snapshots.last().name }
     chartTable(docId, namedData, headers, caption) { characterDetail(data.keys.toList()[it]) }
 }
 
-private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String, Int>, headers: List<String>, caption: String, onClick: (Int) -> Unit = {}) {
-    val max = data.values.maxOfOrNull { it }
+private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String, Number>, headers: List<String>, caption: String, onClick: (Int) -> Unit = {}) {
+    val max = data.values.map { it.toFloat() }.maxOfOrNull { it }
     if (max != null) {
         div("profile-chart-wrapper") {
             table("charts-css bar show-heading show-labels labels-align-end data-spacing-4 profile-chart") {
@@ -206,7 +210,7 @@ private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String,
                     data.entries.forEachIndexed { i, (key, count) ->
                         tr {
                             th(ThScope.row) {
-                                +key.format()
+                                +key
                             }
                             td {
                                 style = "--size: calc( $count / $max )"
