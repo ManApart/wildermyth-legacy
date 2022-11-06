@@ -73,7 +73,6 @@
   color: #fff;
 }
 
-
-#legacy-tier-chart, #gender-chart, #character-class-chart, #popularity-chart, #campaigns-chart, #kills-chart {
+#legacy-tier-chart, #gender-chart, #character-class-chart, #popularity-chart, #campaigns-chart, #kills-chart, #best-stat-chart {
     --labels-size: 150px;
 }
