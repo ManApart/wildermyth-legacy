@@ -290,9 +290,11 @@ data class Character(
     }
 
     private fun parseAbilities(): List<Ability> {
-        val theme = aspects.firstOrNull { it.name.startsWith("theme_") && it.name.count { letter -> letter == '_' } == 1 }
+        val themes = aspects.filter { it.name.startsWith("theme_") && it.name.count { letter -> letter == '_' } == 1 }
 
-        val themeAspects = if (theme == null) listOf() else aspects.filter { it.name.startsWith(theme.name) }
+        val themeAspects = if (themes.isEmpty()) listOf() else aspects.filter { option ->
+            themes.any { option.name.startsWith(it.name) }
+        }
 
         val deckAspects = aspects.filter { it.name.contains("Deck") }
         return (themeAspects + deckAspects).map { aspect ->
