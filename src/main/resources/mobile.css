@@ -17,6 +17,15 @@
         font-size: 1.4em;
     }
 
+    #search {
+        width: 90%;
+    }
+
+    #character-sort-span {
+        display: block;
+        width: inherit;
+    }
+
     #character-details {
         overflow: hidden;
     }

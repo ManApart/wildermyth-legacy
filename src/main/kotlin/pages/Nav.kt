@@ -38,24 +38,6 @@ fun buildNav() {
                 +"Profile"
                 onClickFunction = { profile() }
             }
-            input {
-                id = "search"
-                placeholder = "Filter: Name, Aspect etc. Comma separated"
-                value = searchOptions.searchText
-                onKeyUpFunction = {
-                    searchOptions.searchText = (document.getElementById("search") as HTMLInputElement).value
-                    characterSearch()
-                }
-            }
-            img {
-                id = "clear-search"
-                src = "./images/x-circle.svg"
-                onClickFunction = {
-                    searchOptions.searchText = ""
-                    (document.getElementById("search") as HTMLInputElement).value = ""
-                    characterSearch()
-                }
-            }
             button(classes = "nav-button") {
                 id = "export-button"
                 +"Export"
@@ -64,6 +46,7 @@ fun buildNav() {
             }
         }
         div("row") {
+            id = "search-check-boxes"
             checkBox("favorites-only", "Only Favorites", searchOptions.favoritesOnly) {
                 searchOptions.favoritesOnly = it
                 characterSearch()
@@ -84,25 +67,46 @@ fun buildNav() {
                 buildCharacters(section, getCharacters(), getAdditionalInfo(), true)
                 characterSearch()
             }
-            span {
-                id = "character-sort-span"
-                label { +"Sort:" }
-                select {
-                    id = "character-sort-select"
-                    CharacterSort.values().forEach {
-                        option {
-                            +it.format()
-                            selected = searchOptions.sort == it
-                        }
+        }
+        div {
+            id = "search-span"
+            input {
+                id = "search"
+                placeholder = "Filter: Name, Aspect etc. Comma separated"
+                value = searchOptions.searchText
+                onKeyUpFunction = {
+                    searchOptions.searchText = (document.getElementById("search") as HTMLInputElement).value
+                    characterSearch()
+                }
+            }
+            img {
+                id = "clear-search"
+                src = "./images/x-circle.svg"
+                onClickFunction = {
+                    searchOptions.searchText = ""
+                    (document.getElementById("search") as HTMLInputElement).value = ""
+                    characterSearch()
+                }
+            }
+        }
+        div {
+            id = "character-sort-span"
+            label { +"Sort:" }
+            select {
+                id = "character-sort-select"
+                CharacterSort.values().forEach {
+                    option {
+                        +it.format()
+                        selected = searchOptions.sort == it
                     }
+                }
 
-                    onChangeFunction = {
-                        val characterSelect = (document.getElementById(id) as HTMLSelectElement)
-                        searchOptions.sort = CharacterSort.values()[characterSelect.selectedIndex]
-                        val section = document.getElementById("character-cards-section")!!
-                        buildCharacters(section, getCharacters(), getAdditionalInfo())
-                        characterSearch()
-                    }
+                onChangeFunction = {
+                    val characterSelect = (document.getElementById(id) as HTMLSelectElement)
+                    searchOptions.sort = CharacterSort.values()[characterSelect.selectedIndex]
+                    val section = document.getElementById("character-cards-section")!!
+                    buildCharacters(section, getCharacters(), getAdditionalInfo())
+                    characterSearch()
                 }
             }
         }
