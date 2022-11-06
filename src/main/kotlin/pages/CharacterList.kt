@@ -73,11 +73,13 @@ fun buildCharacters(section: Element, characters: List<LegacyCharacter>, forceRe
         }
         characterCards = sortedCharacters.associate { it.uuid to document.getElementById(it.uuid) as HTMLElement }
     } else if (searchOptions.sort != previousSearch?.sort) {
-        characters.sorted(searchOptions.sort).forEach { character ->
+        val sortedCharacters = characters.sorted(searchOptions.sort)
+        sortedCharacters.forEach { character ->
             characterCards[character.uuid]?.let { characterDom ->
                 characterDoms.appendChild(characterDom)
             }
         }
+        characterCards = sortedCharacters.associate { it.uuid to characterCards[it.uuid]!! }
     } else {
         characterCards.values.forEach { characterDoms.appendChild(it) }
     }
