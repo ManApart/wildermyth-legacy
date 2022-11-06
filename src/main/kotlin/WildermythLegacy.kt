@@ -96,3 +96,7 @@ fun String.splitByCapitals() : String {
 fun String.removeAll(vararg parts: String): String {
     return parts.fold(this){acc, s -> acc.replace(s, "") }
 }
+
+fun isMobile(): Boolean {
+    return window.screen.width / window.screen.height < 3/4f
+}

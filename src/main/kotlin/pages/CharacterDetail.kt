@@ -76,30 +76,44 @@ fun characterDetail(character: LegacyCharacter, snapshot: Character = character.
 private fun TagConsumer<HTMLElement>.buildNav(character: LegacyCharacter, showAggregates: Boolean, snapshot: Character) {
     div {
         id = "character-nav"
-        button {
-            +"Back"
-            title = "You can also use left/right arrow keys."
-            onClickFunction = {
-                characterDetail(previousCharacter(character))
+        span {
+            id = "character-nav-buttons"
+            button {
+                +"Back"
+                title = "You can also use left/right arrow keys."
+                onClickFunction = {
+                    characterDetail(previousCharacter(character))
+                }
+            }
+            button {
+                +"List"
+                onClickFunction = {
+                    window.location.hash = "#${character.uuid}"
+                }
+            }
+            button {
+                +"Profile"
+                onClickFunction = {
+                    profile()
+                }
+            }
+            button {
+                +"Next"
+                title = "You can also use left/right arrow keys."
+                onClickFunction = {
+                    characterDetail(nextCharacter(character))
+                }
             }
         }
+
         button {
-            +"List"
+            id = "log-button"
+            +"Log Detail"
             onClickFunction = {
-                window.location.hash = "#${character.uuid}"
-            }
-        }
-        button {
-            +"Profile"
-            onClickFunction = {
-                profile()
-            }
-        }
-        button {
-            +"Next"
-            title = "You can also use left/right arrow keys."
-            onClickFunction = {
-                characterDetail(nextCharacter(character))
+                println("Raw Json (not saved; only exists after import):")
+                println(character.rawJson)
+                println("Parsed Character:")
+                println(jsonMapper.encodeToString(character))
             }
         }
         span {
@@ -124,16 +138,6 @@ private fun TagConsumer<HTMLElement>.buildNav(character: LegacyCharacter, showAg
                     val snapshotI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
                     changeSnapshot(snapshotI, character)
                 }
-            }
-        }
-        button {
-            id = "log-button"
-            +"Log Detail"
-            onClickFunction = {
-                println("Raw Json (not saved; only exists after import):")
-                println(character.rawJson)
-                println("Parsed Character:")
-                println(jsonMapper.encodeToString(character))
             }
         }
     }
@@ -369,7 +373,7 @@ fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snap
                                     window.open("https://wildermyth.com/wiki/Category:${hook.id}", "_blank")
                                 }
                             }
-                            td { + if (hook.resolved) "Resolved" else "" }
+                            td { +if (hook.resolved) "Resolved" else "" }
                         }
                     }
                 }
