@@ -108,9 +108,11 @@ fun Character.replaceRelationshipTemplate(fullType: String, resultOptions: List<
         when {
             relationship != null && type == "mf" -> relationship.replaceMF(resultOptions)
             relationship != null && type == "fullname" -> (relationship.name ?: "someone")
+            relationship != null && type == "awm" -> relationship.replaceAWM(resultOptions)
             roleName == "self" -> replaceSelf(type, resultOptions)
             else -> {
-                println("Relationship Attributes not supported: $name ${entry.id} $fullType")
+                println("Relationship Attributes not supported: $name ${entry.id} $fullType.  Using ${resultOptions.last()}")
+                println(resultOptions)
                 println(jsonMapper.encodeToString(entry))
                 resultOptions.last()
             }
@@ -138,6 +140,16 @@ private fun HistoryRelationship.replaceMF(resultOptions: List<String>): String {
 
 private fun Character.replaceAWM(resultOptions: List<String>): String {
     return if (attractedToWomen) resultOptions.first() else resultOptions.last()
+}
+
+private fun HistoryRelationship.replaceAWM(resultOptions: List<String>): String {
+    val relation = uuid?.let { getCharacter(it) }
+    return when {
+        relation != null -> if (relation.snapshots.last().attractedToWomen) resultOptions.first() else resultOptions.last()
+        gender == "male" -> resultOptions.first()
+        gender == "female" -> resultOptions.last()
+        else -> resultOptions.first()
+    }
 }
 
 private fun Character.replacePersonality(typeOptions: List<String>, resultOptions: List<String>, level: Int = 0): String {

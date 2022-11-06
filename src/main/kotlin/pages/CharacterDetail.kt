@@ -284,8 +284,15 @@ private fun DIV.buildHistorySection(character: Character, history: List<HistoryE
             div("full-history-entry") {
                 div("full-history-entry-inner") {
                     p {
-                        id = "full-history-$i"
-                        +" ${entry.getText(character)}"
+                        id = "full-history-id-$i"
+                        +entry.id
+                    }
+                    val fullText = entry.getText(character)
+                    if (entry.id != fullText) {
+                        p {
+                            id = "full-history-$i"
+                            +fullText
+                        }
                     }
                     if (entry.associatedAspects.isNotEmpty()) {
                         p {
@@ -300,7 +307,7 @@ private fun DIV.buildHistorySection(character: Character, history: List<HistoryE
                     val relates = entry.relationships.filter { it.name != null }
                     if (relates.isNotEmpty()) {
                         p {
-                            +"Relates: ${relates.joinToString { it.name ?: "" }}"
+                            +"Relates: ${relates.mapNotNull { it.name }.toSet().joinToString(", ")}"
                         }
                     }
                 }
