@@ -195,27 +195,29 @@ private fun skillTable(parent: HTMLElement, stat: Stat) {
     el<HTMLElement?>("skill-table-section")?.remove()
     parent.append {
         div("profile-charts") {
-            id = "skill-table-section"
-            span {
-                id = "start-skill-select-span"
-                label { +"Skill:" }
-                select {
-                    id = "starting-skill-select"
-                    Stat.values().forEach {
-                        option {
-                            +it.format()
-                            selected = stat == it
+            div {
+                id = "skill-table-section"
+                div {
+                    id = "start-skill-select-span"
+                    label { +"Skill:" }
+                    select {
+                        id = "starting-skill-select"
+                        Stat.values().forEach {
+                            option {
+                                +it.format()
+                                selected = stat == it
+                            }
+                        }
+                        onChangeFunction = {
+                            val optionI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
+                            skillTable(parent, Stat.values()[optionI])
                         }
                     }
-                    onChangeFunction = {
-                        val optionI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
-                        skillTable(parent, Stat.values()[optionI])
-                    }
                 }
-            }
 
-            val bestStat = getCharacters().map { it to (it.snapshots.last().primaryStats[stat] ?: 0f) }.sortedByDescending { it.second }.take(10).toMap()
-            chartTable("best-stat-chart", bestStat, listOf("Character", stat.format()), "Highest Starting ${stat.format()}")
+                val bestStat = getCharacters().map { it to (it.snapshots.last().primaryStats[stat] ?: 0f) }.sortedByDescending { it.second }.take(10).toMap()
+                chartTable("best-stat-chart", bestStat, listOf("Character", stat.format()), "Highest Starting ${stat.format()}")
+            }
         }
     }
 }

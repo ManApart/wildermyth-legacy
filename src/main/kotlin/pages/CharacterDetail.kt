@@ -34,6 +34,7 @@ import org.w3c.dom.events.KeyboardEvent
 import searchOptions
 import sorted
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 private lateinit var currentCharacter: LegacyCharacter
 fun characterDetail(character: LegacyCharacter, snapshot: Character = character.snapshots.last(), showAggregates: Boolean = true, startY: Double = 0.0) {
@@ -318,7 +319,6 @@ private fun DIV.buildHistorySection(character: Character, history: List<HistoryE
 
 fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snapshot: Character, showAggregates: Boolean) {
 //    val rawStats = snapshot.aspects.filter { it.name == "historyStat2" }
-    val rawStats = snapshot.primaryStats
     val hooks = if (showAggregates) legacyCharacter.hooks else snapshot.hooks
     div("character-section") {
         id = "stats-section"
@@ -346,7 +346,7 @@ fun TagConsumer<HTMLElement>.statsSection(legacyCharacter: LegacyCharacter, snap
             h2 { +"Stat Bonuses" }
             table {
                 tbody {
-                    rawStats.entries.forEach { (stat, amount) ->
+                    snapshot.primaryStats.entries.forEach { (stat, amount) ->
                         tr {
                             td { +stat.format() }
                             td { +"$amount" }

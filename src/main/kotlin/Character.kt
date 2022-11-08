@@ -1,6 +1,7 @@
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.encodeToString
+import kotlin.math.roundToInt
 
 @Serializable
 data class LegacyCharacter(
@@ -327,12 +328,14 @@ data class Character(
             .mapNotNull { aspect ->
                 aspect.values.first().toStat()?.let { stat ->
                     stat to (aspect.values[1].toFloatOrNull() ?: 0f)
-                } ?: null.also{ println("Unknown Stat: ${aspect.values.first()}")}
+                } ?: null.also { println("Unknown Stat: ${aspect.values.first()}") }
             }
-            .sortedByDescending { it.first }
+            .sortedBy { it.first }
             .groupBy { it.first }
             .mapValues { (_, nested) ->
-                nested.sumOf { it.second.toDouble() }.toFloat()
+                nested
+                    .sumOf { it.second.toDouble() }
+                    .let { (it * 10).roundToInt() / 10f }
             }
 
     }
