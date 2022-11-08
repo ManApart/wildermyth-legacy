@@ -76,3 +76,11 @@
 #legacy-tier-chart, #gender-chart, #character-class-chart, #popularity-chart, #campaigns-chart, #kills-chart, #best-stat-chart {
     --labels-size: 150px;
 }
+
+#best-stat-chart {
+    margin-top: 5%;
+}
+
+#best-stat-chart tbody{
+    height: calc(80% - var(--heading-size));
+}
