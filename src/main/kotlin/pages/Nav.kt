@@ -81,7 +81,7 @@ fun buildNav() {
             }
             img {
                 id = "clear-search"
-                src = "./images/x-circle.svg"
+                src = "./images/no.png"
                 onClickFunction = {
                     searchOptions.searchText = ""
                     (document.getElementById("search") as HTMLInputElement).value = ""

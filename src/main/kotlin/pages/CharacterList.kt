@@ -105,12 +105,12 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot:
             img {
                 classes = setOf("favorite-image")
                 id = character.uuid + "-star"
-                src = if (info.favorite) "images/star-active.png" else "images/star.png"
+                src = if (info.favorite) "images/star.png" else "images/star-empty.png"
                 onClickFunction = { e ->
                     e.stopPropagation()
                     info.favorite = !info.favorite
                     saveAdditionalInfo(info)
-                    (document.getElementById(character.uuid + "-star") as HTMLImageElement).src = if (info.favorite) "images/star-active.png" else "images/star.png"
+                    (document.getElementById(character.uuid + "-star") as HTMLImageElement).src = if (info.favorite) "images/star-empty.png" else "images/star-empty.png"
                 }
             }
             h1 {
@@ -140,7 +140,7 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot:
                 +"${classLevel.format()} ${className.capitalize()} ${character.legacyTierLevel.format()}$npc "
                 repeat(1 + character.legacyTierLevel.ordinal) {
                     img(classes = "legacy-tier-image") {
-                        src = "images/star-active.png"
+                        src = "images/star.png"
                     }
                 }
             }
@@ -177,7 +177,7 @@ fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snaps
                         +"${characterClass.name.format()} ${character.legacyTierLevel.format()} "
                         repeat(1 + character.legacyTierLevel.ordinal) {
                             img(classes = "legacy-tier-image") {
-                                src = "images/star-active.png"
+                                src = "images/star.png"
                             }
                         }
                     }
@@ -186,12 +186,12 @@ fun TagConsumer<HTMLElement>.characterListItem(character: LegacyCharacter, snaps
             img {
                 classes = setOf("favorite-image")
                 id = character.uuid + "-star"
-                src = if (info.favorite) "images/star-active.png" else "images/star.png"
+                src = if (info.favorite) "images/star.png" else "images/star-empty.png"
                 onClickFunction = { e ->
                     e.stopPropagation()
                     info.favorite = !info.favorite
                     saveAdditionalInfo(info)
-                    (document.getElementById(character.uuid + "-star") as HTMLImageElement).src = if (info.favorite) "images/star-active.png" else "images/star.png"
+                    (document.getElementById(character.uuid + "-star") as HTMLImageElement).src = if (info.favorite) "images/star.png" else "images/star-empty.png"
                 }
             }
         }

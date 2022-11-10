@@ -409,7 +409,7 @@ fun TagConsumer<HTMLElement>.tagsSection(info: AdditionalInfo) {
             }
         }
         img {
-            src = "./images/plus-circle.svg"
+            src = "./images/yes.png"
             onClickFunction = {
                 saveTag(info)
             }
@@ -439,7 +439,7 @@ private fun TagConsumer<HTMLElement>.displayTags(info: AdditionalInfo) {
         span("tag-label") {
             +tag
             img {
-                src = "./images/x-circle.svg"
+                src = "./images/no.png"
                 onClickFunction = {
                     info.tags.remove(tag)
                     saveAdditionalInfo(info)
@@ -584,7 +584,7 @@ private fun TagConsumer<HTMLElement>.compatibilitySection(character: LegacyChara
                     repeat(abs(level)) {
                         img {
                             classes = setOf("compatibility-image")
-                            src = if (level > 0) "images/heart.svg" else "images/zap.svg"
+                            src = if (level > 0) "images/lover.png" else "images/rival.png"
                         }
                     }
                 }
