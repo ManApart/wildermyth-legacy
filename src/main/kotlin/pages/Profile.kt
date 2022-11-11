@@ -9,7 +9,6 @@ import el
 import format
 import getCharacters
 import getCompanies
-import getCompanyForGameId
 import getProfile
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -33,7 +32,7 @@ fun profile() {
     section.append {
         buildProfileNav()
         buildLinks(profile)
-        buildCharts()
+        buildCharts(profile)
         buildCompanies()
         buildUnlocks(profile)
     }
@@ -161,7 +160,7 @@ private fun TagConsumer<HTMLElement>.buildCompanies() {
     }
 }
 
-private fun TagConsumer<HTMLElement>.buildCharts() {
+private fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
     div(classes = "profile-section") {
         id = "profile-aggregates"
         h2 {
@@ -186,6 +185,20 @@ private fun TagConsumer<HTMLElement>.buildCharts() {
 
             val kills = getCharacters().map { it to it.killCount }.filter { it.second > 10 }.sortedByDescending { it.second }.take(20).toMap()
             chartTable("kills-chart", kills, listOf("Character", "Kills"), "Confirmed Kills")
+
+            val enemyTypes = getCompanies().groupBy {
+                it.mainThreat
+            }.map { (group, campaigns) -> group.capitalize() to campaigns.size }.toMap()
+            chartTable("enemy-campaign-count", enemyTypes, listOf("Group", "Runs"), "Campaigns Against Enemy")
+
+            val enemyKills = listOfNotNull(
+                profile.unlocks.firstOrNull{it.id == "achievementProgress_cultistKills"},
+                profile.unlocks.firstOrNull{it.id == "achievementProgress_drauvenKills"},
+                profile.unlocks.firstOrNull{it.id == "achievementProgress_gorgonKills"},
+                profile.unlocks.firstOrNull{it.id == "achievementProgress_morthagiKills"},
+                profile.unlocks.firstOrNull{it.id == "achievementProgress_thrixlKills"},
+            ).associate { it.name.replace(" Kills", "") to it.progress }
+            chartTable("enemy-kill-count", enemyKills, listOf("Group", "Kills"), "Enemies Killed")
 
         }
     }
