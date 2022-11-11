@@ -182,16 +182,18 @@
     padding: 8px;
 }
 
-.company h4 {
-    padding-top: 4px;
+.company h2 {
+    padding-top: 5px;
+    padding-bottom: 25px;
     margin: 0px;
     display: inline-block;
 }
 
 .company-foe {
     float: right;
-    margin-top: 0px;
+    margin-top: -10px;
     margin-bottom: 0px;
+    width: 60px;
 }
 
 .company-friend-pic-wrapper{
@@ -255,8 +257,13 @@
     padding: 8px;
 }
 
+.compatibility-label {
+    font-size: .8em;
+    display: inline;
+}
+
 .compatibility-image {
-    width: 3%;
+    width: 20px;
     margin-left: 10px;
 }
 

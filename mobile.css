@@ -77,6 +77,14 @@
         text-align: center;
     }
 
+    .relationship {
+        height: 160px;
+    }
+
+    .relationship-pic {
+        height: 175%;
+    }
+
     .details-subsection{
         width: 100%;
     }
@@ -149,8 +157,20 @@
         font-weight: 100;
     }
 
-    #legacy-tier-chart, #gender-chart, #character-class-chart, #popularity-chart, #campaigns-chart, #kills-chart, #best-stat-chart {
+    .label-image {
+        width: 60px;
+    }
+
+    #skill-table-section {
+        width: 95%;
+    }
+
+    #legacy-tier-chart, #popularity-chart, #campaigns-chart, #kills-chart, #best-stat-chart {
         --labels-size: 350px;
+    }
+
+    #gender-chart, #character-class-chart, #enemy-campaign-count, #enemy-kill-count{
+        --labels-size: 200px;
     }
 
     .tag-label {

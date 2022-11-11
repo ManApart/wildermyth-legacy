@@ -31,18 +31,22 @@
     overflow: hidden;
     position: relative;
     margin: auto;
+    background-size: cover;
 }
 
 .warrior-portrait {
     background-color: #3f4254;
+    background-image: url("images/backgrounds/warrior.jpg");
 }
 
 .hunter-portrait {
     background-color: #2f342e;
+    background-image: url("images/backgrounds/hunter.jpg");
 }
 
 .mystic-portrait {
     background-color: #37313b;
+    background-image: url("images/backgrounds/mystic.jpg");
 }
 
 .character-head {
