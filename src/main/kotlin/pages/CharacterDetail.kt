@@ -548,8 +548,6 @@ private fun TagConsumer<HTMLElement>.relativeCard(mySnapshot: Character, relativ
                 div("relationship-text") {
                     div {
                         h4 { +relationship }
-//                        val rankText = if (rank != null) "Rank $rank, " else ""
-//                        p("relationship-rank") { +"(${rankText}Compatibility $compatibility)" }
                         repeat(abs(rank)) {
                             img {
                                 title = "Current level"
@@ -631,8 +629,11 @@ fun TagConsumer<HTMLElement>.companyCard(companyId: String) {
 fun TagConsumer<HTMLElement>.companyCard(company: Company) {
     div("company") {
         div {
-            h4 { +company.name }
-            p("company-foe") { +"Foe: ${company.mainThreat.capitalize()}" }
+            h2 { +company.name }
+            img(classes = "company-foe") {
+                src = "images/foe/${company.mainThreat}.png"
+                title = "Foe: ${company.mainThreat.capitalize()}"
+            }
         }
         company.characters.mapNotNull { getCharacter(it) }.forEach { relative ->
             getPicture("${relative.uuid}/head")?.let { picture ->
