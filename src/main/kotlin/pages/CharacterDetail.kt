@@ -531,7 +531,7 @@ fun TagConsumer<HTMLElement>.companiesSection(character: LegacyCharacter) {
     }
 }
 
-private fun TagConsumer<HTMLElement>.relativeCard(mySnapshot: Character, relativeUuid: String, relationship: String, rank: Int? = null) {
+private fun TagConsumer<HTMLElement>.relativeCard(mySnapshot: Character, relativeUuid: String, relationship: String, rank: Int = 0) {
     val relative = getCharacter(relativeUuid)
     val snapshot = relative?.snapshots?.last()
 
@@ -548,10 +548,29 @@ private fun TagConsumer<HTMLElement>.relativeCard(mySnapshot: Character, relativ
                 div("relationship-text") {
                     div {
                         h4 { +relationship }
-                        val rankText = if (rank != null) "Rank $rank, " else ""
-                        p("relationship-rank") { +"(${rankText}Compatibility $compatibility)" }
+//                        val rankText = if (rank != null) "Rank $rank, " else ""
+//                        p("relationship-rank") { +"(${rankText}Compatibility $compatibility)" }
+                        repeat(abs(rank)) {
+                            img {
+                                title = "Current level"
+                                classes = setOf("compatibility-image")
+                                src = if (rank > 0) "images/lover.png" else "images/rival.png"
+                            }
+                        }
                     }
                     p { +snapshot.name }
+                    if (compatibility != 0) {
+                        p("compatibility-label") {
+                            +"Compatibility:"
+                        }
+                        repeat(abs(compatibility)) {
+                            img {
+                                title = "Compatibility"
+                                classes = setOf("compatibility-image")
+                                src = if (compatibility > 0) "images/lover.png" else "images/rival.png"
+                            }
+                        }
+                    }
                 }
             }
         }

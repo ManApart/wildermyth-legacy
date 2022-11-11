@@ -255,8 +255,12 @@
     padding: 8px;
 }
 
+.compatibility-label {
+    display: inline;
+}
+
 .compatibility-image {
-    width: 3%;
+    width: 20px;
     margin-left: 10px;
 }
 
