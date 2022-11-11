@@ -9,6 +9,7 @@ import el
 import format
 import getCharacters
 import getCompanies
+import getPicture
 import getProfile
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -188,17 +189,18 @@ private fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
 
             val enemyTypes = getCompanies().groupBy {
                 it.mainThreat
-            }.map { (group, campaigns) -> group.capitalize() to campaigns.size }.toMap()
-            chartTable("enemy-campaign-count", enemyTypes, listOf("Group", "Runs"), "Campaigns Against Enemy")
+            }.map { (group, campaigns) -> Pair<String, String?>(group.capitalize(), "images/foe/$group.png") to campaigns.size }.toMap()
+            chartTableWithPic("enemy-campaign-count", enemyTypes, listOf("Group", "Runs"), "Campaigns Against Enemy")
 
             val enemyKills = listOfNotNull(
-                profile.unlocks.firstOrNull{it.id == "achievementProgress_cultistKills"},
-                profile.unlocks.firstOrNull{it.id == "achievementProgress_drauvenKills"},
-                profile.unlocks.firstOrNull{it.id == "achievementProgress_gorgonKills"},
-                profile.unlocks.firstOrNull{it.id == "achievementProgress_morthagiKills"},
-                profile.unlocks.firstOrNull{it.id == "achievementProgress_thrixlKills"},
-            ).associate { it.name.replace(" Kills", "") to it.progress }
-            chartTable("enemy-kill-count", enemyKills, listOf("Group", "Kills"), "Enemies Killed")
+                profile.unlocks.firstOrNull { it.id == "achievementProgress_cultistKills" },
+                profile.unlocks.firstOrNull { it.id == "achievementProgress_drauvenKills" },
+                profile.unlocks.firstOrNull { it.id == "achievementProgress_gorgonKills" },
+                profile.unlocks.firstOrNull { it.id == "achievementProgress_morthagiKills" },
+                profile.unlocks.firstOrNull { it.id == "achievementProgress_thrixlKills" },
+            ).associate { it.name.replace("Kills", "").trim() to it.progress }
+                .mapKeys { (key, _) -> Pair<String, String?>(key, "images/foe/${key.lowercase()}.png") }
+            chartTableWithPic("enemy-kill-count", enemyKills, listOf("Group", "Kills"), "Enemies Killed")
 
         }
     }
@@ -236,11 +238,15 @@ private fun skillTable(parent: HTMLElement, stat: Stat) {
 }
 
 private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<LegacyCharacter, Number>, headers: List<String>, caption: String) {
-    val namedData = data.mapKeys { (character, _) -> character.snapshots.last().name }
-    chartTable(docId, namedData, headers, caption) { characterDetail(data.keys.toList()[it]) }
+    val namedData = data.mapKeys { (character, _) -> character.snapshots.last().name to getPicture("${character.uuid}/head") }
+    chartTableWithPic(docId, namedData, headers, caption) { characterDetail(data.keys.toList()[it]) }
 }
 
 private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String, Number>, headers: List<String>, caption: String, onClick: (Int) -> Unit = {}) {
+    chartTableWithPic(docId, data.mapKeys { (key, _) -> key to null }, headers, caption, onClick)
+}
+
+private fun TagConsumer<HTMLElement>.chartTableWithPic(docId: String, data: Map<Pair<String, String?>, Number>, headers: List<String>, caption: String, onClick: (Int) -> Unit = {}) {
     val max = data.values.map { it.toFloat() }.maxOfOrNull { it }
     if (max != null) {
         div("profile-chart-wrapper") {
@@ -255,9 +261,15 @@ private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String,
                     }
                 }
                 tbody {
-                    data.entries.forEachIndexed { i, (key, count) ->
+                    data.entries.forEachIndexed { i, (pair, count) ->
+                        val (key, url) = pair
                         tr {
-                            th(ThScope.row) {
+                            th(ThScope.row, classes = "profile-header") {
+                                if (url != null) {
+                                    img(classes = "label-image") {
+                                        src = url
+                                    }
+                                }
                                 +key
                             }
                             td {

@@ -73,8 +73,21 @@
   color: #fff;
 }
 
-#legacy-tier-chart, #gender-chart, #character-class-chart, #popularity-chart, #campaigns-chart, #kills-chart, #best-stat-chart {
-    --labels-size: 150px;
+.charts-css.bar:not(.reverse) tbody tr th {
+    width: inherit;
+    flex-wrap: wrap;
+}
+
+.label-image {
+    width: 40px;
+}
+
+#legacy-tier-chart,   #popularity-chart, #campaigns-chart, #kills-chart, #best-stat-chart {
+    --labels-size: 200px;
+}
+
+#gender-chart, #character-class-chart, #enemy-campaign-count, #enemy-kill-count{
+    --labels-size: 100px;
 }
 
 #best-stat-chart {
