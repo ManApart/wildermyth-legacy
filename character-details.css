@@ -155,6 +155,11 @@
     margin: auto;
 }
 
+#stat-bonuses td{
+    min-width: 40px;
+    word-break: break-word;
+}
+
 #personality-section {
     width: 46%;
     display: inline-block;
