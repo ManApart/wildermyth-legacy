@@ -189,7 +189,7 @@ private fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
 
             val enemyTypes = getCompanies().groupBy {
                 it.mainThreat
-            }.map { (group, campaigns) -> Pair<String, String?>(group.capitalize(), "images/foe/$group.png") to campaigns.size }.toMap()
+            }.map { (group, campaigns) -> Pair<String, String?>(group.capitalize(), "images/foe/$group.png") to campaigns.size }.sortedBy { it.first.first }.toMap()
             chartTableWithPic("enemy-campaign-count", enemyTypes, listOf("Group", "Runs"), "Campaigns Against Enemy")
 
             val enemyKills = listOfNotNull(
@@ -198,8 +198,9 @@ private fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
                 profile.unlocks.firstOrNull { it.id == "achievementProgress_gorgonKills" },
                 profile.unlocks.firstOrNull { it.id == "achievementProgress_morthagiKills" },
                 profile.unlocks.firstOrNull { it.id == "achievementProgress_thrixlKills" },
-            ).associate { it.name.replace("Kills", "").trim() to it.progress }
-                .mapKeys { (key, _) -> Pair<String, String?>(key, "images/foe/${key.lowercase()}.png") }
+            ).map { it.name.replace("Kills", "").trim() to it.progress }
+                .sortedBy { it.first }
+                .associate { (key, value) -> Pair<String, String?>(key, "images/foe/${key.lowercase()}.png") to value }
             chartTableWithPic("enemy-kill-count", enemyKills, listOf("Group", "Kills"), "Enemies Killed")
 
         }
