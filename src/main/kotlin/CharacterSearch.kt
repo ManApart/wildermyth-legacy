@@ -55,7 +55,8 @@ private fun snapshotsFilter(snapshots: Array<Character>, searchText: String): Bo
 private fun latestFilter(latest: Character, searchText: String): Boolean {
     return latest.classLevel.takeIf { it != undefined }?.name?.lowercase()?.contains(searchText) ?: false ||
             latest.personalityFirst.name.lowercase().contains(searchText) ||
-            latest.personalitySecond.name.lowercase().contains(searchText)
+            latest.personalitySecond.name.lowercase().contains(searchText) ||
+            latest.gear.any { it.name.lowercase().contains(searchText) }
 }
 
 
