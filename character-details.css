@@ -155,9 +155,12 @@
     margin: auto;
 }
 
-#stat-bonuses td{
-    min-width: 40px;
+#stat-bonuses td:first-child{
     word-break: break-word;
+}
+
+#stat-bonuses td:nth-child(2){
+    word-break: keep-all;
 }
 
 #personality-section {
