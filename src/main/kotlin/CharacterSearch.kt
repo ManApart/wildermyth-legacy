@@ -9,7 +9,6 @@ fun characterSearch() {
         .hideNPC(searchOptions.hideNPC)
         .filterSearch(searchOptions.searchText, info)
     filterCharacterDoms(characters)
-    saveSearch(searchOptions)
     previousSearch = searchOptions.copy()
 }
 

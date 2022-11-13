@@ -9,7 +9,7 @@ import kotlin.js.Date
 
 val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
 lateinit var favicon: HTMLElement
-var searchOptions = getSearch()
+var searchOptions = CharacterSearchOptions()
 
 fun main() {
     window.onload = {

@@ -144,14 +144,6 @@ fun loadMemory(): Promise<*> {
     }
 }
 
-fun getSearch(): CharacterSearchOptions {
-    return localStorage["search-options"]?.let { jsonMapper.decodeFromString(it) } ?: CharacterSearchOptions()
-}
-
-fun saveSearch(options: CharacterSearchOptions) {
-    localStorage["search-options"] = jsonMapper.encodeToString(options)
-}
-
 fun getDepth(): Int {
     return localStorage["relationship-depth"]?.toIntOrNull() ?: 2
 }

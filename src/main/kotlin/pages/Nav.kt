@@ -2,7 +2,6 @@ package pages
 
 import CharacterSort
 import characterSearch
-import el
 import format
 import getAdditionalInfo
 import getCharacters
@@ -14,13 +13,10 @@ import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
 import kotlinx.serialization.encodeToString
-import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLSelectElement
 import org.w3c.xhr.XMLHttpRequest
-import saveAdditionalInfo
-import saveSearch
 import searchOptions
 
 fun buildNav() {

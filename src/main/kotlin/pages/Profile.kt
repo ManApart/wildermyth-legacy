@@ -20,6 +20,7 @@ import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLSelectElement
+import searchOptions
 
 fun profile() {
     val profile = getProfile()
@@ -170,19 +171,34 @@ private fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
         div("profile-charts") {
             id = "profile-charts"
             val legacyTier = getCharacters().groupBy { it.legacyTierLevel }.entries.associate { (level, list) -> level.format() to list.size }
-            chartTable("legacy-tier-chart", legacyTier, listOf("Level", "Count"), "Characters by Legacy Tier")
+            chartTable("legacy-tier-chart", legacyTier, listOf("Level", "Count"), "Characters by Legacy Tier"){
+                searchOptions.searchText = legacyTier.keys.toList()[it]
+                window.location.hash = "#"
+            }
 
             val gender = getCharacters().groupBy { it.snapshots.last().sex }.entries.associate { (level, list) -> level.format() to list.size }
-            chartTable("gender-chart", gender, listOf("Sex", "Count"), "Characters by Sex")
+            chartTable("gender-chart", gender, listOf("Sex", "Count"), "Characters by Sex"){
+                searchOptions.searchText = gender.keys.toList()[it]
+                window.location.hash = "#"
+            }
 
             val byClass = getCharacters().groupBy { it.snapshots.last().characterClass }.entries.associate { (level, list) -> level.format() to list.size }
-            chartTable("character-class-chart", byClass, listOf("Class", "Count"), "Characters by Class")
+            chartTable("character-class-chart", byClass, listOf("Class", "Count"), "Characters by Class"){
+                searchOptions.searchText = byClass.keys.toList()[it]
+                window.location.hash = "#"
+            }
 
             val byPersonality = getCharacters().groupBy { it.snapshots.last().personalityFirst }.entries.sortedBy { it.key.name }.associate { (level, list) -> level.format() to list.size }
-            chartTable("personality-chart", byPersonality, listOf("Personality", "Count"), "Characters by Top Personality")
+            chartTable("personality-chart", byPersonality, listOf("Personality", "Count"), "Characters by Top Personality"){
+                searchOptions.searchText = byPersonality.keys.toList()[it]
+                window.location.hash = "#"
+            }
 
             val byPersonalitySecond = getCharacters().groupBy { it.snapshots.last().personalitySecond }.entries.sortedBy { it.key.name }.associate { (level, list) -> level.format() to list.size }
-            chartTable("personality-second-chart", byPersonalitySecond, listOf("Personality", "Count"), "Characters by Second Personality")
+            chartTable("personality-second-chart", byPersonalitySecond, listOf("Personality", "Count"), "Characters by Second Personality"){
+                searchOptions.searchText = byPersonalitySecond.keys.toList()[it]
+                window.location.hash = "#"
+            }
 
             val popularity = getCharacters().map { it to it.friendships.size }.filter { it.second > 1 }.sortedByDescending { it.second }.take(20).toMap()
             chartTable("popularity-chart", popularity, listOf("Character", "Friend Count"), "Popularity (Relationship Count)")
