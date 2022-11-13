@@ -178,6 +178,12 @@ private fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
             val byClass = getCharacters().groupBy { it.snapshots.last().characterClass }.entries.associate { (level, list) -> level.format() to list.size }
             chartTable("character-class-chart", byClass, listOf("Class", "Count"), "Characters by Class")
 
+            val byPersonality = getCharacters().groupBy { it.snapshots.last().personalityFirst }.entries.sortedBy { it.key.name }.associate { (level, list) -> level.format() to list.size }
+            chartTable("personality-chart", byPersonality, listOf("Personality", "Count"), "Characters by Top Personality")
+
+            val byPersonalitySecond = getCharacters().groupBy { it.snapshots.last().personalitySecond }.entries.sortedBy { it.key.name }.associate { (level, list) -> level.format() to list.size }
+            chartTable("personality-second-chart", byPersonalitySecond, listOf("Personality", "Count"), "Characters by Second Personality")
+
             val popularity = getCharacters().map { it to it.friendships.size }.filter { it.second > 1 }.sortedByDescending { it.second }.take(20).toMap()
             chartTable("popularity-chart", popularity, listOf("Character", "Friend Count"), "Popularity (Relationship Count)")
 
