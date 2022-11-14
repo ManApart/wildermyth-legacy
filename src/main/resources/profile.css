@@ -82,7 +82,7 @@
     width: 40px;
 }
 
-#legacy-tier-chart,   #popularity-chart, #campaigns-chart, #kills-chart, #best-stat-chart {
+#legacy-tier-chart, #popularity-chart, #campaigns-chart, #kills-chart, #best-stat-chart,  #theme-chart{
     --labels-size: 200px;
 }
 

@@ -83,6 +83,7 @@ data class Character(
         //Since story props don't exist when parsing json from indexDB, reload them after the in-memory db is loaded
         bio = getBio()
         abilities = parseAbilities()
+        themes = parseThemes(abilities)
         gear.forEach { it.reload() }
     }
 
@@ -183,6 +184,9 @@ data class Character(
 
     @Transient
     var abilities = parseAbilities()
+
+    @Transient
+    var themes = parseThemes(abilities)
 
     @Transient
     val hooks = parseHooks()
@@ -303,10 +307,14 @@ data class Character(
 
         val deckAspects = aspects.filter { it.name.contains("Deck") }
         return (themeAspects + deckAspects).map { aspect ->
-            val name = getAspectProp("${aspect.name}.name")?.let { interpolate(it) } ?: aspect.name
+            val name = getAspectProp("${aspect.name}.name")?.let { interpolate(it) } ?: aspect.name.replace("theme_", "")
             val description = getAspectProp("${aspect.name}.blurb")?.let { interpolate(it) } ?: aspect.name
             Ability(aspect.name, name, description)
         }
+    }
+
+    private fun parseThemes(abilities: List<Ability>): List<Ability> {
+        return abilities.filter { it.id.startsWith("theme_") && it.id.count { char -> char == '_' } == 1 }.sortedBy { it.name }
     }
 
     private fun parseHooks(): List<Hook> {
