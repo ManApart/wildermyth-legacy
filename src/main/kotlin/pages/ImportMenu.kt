@@ -12,6 +12,7 @@ import org.khronos.webgl.ArrayBuffer
 import org.w3c.dom.HTMLInputElement
 import org.w3c.files.FileReader
 import org.w3c.files.get
+import resetStorage
 
 fun importMenu(rebuildNav: Boolean = true) {
     val section = el("import-section")
@@ -20,31 +21,46 @@ fun importMenu(rebuildNav: Boolean = true) {
     document.getElementById("nav")!!.innerHTML = ""
     section.append {
         h3 { +"View your own characters from Wildermyth!" }
-        button {
-            +"Cancel"
-            onClickFunction = {
-                section.innerHTML = ""
-                if (rebuildNav) buildNav()
-            }
-        }
-        input(InputType.file) {
-            id = "import-input"
-            type = InputType.file
-            onChangeFunction = {
-                if (rebuildNav) buildNav()
-                val element = document.getElementById(id) as HTMLInputElement
-                if (element.files != undefined) {
-                    val file = element.files!![0]!!
-                    val reader = FileReader()
-                    reader.onload = {
-                        importZip(reader.result as ArrayBuffer, window.location.hash)
-                    }
-                    reader.onerror = { error ->
-                        console.error("Failed to read File $error")
-                    }
-                    reader.readAsArrayBuffer(file)
+        div("row") {
+            id = "upload-options"
+            button {
+                +"Cancel"
+                id = "cancel-import"
+                onClickFunction = {
+                    section.innerHTML = ""
+                    if (rebuildNav) buildNav()
                 }
             }
+            input(InputType.file) {
+                id = "import-input"
+                type = InputType.file
+                onChangeFunction = {
+                    if (rebuildNav) buildNav()
+                    val element = document.getElementById(id) as HTMLInputElement
+                    if (element.files != undefined) {
+                        val file = element.files!![0]!!
+                        val reader = FileReader()
+                        reader.onload = {
+                            importZip(reader.result as ArrayBuffer, window.location.hash)
+                        }
+                        reader.onerror = { error ->
+                            console.error("Failed to read File $error")
+                        }
+                        reader.readAsArrayBuffer(file)
+                    }
+                }
+            }
+            button {
+                id = "clear-data"
+                +"Clear Saved Data"
+                onClickFunction = {
+                    if (clearSavedData()) {
+                        section.innerHTML = ""
+                        if (rebuildNav) buildNav()
+                    }
+                }
+            }
+
         }
         div {
             id = "upload-instructions"
@@ -142,3 +158,11 @@ fun importMenu(rebuildNav: Boolean = true) {
     }
 }
 
+private fun clearSavedData(): Boolean {
+    val confirmed =
+        window.confirm("Are you sure you want to delete your data? You'll have to re-import from your zip and lose any additional info you haven't exported. Only do this if the site is broken!")
+
+    if (confirmed) resetStorage()
+
+    return confirmed
+}

@@ -9,11 +9,12 @@ import org.w3c.dom.get
 import org.w3c.dom.set
 import org.w3c.files.Blob
 import org.w3c.files.FileReader
+import pages.loadExample
 import kotlin.js.Promise
 
 @Serializable
 data class InMemoryStorage(
-    var profile: Profile = Profile("unknown"),
+    var profile: Profile = Profile("Unknown"),
     val characters: MutableMap<String, LegacyCharacter> = mutableMapOf(),
     val pictures: MutableMap<String, String> = mutableMapOf(),
     var additionalInfo: MutableMap<String, AdditionalInfo> = mutableMapOf(),
@@ -29,6 +30,15 @@ data class InMemoryStorage(
 
 private var inMemoryStorage = InMemoryStorage()
 var characterCards: Map<String, HTMLElement> = mapOf()
+
+fun resetStorage() {
+    inMemoryStorage = InMemoryStorage()
+    characterCards = mapOf()
+    loadExample(false).then {
+        persistMemory()
+        doRouting()
+    }
+}
 
 fun getProfile(): Profile {
     return inMemoryStorage.profile
@@ -97,7 +107,7 @@ fun getCompanyForGameId(uuid: String): Company {
 }
 
 fun saveCompanies(companies: Map<String, Company>) {
-    inMemoryStorage.companies = companies.entries.sortedBy { it.value.date }.associate{ it.key to it.value}
+    inMemoryStorage.companies = companies.entries.sortedBy { it.value.date }.associate { it.key to it.value }
     inMemoryStorage.companyByGameId = companies.values.associateBy { it.gameId }
 }
 

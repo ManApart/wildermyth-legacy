@@ -18,9 +18,9 @@ import kotlin.js.Promise
 
 private const val loadZip = false
 
-fun loadExample() {
+fun loadExample(attemptLoadMemory: Boolean = true): Promise<*> {
     val windowHash = window.location.hash
-    loadJson("example/data.json").then { json ->
+    return loadJson("example/data.json").then { json ->
         val example = parseLegacyCharacter(json)
         saveCharacter(example)
 
@@ -35,7 +35,7 @@ fun loadExample() {
             )
         ).then {
             doRouting(windowHash)
-            loadMemoryIfPresent(windowHash)
+            if (attemptLoadMemory) loadMemoryIfPresent(windowHash)
             if (loadZip) loadZipIfPresent(windowHash)
         }
     }

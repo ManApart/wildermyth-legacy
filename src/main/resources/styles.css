@@ -135,8 +135,22 @@ table {
   flex-wrap: wrap;
 }
 
+#upload-options {
+    grid-template-columns: minmax(100px, 20%) auto minmax(100px, 20%);
+}
+
 #import-input {
-  margin-left: 38%
+}
+
+#cancel-import {
+    margin-right: auto;
+}
+
+#clear-data {
+    max-width: 70px;
+    font-size: .7em;
+    padding: 5px;
+    margin-left: auto;
 }
 
 #loading-status {
