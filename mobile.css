@@ -165,11 +165,11 @@
         width: 95%;
     }
 
-    #legacy-tier-chart, #popularity-chart, #campaigns-chart, #kills-chart, #best-stat-chart {
+    .large-label, .large-label td  {
         --labels-size: 350px;
     }
 
-    #gender-chart, #character-class-chart, #enemy-campaign-count, #enemy-kill-count{
+    .small-label, .small-label td {
         --labels-size: 200px;
     }
 
