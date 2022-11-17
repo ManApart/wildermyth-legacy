@@ -2,13 +2,13 @@ package pages
 
 import AdditionalInfo
 import Character
-import CharacterSort
 import LegacyCharacter
 import characterCards
 import clearSections
 import el
 import format
 import getAdditionalInfo
+import getCharacter
 import getCharacters
 import getPicture
 import kotlinx.browser.document
@@ -19,7 +19,6 @@ import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
-import log
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
@@ -33,10 +32,9 @@ fun displayCharacters() {
     val section = el("character-cards-section")
     clearSections()
     document.title = "Wildermyth Legacy"
-    setFavicon(getCharacters().random())
     buildNav()
     buildCharacters(section, getCharacters(), getAdditionalInfo())
-    scrollToCharacter()
+    scrollToCharacterAndSetFavicon()
 }
 
 fun filterCharacterDoms(characters: List<LegacyCharacter>) {
@@ -90,9 +88,10 @@ fun buildCharacters(section: Element, characters: List<LegacyCharacter>, info: M
     }
 }
 
-private fun scrollToCharacter() {
+private fun scrollToCharacterAndSetFavicon() {
     val hashId = window.location.hash.replace("#", "")
     document.getElementById(hashId)?.scrollIntoView()
+    getCharacter(hashId)?.let { setFavicon(it) } ?: setFavicon(getCharacters().random())
 }
 
 fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot: Character, info: AdditionalInfo, clickable: Boolean) {
