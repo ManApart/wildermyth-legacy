@@ -174,31 +174,31 @@ private fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
         div("profile-charts") {
             id = "profile-charts"
             val legacyTier = getCharacters().groupBy { it.legacyTierLevel }.entries.sortedBy { it.key.ordinal }.associate { (level, list) -> level.format() to list.size }
-            chartTable("legacy-tier-chart", legacyTier, listOf("Level", "Count"), "Characters by Legacy Tier") {
+            chartTable("legacy-tier-chart", legacyTier, listOf("Level", "Count"), "Characters by Legacy Tier", "large-label") {
                 searchOptions.searchText = legacyTier.keys.toList()[it]
                 window.location.hash = "#"
             }
 
             val gender = getCharacters().groupBy { it.snapshots.last().sex }.entries.associate { (level, list) -> level.format() to list.size }
-            chartTable("gender-chart", gender, listOf("Sex", "Count"), "Characters by Sex") {
+            chartTable("gender-chart", gender, listOf("Sex", "Count"), "Characters by Sex", "small-label") {
                 searchOptions.searchText = gender.keys.toList()[it]
                 window.location.hash = "#"
             }
 
             val byClass = getCharacters().groupBy { it.snapshots.last().characterClass }.entries.associate { (level, list) -> level.format() to list.size }
-            chartTable("character-class-chart", byClass, listOf("Class", "Count"), "Characters by Class") {
+            chartTable("character-class-chart", byClass, listOf("Class", "Count"), "Characters by Class", "small-label") {
                 searchOptions.searchText = byClass.keys.toList()[it]
                 window.location.hash = "#"
             }
 
             val byPersonality = getCharacters().groupBy { it.snapshots.last().personalityFirst }.entries.sortedBy { it.key.name }.associate { (level, list) -> level.format() to list.size }
-            chartTable("personality-chart", byPersonality, listOf("Personality", "Count"), "Characters by Top Personality") {
+            chartTable("personality-chart", byPersonality, listOf("Personality", "Count"), "Characters by Top Personality", "small-label") {
                 searchOptions.searchText = byPersonality.keys.toList()[it]
                 window.location.hash = "#"
             }
 
             val byPersonalitySecond = getCharacters().groupBy { it.snapshots.last().personalitySecond }.entries.sortedBy { it.key.name }.associate { (level, list) -> level.format() to list.size }
-            chartTable("personality-second-chart", byPersonalitySecond, listOf("Personality", "Count"), "Characters by Second Personality") {
+            chartTable("personality-second-chart", byPersonalitySecond, listOf("Personality", "Count"), "Characters by Second Personality", "small-label") {
                 searchOptions.searchText = byPersonalitySecond.keys.toList()[it]
                 window.location.hash = "#"
             }
@@ -211,24 +211,24 @@ private fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
             }
             val byThemeSorted = byTheme.entries.sortedBy { it.value.first }.associate { (key, value) -> key to value }
             val byThemeName = byThemeSorted.map { (_, nameCount) -> nameCount.first to nameCount.second }.toMap()
-            chartTable("theme-chart", byThemeName, listOf("Theme", "Count"), "Characters by Theme") {
+            chartTable("theme-chart", byThemeName, listOf("Theme", "Count"), "Characters by Theme", "large-label") {
                 searchOptions.searchText = byThemeSorted.keys.toList()[it]
                 window.location.hash = "#"
             }
 
             val popularity = getCharacters().map { it to it.friendships.size }.filter { it.second > 1 }.sortedByDescending { it.second }.take(20).toMap()
-            chartTable("popularity-chart", popularity, listOf("Character", "Friend Count"), "Popularity (Relationship Count)")
+            chartTable("popularity-chart", popularity, listOf("Character", "Friend Count"), "Popularity (Relationship Count)", "large-label")
 
             val campaigns = getCharacters().map { it to it.companyIds.size }.filter { it.second > 1 }.sortedByDescending { it.second }.take(20).toMap()
-            chartTable("campaigns-chart", campaigns, listOf("Character", "Campaign Count"), "Campaigns Participated In")
+            chartTable("campaigns-chart", campaigns, listOf("Character", "Campaign Count"), "Campaigns Participated In", "large-label")
 
             val kills = getCharacters().map { it to it.killCount }.filter { it.second > 10 }.sortedByDescending { it.second }.take(20).toMap()
-            chartTable("kills-chart", kills, listOf("Character", "Kills"), "Confirmed Kills")
+            chartTable("kills-chart", kills, listOf("Character", "Kills"), "Confirmed Kills", "large-label")
 
             val enemyTypes = getCompanies().groupBy {
                 it.mainThreat
             }.map { (group, campaigns) -> Pair<String, String?>(group.capitalize(), "images/foe/$group.png") to campaigns.size }.sortedBy { it.first.first }.toMap()
-            chartTableWithPic("enemy-campaign-count", enemyTypes, listOf("Group", "Runs"), "Campaigns Against Enemy")
+            chartTableWithPic("enemy-campaign-count", enemyTypes, listOf("Group", "Runs"), "Campaigns Against Enemy", "small-label")
 
             val enemyKills = listOfNotNull(
                 profile.unlocks.firstOrNull { it.id == "achievementProgress_cultistKills" },
@@ -239,7 +239,7 @@ private fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
             ).map { it.name.replace("Kills", "").trim() to it.progress }
                 .sortedBy { it.first }
                 .associate { (key, value) -> Pair<String, String?>(key, "images/foe/${key.lowercase()}.png") to value }
-            chartTableWithPic("enemy-kill-count", enemyKills, listOf("Group", "Kills"), "Enemies Killed")
+            chartTableWithPic("enemy-kill-count", enemyKills, listOf("Group", "Kills"), "Enemies Killed", "small-label")
 
         }
     }
@@ -270,22 +270,22 @@ private fun skillTable(parent: HTMLElement, stat: Stat) {
                 }
 
                 val bestStat = getCharacters().map { it to (it.snapshots.last().primaryStats[stat] ?: 0f) }.sortedByDescending { it.second }.take(10).toMap()
-                chartTable("best-stat-chart", bestStat, listOf("Character", stat.format()), "Highest Starting ${stat.format()}")
+                chartTable("best-stat-chart", bestStat, listOf("Character", stat.format()), "Highest Starting ${stat.format()}", "large-label")
             }
         }
     }
 }
 
-private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<LegacyCharacter, Number>, headers: List<String>, caption: String) {
+private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<LegacyCharacter, Number>, headers: List<String>, caption: String, labelClass: String) {
     val namedData = data.mapKeys { (character, _) -> character.snapshots.last().name to getPicture("${character.uuid}/head") }
-    chartTableWithPic(docId, namedData, headers, caption) { characterDetail(data.keys.toList()[it]) }
+    chartTableWithPic(docId, namedData, headers, caption, labelClass) { characterDetail(data.keys.toList()[it]) }
 }
 
-private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String, Number>, headers: List<String>, caption: String, onClick: (Int) -> Unit = {}) {
-    chartTableWithPic(docId, data.mapKeys { (key, _) -> key to null }, headers, caption, onClick)
+private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String, Number>, headers: List<String>, caption: String, labelClass: String, onClick: (Int) -> Unit = {}) {
+    chartTableWithPic(docId, data.mapKeys { (key, _) -> key to null }, headers, caption, labelClass, onClick)
 }
 
-private fun TagConsumer<HTMLElement>.chartTableWithPic(docId: String, data: Map<Pair<String, String?>, Number>, headers: List<String>, caption: String, onClick: (Int) -> Unit = {}) {
+private fun TagConsumer<HTMLElement>.chartTableWithPic(docId: String, data: Map<Pair<String, String?>, Number>, headers: List<String>, caption: String, labelClass: String, onClick: (Int) -> Unit = {}) {
     val max = data.values.map { it.toFloat() }.maxOfOrNull { it }
     if (max != null) {
         div("profile-chart-wrapper") {
@@ -302,8 +302,8 @@ private fun TagConsumer<HTMLElement>.chartTableWithPic(docId: String, data: Map<
                 tbody {
                     data.entries.forEachIndexed { i, (pair, count) ->
                         val (key, url) = pair
-                        tr {
-                            th(ThScope.row, classes = "profile-header") {
+                        tr(classes = labelClass) {
+                            th(ThScope.row, classes = "profile-header $labelClass") {
                                 if (url != null) {
                                     img(classes = "label-image") {
                                         src = url
