@@ -173,7 +173,7 @@ private fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
         }
         div("profile-charts") {
             id = "profile-charts"
-            val legacyTier = getCharacters().groupBy { it.legacyTierLevel }.entries.associate { (level, list) -> level.format() to list.size }
+            val legacyTier = getCharacters().groupBy { it.legacyTierLevel }.entries.sortedBy { it.key.ordinal }.associate { (level, list) -> level.format() to list.size }
             chartTable("legacy-tier-chart", legacyTier, listOf("Level", "Count"), "Characters by Legacy Tier") {
                 searchOptions.searchText = legacyTier.keys.toList()[it]
                 window.location.hash = "#"
