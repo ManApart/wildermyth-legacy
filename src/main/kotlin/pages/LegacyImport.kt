@@ -13,6 +13,7 @@ import JsonObject
 import LegacyCharacter
 import Profile
 import Unlock
+import characterCards
 import doRouting
 import el
 import jsonMapper
@@ -123,6 +124,7 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, sta
             }.toTypedArray())
         }.then {
             status.updateStatus("Parsed All Characters")
+            characterCards = mapOf()
             doRouting(originalHash)
             persistMemory()
         }

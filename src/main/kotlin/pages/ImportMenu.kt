@@ -5,7 +5,6 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.*
 import kotlinx.html.dom.append
-import kotlinx.html.js.input
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 import org.khronos.webgl.ArrayBuffer
