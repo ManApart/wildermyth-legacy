@@ -1,6 +1,6 @@
 package pages
 
-import Ability
+import Hook
 import LegacyCharacter
 import Profile
 import Stat
@@ -12,8 +12,6 @@ import getCharacters
 import getCompanies
 import getPicture
 import getProfile
-import jsonMapper
-import kotlinx.serialization.encodeToString
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.*
@@ -42,6 +40,7 @@ fun profile() {
         buildUnlocks(profile)
     }
     skillTable(el("profile-charts"), Stat.ARMOR)
+    hooksTable(el("profile-charts"), HookType.RESOLVED)
 }
 
 private fun TagConsumer<HTMLElement>.buildProfileNav() {
@@ -248,29 +247,76 @@ private fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
 private fun skillTable(parent: HTMLElement, stat: Stat) {
     el<HTMLElement?>("skill-table-section")?.remove()
     parent.append {
-        div("profile-charts") {
-            div {
-                id = "skill-table-section"
+        div("profile-chart-wrapper") {
+            id = "skill-table-section"
+            div("profile-charts") {
                 div {
-                    id = "start-skill-select-span"
-                    label { +"Skill:" }
-                    select {
-                        id = "starting-skill-select"
-                        Stat.values().forEach {
-                            option {
-                                +it.format()
-                                selected = stat == it
+                    div {
+                        id = "start-skill-select-span"
+                        label { +"Skill:" }
+                        select {
+                            id = "starting-skill-select"
+                            Stat.values().forEach {
+                                option {
+                                    +it.format()
+                                    selected = stat == it
+                                }
+                            }
+                            onChangeFunction = {
+                                val optionI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
+                                skillTable(parent, Stat.values()[optionI])
                             }
                         }
-                        onChangeFunction = {
-                            val optionI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
-                            skillTable(parent, Stat.values()[optionI])
+                    }
+
+                    val bestStat = getCharacters().map { it to (it.snapshots.last().primaryStats[stat] ?: 0f) }.sortedByDescending { it.second }.take(10).toMap()
+                    chartTable("best-stat-chart", bestStat, listOf("Character", stat.format()), "Highest Starting ${stat.format()}", "large-label")
+                }
+            }
+        }
+    }
+}
+
+enum class HookType { UNRESOLVED, RESOLVED, ALL }
+
+private fun hooksTable(parent: HTMLElement, hookType: HookType) {
+    el<HTMLElement?>("hooks-table-section")?.remove()
+    parent.append {
+        div("profile-chart-wrapper") {
+            id = "hooks-table-section"
+            div("profile-charts") {
+                div {
+                    div {
+                        id = "hooks-select-span"
+                        label { +"Type:" }
+                        select {
+                            id = "starting-hook-select"
+                            HookType.values().forEach {
+                                option {
+                                    +it.format()
+                                    selected = hookType == it
+                                }
+                            }
+                            onChangeFunction = {
+                                val optionI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
+                                hooksTable(parent, HookType.values()[optionI])
+                            }
                         }
                     }
-                }
 
-                val bestStat = getCharacters().map { it to (it.snapshots.last().primaryStats[stat] ?: 0f) }.sortedByDescending { it.second }.take(10).toMap()
-                chartTable("best-stat-chart", bestStat, listOf("Character", stat.format()), "Highest Starting ${stat.format()}", "large-label")
+                    val hookSort: (Hook) -> Boolean = when (hookType) {
+                        HookType.UNRESOLVED -> { hook -> !hook.resolved }
+                        HookType.RESOLVED -> { hook -> hook.resolved }
+                        HookType.ALL -> { _ -> true }
+                    }
+
+                    val byHook =
+                        getCharacters().flatMap { char -> char.hooks.filter { hookSort(it) } }.groupBy { it.id }.entries.sortedBy { it.key }.associate { (hook, list) -> hook.format() to list.size }
+                    chartTable("hook-resolved-chart", byHook, listOf("Hook", "Count"), "Hooks", "small-label") {
+                        searchOptions.searchText = byHook.keys.toList()[it]
+                        window.location.hash = "#"
+                    }
+                }
             }
         }
     }
@@ -285,7 +331,14 @@ private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<String,
     chartTableWithPic(docId, data.mapKeys { (key, _) -> key to null }, headers, caption, labelClass, onClick)
 }
 
-private fun TagConsumer<HTMLElement>.chartTableWithPic(docId: String, data: Map<Pair<String, String?>, Number>, headers: List<String>, caption: String, labelClass: String, onClick: (Int) -> Unit = {}) {
+private fun TagConsumer<HTMLElement>.chartTableWithPic(
+    docId: String,
+    data: Map<Pair<String, String?>, Number>,
+    headers: List<String>,
+    caption: String,
+    labelClass: String,
+    onClick: (Int) -> Unit = {}
+) {
     val max = data.values.map { it.toFloat() }.maxOfOrNull { it }
     if (max != null) {
         div("profile-chart-wrapper") {
