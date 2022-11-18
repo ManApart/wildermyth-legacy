@@ -1,6 +1,7 @@
 import kotlinx.serialization.encodeToString
 import kotlin.math.min
 
+//https://wildermyth.com/wiki/Tag_Reference
 interface Chunk {
     fun interpolate(character: Character, entry: HistoryEntry): String
 }
@@ -71,6 +72,7 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
         templateClean == "company" -> getCompany(uuid).name
         type == "hero.rfln.self" -> resultOptions.last()
         type == "awm" -> replaceAWM(resultOptions)
+        type == "whm" -> replaceWHM(resultOptions)
         type == "mf" -> replaceMF(resultOptions)
         type == "int" -> parts.last()
         type.contains(".") -> replaceRelationshipTemplate(type, resultOptions, entry)
@@ -140,6 +142,14 @@ private fun HistoryRelationship.replaceMF(resultOptions: List<String>): String {
 
 private fun Character.replaceAWM(resultOptions: List<String>): String {
     return if (attractedToWomen) resultOptions.first() else resultOptions.last()
+}
+
+private fun Character.replaceWHM(resultOptions: List<String>): String {
+    return when {
+        characterClass == CharacterClass.WARRIOR -> resultOptions.first()
+        characterClass == CharacterClass.HUNTER && resultOptions.size > 1 -> resultOptions[1]
+        else -> resultOptions.last()
+    }
 }
 
 private fun HistoryRelationship.replaceAWM(resultOptions: List<String>): String {
