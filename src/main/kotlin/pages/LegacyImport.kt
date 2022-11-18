@@ -167,11 +167,13 @@ private fun handleSinglePicture(zip: JSZip.ZipObject, character: Character, zipN
 
 fun parseLegacy(json: Json, status: HTMLParagraphElement): List<LegacyCharacter> {
     var parsedCount = 0
+    var totalCount = 0
     return (json["entries"] as Array<Json>)
         .mapNotNull {
-            parseLegacyCharacter(it).also {
-                parsedCount++
-                status.updateStatus("Parsed $parsedCount Characters")
+            parseLegacyCharacter(it).also { character ->
+                if (character != null) parsedCount++
+                totalCount++
+                status.updateStatus("Parsed $parsedCount/$totalCount Characters")
             }
         }
         .also {
