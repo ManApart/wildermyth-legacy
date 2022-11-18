@@ -38,11 +38,14 @@ import saveProfile
 import saveStoryProps
 import splitByCapitals
 import kotlin.js.Promise
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json.Default.encodeToString
 
 private val companies = mutableMapOf<String, Company>()
 
 fun importZip(data: ArrayBuffer, originalHash: String) {
     val status = initialLoading()
+
 
     JSZip().loadAsync(data).then { zip ->
         status.updateStatus("Loaded Zip")
@@ -108,7 +111,7 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, sta
     var handled = 0
     zip.file(legacyJson)!!.async<String>("string")
         .then { contents ->
-            val json = JSON.parse<Json>(contents)
+            val json = JSON.parse<Json>(contents.replace(",Infinity", ",0"))
             val profile = parseProfile(json)
             saveProfile(profile)
             status.updateStatus("Saved Profile")
@@ -152,7 +155,7 @@ private fun handleSinglePicture(zip: JSZip.ZipObject, character: Character, zipN
 fun parseLegacy(json: Json, status: HTMLParagraphElement): List<LegacyCharacter> {
     var parsedCount = 0
     return (json["entries"] as Array<Json>)
-        .map {
+        .mapNotNull {
             parseLegacyCharacter(it).also {
                 parsedCount++
                 status.updateStatus("Parsed $parsedCount Characters")
@@ -163,15 +166,20 @@ fun parseLegacy(json: Json, status: HTMLParagraphElement): List<LegacyCharacter>
         }
 }
 
-fun parseLegacyCharacter(json: Json): LegacyCharacter {
+fun parseLegacyCharacter(json: Json): LegacyCharacter? {
     val uuid = (json["id"] as Json)["value"] as String
-    val snapshots = (json["snapshots"] as Array<Json>).mapNotNull { parseCharacter(uuid, it) }.toTypedArray()
-    val companyIds = parseCompanies(json, uuid)
-    val isNPC = (json["usage"] as String? == "background")
-    val tier = legacyTierLevelFromInt(json["tier"] as Int? ?: 0)
+    return try {
+        val snapshots = (json["snapshots"] as Array<Json>).mapNotNull { parseCharacter(uuid, it) }.toTypedArray()
+        val companyIds = parseCompanies(json, uuid)
+        val isNPC = (json["usage"] as String? == "background")
+        val tier = legacyTierLevelFromInt(json["tier"] as Int? ?: 0)
 
-    val killCount = parseKillCount(json)
-    return LegacyCharacter(uuid, snapshots, companyIds, isNPC, tier, killCount, JSON.stringify(json))
+        val killCount = parseKillCount(json)
+        LegacyCharacter(uuid, snapshots, companyIds, isNPC, tier, killCount, JSON.stringify(json))
+    } catch (e: Exception) {
+        println("Failed to parse character $uuid! ${e.message}")
+        null
+    }
 }
 
 fun parseCharacter(uuid: String, json: Json): Character? {
@@ -198,11 +206,16 @@ private fun parseCompanies(json: Json, uuid: String): List<String> {
     val companyIds = (json["legacyCompanyInfo"] as Array<Json>).map { companyJson ->
         ((companyJson["companyId"] as Json)["value"] as String).also { companyId ->
             if (!companies.containsKey(companyId)) {
-                val name = companyJson["companyName"] as String
-                val date = companyJson["date"] as Double
-                val mainThreat = companyJson["mainThreat"] as String
-                val gameId = ((companyJson["gameId"] as Json)["value"] as String)
-                companies[companyId] = Company(companyId, gameId, date, name, mainThreat)
+                try {
+                    val name = companyJson["companyName"] as String
+                    val date = companyJson["date"] as Double
+                    val mainThreat = companyJson["mainThreat"] as String
+                    val gameId = ((companyJson["gameId"] as Json?)?.get("value") as String?) ?: "NA"
+                    companies[companyId] = Company(companyId, gameId, date, name, mainThreat)
+                } catch (e: Exception){
+                    println("Failed to parse company $companyId")
+                    println(JSON.stringify(companyJson))
+                }
             }
             companies[companyId]?.characters?.add(uuid)
         }
