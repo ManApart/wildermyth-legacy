@@ -90,6 +90,10 @@
     --labels-size: 200px;
 }
 
+.smart-chart-wrapper {
+    width: 100%;
+}
+
 #best-stat-chart {
     margin-top: 5%;
 }
