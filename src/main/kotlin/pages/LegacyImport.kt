@@ -8,12 +8,15 @@ import Gear
 import GearRaw
 import HistoryEntry
 import HistoryEntryRaw
+import InMemoryStorage
 import JSZip
 import JsonObject
 import LegacyCharacter
 import Profile
 import Unlock
 import characterCards
+import clearSections
+import clearStorage
 import doRouting
 import el
 import jsonMapper
@@ -46,6 +49,7 @@ private val companies = mutableMapOf<String, Company>()
 fun importZip(data: ArrayBuffer, originalHash: String) {
     val status = initialLoading()
 
+    clearStorage()
 
     JSZip().loadAsync(data).then { zip ->
         status.updateStatus("Loaded Zip")

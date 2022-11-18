@@ -31,6 +31,11 @@ data class InMemoryStorage(
 private var inMemoryStorage = InMemoryStorage()
 var characterCards: Map<String, HTMLElement> = mapOf()
 
+fun clearStorage(){
+    inMemoryStorage = InMemoryStorage()
+    characterCards = mapOf()
+}
+
 fun resetStorage() {
     inMemoryStorage = InMemoryStorage()
     characterCards = mapOf()
