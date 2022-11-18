@@ -39,8 +39,8 @@ fun profile() {
         buildCompanies()
         buildUnlocks(profile)
     }
-    skillTable(el("profile-charts"), Stat.ARMOR)
-    hooksTable(el("profile-charts"), HookType.RESOLVED)
+    skillTable(el("skill-table-section"), Stat.ARMOR)
+    hooksTable(el("hooks-table-section"), HookType.RESOLVED)
 }
 
 private fun TagConsumer<HTMLElement>.buildProfileNav() {
@@ -241,37 +241,44 @@ private fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
             chartTableWithPic("enemy-kill-count", enemyKills, listOf("Group", "Kills"), "Enemies Killed", "small-label")
 
         }
+
+        div("profile-charts") {
+            div("profile-chart-wrapper") {
+                id = "skill-table-section"
+            }
+            div("profile-chart-wrapper") {
+                id = "hooks-table-section"
+            }
+        }
+
     }
 }
 
 private fun skillTable(parent: HTMLElement, stat: Stat) {
-    el<HTMLElement?>("skill-table-section")?.remove()
+    parent.innerHTML = ""
     parent.append {
-        div("profile-chart-wrapper") {
-            id = "skill-table-section"
-            div("profile-charts") {
+        div("profile-charts") {
+            div("smart-chart-wrapper") {
                 div {
-                    div {
-                        id = "start-skill-select-span"
-                        label { +"Skill:" }
-                        select {
-                            id = "starting-skill-select"
-                            Stat.values().forEach {
-                                option {
-                                    +it.format()
-                                    selected = stat == it
-                                }
-                            }
-                            onChangeFunction = {
-                                val optionI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
-                                skillTable(parent, Stat.values()[optionI])
+                    id = "start-skill-select-span"
+                    label { +"Skill:" }
+                    select {
+                        id = "starting-skill-select"
+                        Stat.values().forEach {
+                            option {
+                                +it.format()
+                                selected = stat == it
                             }
                         }
+                        onChangeFunction = {
+                            val optionI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
+                            skillTable(parent, Stat.values()[optionI])
+                        }
                     }
-
-                    val bestStat = getCharacters().map { it to (it.snapshots.last().primaryStats[stat] ?: 0f) }.sortedByDescending { it.second }.take(10).toMap()
-                    chartTable("best-stat-chart", bestStat, listOf("Character", stat.format()), "Highest Starting ${stat.format()}", "large-label")
                 }
+
+                val bestStat = getCharacters().map { it to (it.snapshots.last().primaryStats[stat] ?: 0f) }.sortedByDescending { it.second }.take(10).toMap()
+                chartTable("best-stat-chart", bestStat, listOf("Character", stat.format()), "Highest Starting ${stat.format()}", "large-label")
             }
         }
     }
@@ -280,42 +287,39 @@ private fun skillTable(parent: HTMLElement, stat: Stat) {
 enum class HookType { UNRESOLVED, RESOLVED, ALL }
 
 private fun hooksTable(parent: HTMLElement, hookType: HookType) {
-    el<HTMLElement?>("hooks-table-section")?.remove()
+    parent.innerHTML = ""
     parent.append {
-        div("profile-chart-wrapper") {
-            id = "hooks-table-section"
-            div("profile-charts") {
+        div("profile-charts") {
+            div("smart-chart-wrapper") {
                 div {
-                    div {
-                        id = "hooks-select-span"
-                        label { +"Type:" }
-                        select {
-                            id = "starting-hook-select"
-                            HookType.values().forEach {
-                                option {
-                                    +it.format()
-                                    selected = hookType == it
-                                }
-                            }
-                            onChangeFunction = {
-                                val optionI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
-                                hooksTable(parent, HookType.values()[optionI])
+                    id = "hooks-select-span"
+                    label { +"Type:" }
+                    select {
+                        id = "starting-hook-select"
+                        HookType.values().forEach {
+                            option {
+                                +it.format()
+                                selected = hookType == it
                             }
                         }
+                        onChangeFunction = {
+                            val optionI = (document.getElementById(id) as HTMLSelectElement).selectedIndex
+                            hooksTable(parent, HookType.values()[optionI])
+                        }
                     }
+                }
 
-                    val hookSort: (Hook) -> Boolean = when (hookType) {
-                        HookType.UNRESOLVED -> { hook -> !hook.resolved }
-                        HookType.RESOLVED -> { hook -> hook.resolved }
-                        HookType.ALL -> { _ -> true }
-                    }
+                val hookSort: (Hook) -> Boolean = when (hookType) {
+                    HookType.UNRESOLVED -> { hook -> !hook.resolved }
+                    HookType.RESOLVED -> { hook -> hook.resolved }
+                    HookType.ALL -> { _ -> true }
+                }
 
-                    val byHook =
-                        getCharacters().flatMap { char -> char.hooks.filter { hookSort(it) } }.groupBy { it.id }.entries.sortedBy { it.key }.associate { (hook, list) -> hook.format() to list.size }
-                    chartTable("hook-resolved-chart", byHook, listOf("Hook", "Count"), "Hooks", "small-label") {
-                        searchOptions.searchText = byHook.keys.toList()[it]
-                        window.location.hash = "#"
-                    }
+                val byHook =
+                    getCharacters().flatMap { char -> char.hooks.filter { hookSort(it) } }.groupBy { it.id }.entries.sortedBy { it.key }.associate { (hook, list) -> hook.format() to list.size }
+                chartTable("hook-resolved-chart", byHook, listOf("Hook", "Count"), "Hooks", "small-label") {
+                    searchOptions.searchText = byHook.keys.toList()[it]
+                    window.location.hash = "#"
                 }
             }
         }

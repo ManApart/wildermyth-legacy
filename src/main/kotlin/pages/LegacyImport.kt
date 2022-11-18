@@ -48,7 +48,6 @@ private val companies = mutableMapOf<String, Company>()
 
 fun importZip(data: ArrayBuffer, originalHash: String) {
     val status = initialLoading()
-
     clearStorage()
 
     JSZip().loadAsync(data).then { zip ->
