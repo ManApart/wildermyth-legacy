@@ -80,15 +80,23 @@ private fun HTMLParagraphElement.updateStatus(status: String) {
 
 private fun handleAdditionalInfo(zip: JSZip.ZipObject, status: HTMLParagraphElement) {
     zip.file("AdditionalInfo.json")?.async<String>("string")?.then { content ->
-        saveAdditionalInfo(jsonMapper.decodeFromString<MutableMap<String, AdditionalInfo>>(content))
-        status.updateStatus("Parsed Additional Info")
+        try {
+            saveAdditionalInfo(jsonMapper.decodeFromString<MutableMap<String, AdditionalInfo>>(content))
+            status.updateStatus("Parsed Additional Info")
+        } catch (e: Exception) {
+            status.updateStatus("Unable to load Additional Info")
+        }
     }
 }
 
 private fun handlePropertyFiles(zip: JSZip.ZipObject, status: HTMLParagraphElement) {
-    handlePropsFile(zip, "story.properties", ::saveStoryProps, status)
-    handlePropsFile(zip, "dynamic.properties", ::saveDynamicProps, status)
-    handlePropsFile(zip, "aspects.properties", ::saveAspectProps, status)
+    try {
+        handlePropsFile(zip, "story.properties", ::saveStoryProps, status)
+        handlePropsFile(zip, "dynamic.properties", ::saveDynamicProps, status)
+        handlePropsFile(zip, "aspects.properties", ::saveAspectProps, status)
+    } catch (e: Exception) {
+        status.updateStatus("Unable to load Props Files")
+    }
 }
 
 private fun handlePropsFile(zip: JSZip.ZipObject, fileName: String, save: (Map<String, String>) -> Unit, status: HTMLParagraphElement) {
@@ -111,20 +119,25 @@ private fun handleZipCharacterData(zip: JSZip.ZipObject, keys: List<String>, sta
     var handled = 0
     zip.file(legacyJson)!!.async<String>("string")
         .then { contents ->
-            val json = JSON.parse<Json>(contents.replace(",Infinity", ",0"))
-            val profile = parseProfile(json)
-            saveProfile(profile)
-            status.updateStatus("Saved Profile")
+            try {
+                val json = JSON.parse<Json>(contents.replace(",Infinity", ",0"))
+                val profile = parseProfile(json)
+                saveProfile(profile)
+                status.updateStatus("Saved Profile")
 
-            val characters = parseLegacy(json, status)
-            characters.forEach { saveCharacter(it) }
-            status.updateStatus("Saved All Characters")
-            Promise.all(characters.map {
-                handleZipPictures(zip, it.snapshots.last()).then {
-                    handled++
-                    status.updateStatus("Parsed $handled pictures")
-                }
-            }.toTypedArray())
+                val characters = parseLegacy(json, status)
+                characters.forEach { saveCharacter(it) }
+                status.updateStatus("Saved All Characters")
+                Promise.all(characters.map {
+                    handleZipPictures(zip, it.snapshots.last()).then {
+                        handled++
+                        status.updateStatus("Parsed $handled pictures")
+                    }
+                }.toTypedArray())
+            } catch (e: Throwable) {
+                status.updateStatus("Unable to Parse Legacy File!")
+                throw e
+            }
         }.then {
             status.updateStatus("Parsed All Characters")
             characterCards = mapOf()
@@ -212,7 +225,7 @@ private fun parseCompanies(json: Json, uuid: String): List<String> {
                     val mainThreat = companyJson["mainThreat"] as String
                     val gameId = ((companyJson["gameId"] as Json?)?.get("value") as String?) ?: "NA"
                     companies[companyId] = Company(companyId, gameId, date, name, mainThreat)
-                } catch (e: Exception){
+                } catch (e: Exception) {
                     println("Failed to parse company $companyId")
                     println(JSON.stringify(companyJson))
                 }
