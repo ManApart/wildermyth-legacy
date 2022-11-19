@@ -22,6 +22,10 @@ import org.w3c.dom.HTMLSelectElement
 import searchOptions
 
 
+private val mysticColor = "#90CAF9"
+private val hunterColor = "#5C7873"
+private val warriorColor = "#FF8965"
+
 fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
     div(classes = "profile-section") {
         id = "profile-aggregates"
@@ -192,7 +196,11 @@ private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<LegacyC
     val namedData = data.entries.map { (character, amount) ->
         val name = character.snapshots.last().name
         val picUrl = getPicture("${character.uuid}/head")
-        val color = ""
+        val color = when(character.snapshots.last().characterClass){
+            CharacterClass.MYSTIC -> mysticColor
+            CharacterClass.WARRIOR -> warriorColor
+            CharacterClass.HUNTER -> hunterColor
+        }
         GraphDataEntry(name, amount.toInt(), picUrl, color)
     }
     chartTableWithPic(docId, namedData, headers, caption, labelClass) { characterDetail(data.keys.toList()[it]) }
@@ -235,7 +243,8 @@ private fun TagConsumer<HTMLElement>.chartTableWithPic(
                                 +data.rowName
                             }
                             td {
-                                style = "--size: calc( ${data.amount} / $max )"
+                                val colorString = if(data.color != null) " --color: ${data.color};" else ""
+                                style = "--size: calc( ${data.amount} / $max );$colorString"
                                 +"${data.amount}"
                             }
                             onClickFunction = { onClick(i) }
