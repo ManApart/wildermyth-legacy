@@ -194,3 +194,5 @@ data class Profile(
 
 @Serializable
 data class Unlock(val id: String, val name: String, val progress: Int)
+
+data class GraphDataEntry(val rowName: String, val amount: Int, val picUrl: String? = null, val color: String? = null, val rowSearch: String? = null)
