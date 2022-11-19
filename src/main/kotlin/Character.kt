@@ -120,8 +120,17 @@ data class Character(
     @Transient
     val age = getAge()
 
+    val primaryStats: Map<Stat, Float>
+        get() {
+            if (primaryStatsBacking == undefined) {
+                primaryStatsBacking = parsePrimaryStats()
+            }
+            return primaryStatsBacking
+        }
+
     @Transient
-    val primaryStats = parsePrimaryStats()
+    private var primaryStatsBacking = parsePrimaryStats()
+
 
     val personality: Map<Personality, Int>
         get() {

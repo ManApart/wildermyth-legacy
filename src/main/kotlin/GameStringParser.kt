@@ -74,7 +74,7 @@ private fun Character.replaceTemplate(template: String, entry: HistoryEntry): St
         type == "awm" -> replaceAWM(resultOptions)
         type == "whm" -> replaceWHM(resultOptions)
         type == "mf" -> replaceMF(resultOptions)
-        type == "int" -> parts.last()
+        type in listOf("int", "float") -> parts.last()
         type.contains(".") -> replaceRelationshipTemplate(type, resultOptions, entry)
         entry.relationships.any { it.role == templateClean } -> entry.roleMatch(templateClean)
         entry.relationships.any { it.role == template } -> entry.roleMatch(template)
@@ -112,8 +112,11 @@ fun Character.replaceRelationshipTemplate(fullType: String, resultOptions: List<
             relationship != null && type == "fullname" -> (relationship.name ?: "someone")
             relationship != null && type == "awm" -> relationship.replaceAWM(resultOptions)
             roleName == "self" -> replaceSelf(type, resultOptions)
+            type.toIntOrNull() != null && Personality.values().any { it.name.lowercase() == roleName } -> replacePersonalityIfHighEnough(roleName, resultOptions, type.toInt())
+            type.toIntOrNull() != null && Stat.values().any { it.name.lowercase() == roleName } -> replaceStatIfHighEnough(roleName, resultOptions, type.toInt())
             else -> {
                 println("Relationship Attributes not supported: $name ${entry.id} $fullType.  Using ${resultOptions.last()}")
+                println(relationship)
                 println(resultOptions)
                 println(jsonMapper.encodeToString(entry))
                 resultOptions.last()
@@ -170,6 +173,16 @@ private fun Character.replacePersonality(typeOptions: List<String>, resultOption
     }
     val resultIndex = min(resultOptions.size - 1, typeOptions.indexOf(highest))
     return resultOptions[resultIndex]
+}
+
+private fun Character.replacePersonalityIfHighEnough(personalityName: String, resultOptions: List<String>, requiredLevel: Int = 0): String {
+    val actual = personality[Personality.valueOf(personalityName.uppercase())] ?: 0
+    return if (actual >= requiredLevel) resultOptions.first() else resultOptions.last()
+}
+
+private fun Character.replaceStatIfHighEnough(statName: String, resultOptions: List<String>, requiredLevel: Int = 0): String {
+    val actual = primaryStats[Stat.valueOf(statName.uppercase())]?.toInt() ?: 0
+    return if (actual >= requiredLevel) resultOptions.first() else resultOptions.last()
 }
 
 private fun HistoryEntry.roleMatch(role: String): String {
