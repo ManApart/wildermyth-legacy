@@ -22,9 +22,9 @@ import org.w3c.dom.HTMLSelectElement
 import searchOptions
 
 
-private val mysticColor = "#90CAF9"
-private val hunterColor = "#5C7873"
-private val warriorColor = "#FF8965"
+private val mysticColor = "#38C9D5"
+private val hunterColor = "#25744D"
+private val warriorColor = "#D8660F"
 
 fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
     div(classes = "profile-section") {
