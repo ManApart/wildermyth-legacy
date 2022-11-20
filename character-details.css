@@ -221,6 +221,12 @@
     scale: 1.1;
 }
 
+.company-friend-no-pic {
+    margin-right: 2px;
+    margin-left: 2px;
+    display: inline-block;
+}
+
 .two-column-section{
     width: 100%;
 }

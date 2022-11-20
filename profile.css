@@ -40,17 +40,16 @@
 
 .profile-chart {
     margin: 0 auto;
-    --heading-size: 3.5rem;
-    --color-1: #90CAF9;
-    --color-8: #FFE0B2;
-    --color-3: #FF8965;
-    --color-4: #455A64;
-    --color-5: #FFD9D1;
-    --color-6: #795548;
-    --color-7: #B37E71;
-    --color-2: #6B2B17;
-    --color-9: #FFFFFF;
-    --color-10: #4D4D4D;
+    --color-1: #94E68F;
+    --color-2: #FFEEC8;
+    --color-3: #B38DD5;
+    --color-4: #D8660F;
+    --color-5: #FFD863;
+    --color-6: #38C9D5;
+    --color-7: #727272;
+    --color-8: #25744D;
+    --color-9: #B13B3B;
+    --color-10: #624FC7;
 
 }
 
