@@ -21,7 +21,7 @@ private const val loadZip = false
 fun loadExample(attemptLoadMemory: Boolean = true): Promise<*> {
     val windowHash = window.location.hash
     return loadJson("example/data.json").then { json ->
-        val example = parseLegacyCharacter(json)
+        val example = parseLegacyCharacter(json)!!
         saveCharacter(example)
 
         Promise.all(

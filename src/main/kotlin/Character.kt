@@ -6,7 +6,7 @@ import kotlin.math.roundToInt
 data class LegacyCharacter(
     val uuid: String,
     val snapshots: Array<Character>,
-    val companyIds: List<String> = listOf(),
+    val companyIds: Set<String> = setOf(),
     val npc: Boolean = false,
     val legacyTierLevel: LegacyTierLevel = LegacyTierLevel.FOLK_HERO,
     val killCount: Int = 0,
@@ -198,6 +198,10 @@ data class Character(
 
     @Transient
     val hooks = parseHooks()
+
+    fun firstName(): String {
+        return name.split(" ").first()
+    }
 
     private fun getBio(): String {
         val historyOverrides = history.joinToString(" ") { it.textOverride }

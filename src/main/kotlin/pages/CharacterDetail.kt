@@ -614,6 +614,9 @@ private fun TagConsumer<HTMLElement>.compatibilitySection(character: LegacyChara
                                 onClickFunction = { characterDetail(friend) }
                             }
                         }
+                    } ?: span("company-friend-no-pic") {
+                        +friend.snapshots.last().firstName()
+                        onClickFunction = { characterDetail(friend) }
                     }
                 }
             }
@@ -644,6 +647,9 @@ fun TagConsumer<HTMLElement>.companyCard(company: Company) {
                         onClickFunction = { characterDetail(relative) }
                     }
                 }
+            } ?: span("company-friend-no-pic") {
+                +relative.snapshots.last().firstName()
+                onClickFunction = { characterDetail(relative) }
             }
         }
     }

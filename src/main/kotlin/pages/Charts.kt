@@ -201,7 +201,7 @@ private fun TagConsumer<HTMLElement>.chartTable(docId: String, data: Map<LegacyC
             CharacterClass.WARRIOR -> warriorColor
             CharacterClass.HUNTER -> hunterColor
         }
-        GraphDataEntry(name, amount.toInt(), picUrl, color)
+        GraphDataEntry(name, amount.toFloat(), picUrl, color)
     }
     chartTableWithPic(docId, namedData, headers, caption, labelClass) { characterDetail(data.keys.toList()[it]) }
 }
@@ -218,8 +218,8 @@ private fun TagConsumer<HTMLElement>.chartTableWithPic(
     labelClass: String,
     onClick: (Int) -> Unit = {}
 ) {
-    val max = data.map { it.amount.toFloat() }.maxOfOrNull { it }
-    if (max != null) {
+    val max = data.map { it.amount }.maxOfOrNull { it }
+    if (max != null && max != 0f) {
         div("profile-chart-wrapper") {
             table("charts-css bar show-heading show-labels labels-align-end data-spacing-4 profile-chart") {
                 id = docId

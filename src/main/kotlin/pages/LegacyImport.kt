@@ -220,7 +220,7 @@ fun parseCharacter(uuid: String, json: Json): Character? {
     return Character(uuid, gameId, date, name, aspects, temporal, history, gear)
 }
 
-private fun parseCompanies(json: Json, uuid: String): List<String> {
+private fun parseCompanies(json: Json, uuid: String): Set<String> {
     val companyIds = (json["legacyCompanyInfo"] as Array<Json>).map { companyJson ->
         ((companyJson["companyId"] as Json)["value"] as String).also { companyId ->
             if (!companies.containsKey(companyId)) {
@@ -238,7 +238,7 @@ private fun parseCompanies(json: Json, uuid: String): List<String> {
             companies[companyId]?.characters?.add(uuid)
         }
     }
-    return companyIds
+    return companyIds.toSet()
 }
 
 private fun parseKillCount(json: Json): Int {
