@@ -122,6 +122,9 @@ private fun TagConsumer<HTMLElement>.buildUnlockTable(unlocks: List<Unlock>) {
                         td {
                             +unlock.name
                             title = unlock.id
+                            onClickFunction = {
+                                window.open("https://wildermyth.com/wiki/Achievement", "_blank")
+                            }
                         }
                     }
                 }
