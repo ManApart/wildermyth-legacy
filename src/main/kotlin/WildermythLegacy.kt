@@ -44,24 +44,28 @@ fun doRouting(windowHash: String) {
         windowHash.startsWith("#profile") -> {
             profile()
         }
+
         windowHash.startsWith("#detail/") -> {
             val hash = windowHash.replace("#detail/", "")
             getCharacter(hash)?.let { character ->
                 characterDetail(character)
             } ?: displayCharacters()
         }
+
         windowHash.startsWith("#network/") -> {
             val hash = windowHash.replace("#network/", "")
             getCharacter(hash)?.let { character ->
                 buildRelationshipNetwork(character)
             } ?: displayCharacters()
         }
+
         windowHash.startsWith("#family/") -> {
             val hash = windowHash.replace("#family/", "")
             getCharacter(hash)?.let { character ->
                 buildRelationshipNetwork(character, true)
             } ?: displayCharacters()
         }
+
         else -> {
             displayCharacters()
             characterSearch()
@@ -90,16 +94,21 @@ fun String.format(): String {
 }
 
 private val capitalSplitRegex = "(?=\\p{Upper})".toRegex()
-fun String.splitByCapitals() : String {
-    return split(capitalSplitRegex).joinToString(" ")
+fun String.splitByCapitals(capitalize: Boolean = false): String {
+    return if (capitalize) {
+        println(split(capitalSplitRegex))
+        split(capitalSplitRegex).flatMap { it.split(" ") }.joinToString(" ") { it.capitalize() }
+    } else {
+        split(capitalSplitRegex).joinToString(" ")
+    }
 }
 
 fun String.removeAll(vararg parts: String): String {
-    return parts.fold(this){acc, s -> acc.replace(s, "") }
+    return parts.fold(this) { acc, s -> acc.replace(s, "") }
 }
 
 fun isMobile(): Boolean {
-    return window.screen.width / window.screen.height < 3/4f
+    return window.screen.width / window.screen.height < 3 / 4f
 }
 
 private var logTime = Date().getMilliseconds()
@@ -109,9 +118,10 @@ fun logStart(message: String) {
     logTime = now
     println(message)
 }
+
 fun log(message: String) {
     val now = Date().getMilliseconds()
-    val elapsed = now-logTime
+    val elapsed = now - logTime
     logTime = now
     println("$elapsed: $message")
 }

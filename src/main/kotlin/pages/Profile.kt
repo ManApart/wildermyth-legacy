@@ -1,10 +1,12 @@
 package pages
 
+import Element
 import Profile
 import Stat
 import Unlock
 import clearSections
 import el
+import format
 import getCharacters
 import getCompanies
 import getProfile
@@ -15,6 +17,7 @@ import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.HTMLElement
+import splitByCapitals
 
 fun profile() {
     val profile = getProfile()
@@ -29,6 +32,7 @@ fun profile() {
         buildProfileNav()
         buildLinks(profile)
         buildCharts(profile)
+        buildWeaponUnlocks(profile)
         buildCompanies()
         buildUnlocks(profile)
     }
@@ -83,6 +87,36 @@ private fun TagConsumer<HTMLElement>.buildLinks(profile: Profile) {
             a("https://github.com/ManApart/wildermyth-legacy") {
                 +"Site Source"
                 target = "_blank"
+            }
+        }
+    }
+}
+
+
+private fun TagConsumer<HTMLElement>.buildWeaponUnlocks(profile: Profile) {
+    div("profile-section") {
+        id = "weapon-unlocks"
+        h2 {
+            +"Weapons"
+            title = "Every elemental weapon you've unlocked."
+        }
+        table {
+            tr {
+                th { +"Weapon" }
+                Element.values().forEach { el ->
+                    th { +el.name.format() }
+                }
+            }
+            tbody {
+                profile.weaponUnlocks.forEach { (weapon, elements) ->
+                    tr {
+                        td { +weapon.splitByCapitals(true) }
+                        elements.entries.forEach { (element, unlocked)->
+                            val elClass = if (unlocked) "${element.name.lowercase()}-unlock" else ""
+                            td(classes = elClass) {  }
+                        }
+                    }
+                }
             }
         }
     }

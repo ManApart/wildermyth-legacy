@@ -186,16 +186,40 @@ data class GearRaw(
 @Serializable
 data class Hook(val id: String, val resolved: Boolean = false)
 
+enum class Element { FIRE, LEAF, STONE, WATER }
+
 @Serializable
 data class Profile(
     val name: String,
     val unlocks: List<Unlock> = listOf()
-)
+) {
+    val weaponUnlocks: Map<String, Map<Element, Boolean>>
+        get() {
+            if (weaponUnlocksBacking == undefined) {
+                weaponUnlocksBacking = parseWeaponUnlocks()
+            }
+            return weaponUnlocksBacking
+        }
+
+    @Transient
+    private var weaponUnlocksBacking = parseWeaponUnlocks()
+
+    private fun parseWeaponUnlocks(): Map<String, Map<Element, Boolean>> {
+        return unlocks.filter { it.id.startsWith("weaponUnlock") }.map {
+            val parts = it.id.split("|")
+            parts[1] to Element.valueOf(parts[2].uppercase())
+        }.groupBy { it.first }
+            .mapValues { (_, namePairs:  List<Pair<String, Element>>) ->  namePairs.map { it.second } }
+            .mapValues { (_, elements:  List<Element>) ->
+                Element.values().associateWith { element -> elements.contains(element) }
+            }
+    }
+}
 
 @Serializable
 data class Unlock(val id: String, val name: String, val progress: Int)
 
-data class GraphDataEntry(val rowName: String, val amount: Float, val picUrl: String? = null, val color: String? = null, val rowSearch: String? = null){
-    constructor(rowName: String, amount: Int): this (rowName, amount.toFloat())
-    constructor(rowName: String, amount: Int, rowSearch: String?): this (rowName, amount.toFloat(), rowSearch = rowSearch)
+data class GraphDataEntry(val rowName: String, val amount: Float, val picUrl: String? = null, val color: String? = null, val rowSearch: String? = null) {
+    constructor(rowName: String, amount: Int) : this(rowName, amount.toFloat())
+    constructor(rowName: String, amount: Int, rowSearch: String?) : this(rowName, amount.toFloat(), rowSearch = rowSearch)
 }
