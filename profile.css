@@ -100,3 +100,23 @@
 #best-stat-chart tbody{
     height: calc(80% - var(--heading-size));
 }
+
+#weapon-unlocks {
+
+}
+
+.fire-unlock{
+    background-color: #D8660F;
+}
+
+.leaf-unlock{
+    background-color: #94E68F;
+}
+
+.stone-unlock{
+    background-color: #727272;
+}
+
+.water-unlock{
+    background-color: #38C9D5;
+}
