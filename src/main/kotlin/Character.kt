@@ -100,8 +100,16 @@ data class Character(
     @Transient
     private var sexBacking = parseSex()
 
+    val attractedToWomen: Boolean
+        get() {
+            if (attractedToWomenBacking == undefined) {
+                attractedToWomenBacking = getAttractedToWomen()
+            }
+            return attractedToWomenBacking
+        }
+
     @Transient
-    val attractedToWomen = getAttractedToWomen()
+    private var attractedToWomenBacking = getAttractedToWomen()
 
     @Transient
     val characterClass = getCharacterClass()

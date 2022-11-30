@@ -96,7 +96,6 @@ fun String.format(): String {
 private val capitalSplitRegex = "(?=\\p{Upper})".toRegex()
 fun String.splitByCapitals(capitalize: Boolean = false): String {
     return if (capitalize) {
-        println(split(capitalSplitRegex))
         split(capitalSplitRegex).flatMap { it.split(" ") }.joinToString(" ") { it.capitalize() }
     } else {
         split(capitalSplitRegex).joinToString(" ")
