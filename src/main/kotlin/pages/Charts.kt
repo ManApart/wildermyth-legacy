@@ -87,7 +87,7 @@ fun TagConsumer<HTMLElement>.buildCharts(profile: Profile) {
 
             val enemyTypes = getCompanies().groupBy {
                 it.mainThreat
-            }.map { (group, campaigns) -> GraphDataEntry(group.capitalize(), campaigns.size, "images/foe/$group.png") }.sortedBy { it.amount }
+            }.map { (group, campaigns) -> GraphDataEntry(group.capitalize(), campaigns.size, "images/foe/$group.png") }.sortedBy { it.rowName }
             chartTableWithPic("enemy-campaign-count", enemyTypes, listOf("Group", "Runs"), "Campaigns Against Enemy", "small-label")
 
             val enemyKills = listOfNotNull(
