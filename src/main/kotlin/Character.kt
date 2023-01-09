@@ -266,6 +266,16 @@ data class Character(
             Personality.values().forEachIndexed { i, p ->
                 personality[p] = aspect.values[i].toDouble().toInt()
             }
+
+            history.firstOrNull{ it.id == "personalityCustomization"}?.associatedAspects?.filter { it.name == "permanentStatModManual" && it.values.size == 3 }?.forEach { mod ->
+                val personalityMod = Personality.values().firstOrNull { it.name == mod.values[1] }
+                val amount = mod.values.last().toDoubleOrNull()?.toInt()
+                if (personalityMod != null && amount != null){
+                    personality[personalityMod] = personality[personalityMod]!! + amount
+                }
+            }
+
+
             personality
         } else {
             Personality.values().associateWith { 0 }
