@@ -21,7 +21,7 @@ dependencies {
 }
 
 kotlin {
-    js(LEGACY) {
+    js {
         binaries.executable()
         browser {
             commonWebpackConfig {
