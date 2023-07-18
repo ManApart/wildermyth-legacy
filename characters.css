@@ -64,7 +64,7 @@
 
 @keyframes warrior-idle-head {
   0% {top: var(--warrior-head-base);}
-  100% {top: calc(var(--head-bob-amount) +var(--warrior-head-base));}
+  100% {top: calc(var(--head-bob-amount) + var(--warrior-head-base));}
 }
 
 .hunter-head {
@@ -75,7 +75,7 @@
 
 @keyframes hunter-idle-head {
   0% {top: var(--hunter-head-base);}
-  100% {top: calc(var(--head-bob-amount) +var(--hunter-head-base));}
+  100% {top: calc(var(--head-bob-amount) + var(--hunter-head-base));}
 }
 
 .mystic-head {
