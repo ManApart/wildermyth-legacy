@@ -610,6 +610,7 @@ private fun TagConsumer<HTMLElement>.compatibilitySection(character: LegacyChara
                         div("company-friend-pic-wrapper") {
                             img(classes = "company-friend-pic") {
                                 src = picture
+                                title = friend.snapshots.last().name
                                 alt = friend.snapshots.last().name
                                 onClickFunction = { characterDetail(friend) }
                             }
@@ -643,6 +644,7 @@ fun TagConsumer<HTMLElement>.companyCard(company: Company) {
                 div("company-friend-pic-wrapper") {
                     img(classes = "company-friend-pic") {
                         src = picture
+                        title = relative.snapshots.last().name
                         alt = relative.snapshots.last().name
                         onClickFunction = { characterDetail(relative) }
                     }

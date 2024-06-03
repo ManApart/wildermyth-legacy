@@ -195,7 +195,7 @@ data class Profile(
 ) {
     val weaponUnlocks: Map<String, Map<Element, Boolean>>
         get() {
-            if (weaponUnlocksBacking == undefined) {
+            if (weaponUnlocksBacking === undefined) {
                 weaponUnlocksBacking = parseWeaponUnlocks()
             }
             return weaponUnlocksBacking

@@ -86,7 +86,7 @@ fun el(id: String) = document.getElementById(id) as HTMLElement
 fun <T> el(id: String) = document.getElementById(id) as T
 
 fun Enum<*>.format(): String {
-    return if (this == undefined) "" else name.split("_").joinToString(" ") { it.lowercase().capitalize() }
+    return if (this === undefined) "" else name.split("_").joinToString(" ") { it.lowercase().capitalize() }
 }
 
 fun String.format(): String {

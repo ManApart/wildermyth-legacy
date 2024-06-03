@@ -125,6 +125,7 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot:
                 getPicture("$uuid/body")?.let { picture ->
                     img {
                         src = picture
+                        title = name
                         classes = setOf("character-body", "${className}-body")
                         style = "animation-delay: ${animDelay}s"
                     }
@@ -132,6 +133,7 @@ fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot:
                 getPicture("$uuid/head")?.let { picture ->
                     img {
                         src = picture
+                        title = name
                         classes = setOf("character-head", "${className}-head")
                         style = "animation-delay: ${animDelay + .05}s"
                     }
