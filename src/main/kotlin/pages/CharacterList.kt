@@ -91,7 +91,10 @@ fun buildCharacters(section: Element, characters: List<LegacyCharacter>, info: M
 private fun scrollToCharacterAndSetFavicon() {
     val hashId = window.location.hash.replace("#", "")
     document.getElementById(hashId)?.scrollIntoView()
-    getCharacter(hashId)?.let { setFavicon(it) } ?: setFavicon(getCharacters().random())
+    val character = getCharacter(hashId)
+    if (character != null) setFavicon(character) else {
+        if (getCharacters().isNotEmpty()) setFavicon(getCharacters().random())
+    }
 }
 
 fun TagConsumer<HTMLElement>.characterCard(character: LegacyCharacter, snapshot: Character, info: AdditionalInfo, clickable: Boolean) {

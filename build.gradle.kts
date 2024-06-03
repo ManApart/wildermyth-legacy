@@ -1,6 +1,6 @@
 plugins {
-    kotlin("js") version "1.7.10"
-    kotlin("plugin.serialization") version "1.7.10"
+    kotlin("js") version "2.0.0"
+    kotlin("plugin.serialization") version "2.0.0"
 }
 
 group = "org.example"
@@ -25,9 +25,11 @@ kotlin {
         binaries.executable()
         browser {
             commonWebpackConfig {
-                cssSupport.enabled = true
+                cssSupport {
+                    enabled = true
+                }
             }
-            testTask{
+            testTask {
                 useMocha()
             }
         }

@@ -91,7 +91,7 @@ data class Character(
 
     val sex: Sex
         get() {
-            if (sexBacking == undefined) {
+            if (sexBacking === undefined) {
                 sexBacking = parseSex()
             }
             return sexBacking
@@ -102,7 +102,7 @@ data class Character(
 
     val attractedToWomen: Boolean
         get() {
-            if (attractedToWomenBacking == undefined) {
+            if (attractedToWomenBacking === undefined) {
                 attractedToWomenBacking = getAttractedToWomen()
             }
             return attractedToWomenBacking
@@ -116,7 +116,7 @@ data class Character(
 
     val classLevel: ClassLevel
         get() {
-            if (classLevelBacking == undefined) {
+            if (classLevelBacking === undefined) {
                 classLevelBacking = parseClassLevel()
             }
             return classLevelBacking
@@ -130,7 +130,7 @@ data class Character(
 
     val primaryStats: Map<Stat, Float>
         get() {
-            if (primaryStatsBacking == undefined) {
+            if (primaryStatsBacking === undefined) {
                 primaryStatsBacking = parsePrimaryStats()
             }
             return primaryStatsBacking
@@ -142,7 +142,7 @@ data class Character(
 
     val personality: Map<Personality, Int>
         get() {
-            if (personalityBacking == undefined) {
+            if (personalityBacking === undefined) {
                 personalityBacking = parsePersonality()
             }
             return personalityBacking
@@ -153,7 +153,7 @@ data class Character(
 
     val personalityFirst: Personality
         get() {
-            if (personalityFirstBacking == undefined) {
+            if (personalityFirstBacking === undefined) {
                 personalityFirstBacking = parsePersonalityFirst()
             }
             return personalityFirstBacking
@@ -164,7 +164,7 @@ data class Character(
 
     val personalitySecond: Personality
         get() {
-            if (personalitySecondBacking == undefined) {
+            if (personalitySecondBacking === undefined) {
                 personalitySecondBacking = parsePersonalitySecond()
             }
             return personalitySecondBacking
@@ -175,7 +175,7 @@ data class Character(
 
     val family: Family
         get() {
-            if (familyBacking == undefined) {
+            if (familyBacking === undefined) {
                 familyBacking = getFamily()
             }
             return familyBacking
@@ -189,7 +189,7 @@ data class Character(
 
     val hometown: String
         get() {
-            if (hometownBacking == undefined) {
+            if (hometownBacking === undefined) {
                 hometownBacking = parseHomeTown()
             }
             return hometownBacking
