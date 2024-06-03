@@ -8,7 +8,7 @@
 
 ## Deploying
 ```
-cp -r ../wildermyth-legacy/build/distributions/* .
+cp -r ../wildermyth-legacy/build/dist/js/productionExecutable/* .
 ```
 
 ## Features
