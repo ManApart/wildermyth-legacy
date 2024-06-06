@@ -17,21 +17,6 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     (c) 2013-2017 Mozilla, Apache License 2.0
 */
 
-/*! *****************************************************************************
-	Copyright (c) Microsoft Corporation.
-
-	Permission to use, copy, modify, and/or distribute this software for any
-	purpose with or without fee is hereby granted.
-
-	THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-	REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-	AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-	INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-	LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-	OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-	PERFORMANCE OF THIS SOFTWARE.
-	***************************************************************************** */
-
 /*! Hammer.JS - v2.0.17-rc - 2019-12-16
 	 * http://naver.github.io/egjs
 	 *
@@ -52,8 +37,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
  *
  * Manage unstructured data using DataSet. Add, update, and remove data, and listen for changes in the data.
  *
- * @version 7.1.4
- * @date    2022-03-15T15:23:59.245Z
+ * @version 7.1.9
+ * @date    2023-11-24T17:53:34.179Z
  *
  * @copyright (c) 2011-2017 Almende B.V, http://almende.com
  * @copyright (c) 2017-2019 visjs contributors, https://github.com/visjs
@@ -78,8 +63,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
  *
  * A dynamic, browser-based visualization library.
  *
- * @version 9.1.2
- * @date    2022-03-28T20:13:51.046Z
+ * @version 9.1.9
+ * @date    2023-11-03T01:42:27.418Z
  *
  * @copyright (c) 2011-2017 Almende B.V, http://almende.com
  * @copyright (c) 2017-2019 visjs contributors, https://github.com/visjs
