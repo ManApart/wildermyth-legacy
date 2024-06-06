@@ -1,5 +1,4 @@
 import org.khronos.webgl.ArrayBuffer
-import org.w3c.dom.HTMLElement
 import kotlin.js.Json
 import kotlin.js.Promise
 

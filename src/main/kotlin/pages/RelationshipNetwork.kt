@@ -5,8 +5,6 @@ import Vis
 import VisData
 import clearSections
 import el
-import getCharacter
-import getCompatibility
 import getCroppedHeadWithId
 import getDepth
 import kotlinx.browser.document
@@ -22,8 +20,19 @@ import org.w3c.dom.get
 import saveDepth
 import kotlin.js.Promise
 
-class Node(val id: Int, val label: String, var image: String, val shape: String = "circularImage")
-class Edge(val from: Int, val to: Int, val dashes: Boolean = false, val arrows: String? = undefined) {
+class Node(
+    @JsName("id") val id: Int,
+    @JsName("label") val label: String,
+    @JsName("image") var image: String,
+    @JsName("shape") val shape: String = "circularImage"
+)
+
+data class Edge(
+    @JsName("from") val from: Int,
+    @JsName("to") val to: Int,
+    @JsName("dashes") val dashes: Boolean = false,
+    @JsName("arrows") val arrows: String? = undefined
+) {
     override fun equals(other: Any?): Boolean {
         return other is Edge &&
                 ((from == other.from && to == other.to) ||
@@ -34,8 +43,6 @@ class Edge(val from: Int, val to: Int, val dashes: Boolean = false, val arrows: 
         return from + to
     }
 }
-
-class Data(val nodes: dynamic, val edges: dynamic)
 
 fun buildRelationshipNetwork(character: LegacyCharacter, familyOnly: Boolean = false, depth: Int = getDepth()) {
     val snapshot = character.snapshots.last()
@@ -146,12 +153,14 @@ private fun buildFamilyEdges(relatives: Set<LegacyCharacter>): Array<Edge> {
 private fun buildNetwork(container: HTMLElement, lookup: Map<Int, LegacyCharacter>, nodes: Array<Node>, edges: Array<Edge>) {
     val visData = VisData
     val visNet = Vis
-    val data = Data(js("new visData.DataSet(nodes)"), js("new visData.DataSet(edges)"))
     val options = getOptions()
-    val network = js("new visNet.Network(container, data, options);") as Vis.Network
+    val data = js("{nodes: new visData.DataSet(nodes), edges: new visData.DataSet(edges)}")
+    val network = js("new visNet.Network(container, data, options)") as Vis.Network
     network.on("selectNode") { event ->
         val selectedNode = (event["nodes"] as Array<Number>).first()
-        lookup[selectedNode]?.let { characterDetail(it) }
+        lookup[selectedNode]?.let {
+            characterDetail(it)
+        }
     }
 }
 

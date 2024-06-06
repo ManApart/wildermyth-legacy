@@ -3,3 +3,4 @@ build/
 .gradle/
 out/
 src/main/resources/characters.zip
+.kotlin/
